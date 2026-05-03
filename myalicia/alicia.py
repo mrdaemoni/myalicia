@@ -424,83 +424,19 @@ def chat_guard(fn):
 
 
 # ── Security ──────────────────────────────────────────────────────────────────
-
-SECURITY_KEYWORDS = {
-    # Tier 4 — irreversible / financial / credential exposure. Each entry is
-    # matched as a *whole word* (or a literal phrase). Removed bare "wire" —
-    # it triggered on "wired" / "wireless" / "wiretap"; the actual concern is
-    # already covered by "transfer", "send money", "wire transfer".
-    4: ["delete", "transfer", "payment", "credential", "credentials",
-        "api key", "password", "bank account", "irreversible",
-        "send money", "wire transfer", "wire money", "wire funds"],
-    # Tier 3 — outbound / publishing / shell-execution. Compound phrases
-    # avoid the "executive"/"sharepoint"/"compost" false positives that
-    # bare "execute"/"share"/"post" used to produce.
-    3: ["send email", "forward email", "share document", "publish",
-        "submit form", "financial record", "run command", "execute trade",
-        "execute command", "shell command"],
-    # Tier 2 — privacy-sensitive read access.
-    2: ["read email", "gmail", "obsidian", "health data", "spending",
-        "research", "finance", "personal data"],
-}
-
-# Compile word-boundary regex per level. Multi-word phrases match as literal
-# substrings (the boundary check still applies at the start and end). This
-# replaces the old substring `kw in lowered` test that caused "wire" to fire
-# on "wired", "executive" to fire on "execute", etc.
-import re as _re
-_SECURITY_REGEX = {
-    level: [_re.compile(r"\b" + _re.escape(kw) + r"\b", _re.IGNORECASE)
-            for kw in kws]
-    for level, kws in SECURITY_KEYWORDS.items()
-}
-
-
-def classify_security_level(text):
-    """Return the highest security tier whose keyword list matches `text`.
-
-    Matching is word-boundary aware (re.escape + \\b) so "wired" doesn't
-    fire L4 just because "wire" is a money-transfer keyword. Phrases like
-    "send email" still match as literal sequences because the boundaries
-    only apply at the outer edges, not between words inside the phrase.
-    """
-    if not text:
-        return 1
-    for level in (4, 3, 2):
-        for pattern in _SECURITY_REGEX[level]:
-            if pattern.search(text):
-                return level
-    return 1
-
-def get_context_size(level):
-    return {1: 5, 2: 20, 3: 40, 4: 60}.get(level, 5)
-
-def security_emoji(level):
-    return {1: "🟢", 2: "🟡", 3: "🟠", 4: "🔴"}.get(level, "🟢")
-
-def log_interaction(level, action, outcome):
-    entry = {
-        "timestamp": datetime.utcnow().isoformat(),
-        "security_level": f"L{level}",
-        "action": action,
-        "outcome": outcome,
-    }
-    with open(LOG_FILE, "a") as f:
-        f.write(json.dumps(entry) + "\n")
+# Extracted to core/security.py in v0.1.0. Keywords, regex, classifier,
+# and visual helpers live there now.
+from myalicia.core.security import (
+    SECURITY_KEYWORDS,
+    classify_security_level,
+    get_context_size,
+    security_emoji,
+)
 
 # ── Obsidian writer ───────────────────────────────────────────────────────────
-
-def write_to_obsidian(subfolder, filename, content):
-    path = os.path.join(OBSIDIAN_VAULT, subfolder)
-    os.makedirs(path, exist_ok=True)
-    filepath = os.path.join(path, filename)
-    with open(filepath, "w") as f:
-        f.write(content)
-    return filepath
-
-def write_daily_log(content):
-    today = datetime.now().strftime("%Y-%m-%d")
-    write_to_obsidian("Self/Daily Log", f"{today}.md", content)
+# Extracted to core/vault_io.py in v0.1.0. write_to_obsidian and
+# write_daily_log live there now and route through config.vault.*.
+from myalicia.core.vault_io import write_to_obsidian, write_daily_log
 
 # ── Semantic context builder ──────────────────────────────────────────────────
 

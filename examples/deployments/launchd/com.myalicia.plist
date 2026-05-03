@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  macOS launchd configuration for myalicia.
+
+  Install:
+    1. Edit the paths below for your machine
+    2. Copy to ~/Library/LaunchAgents/com.myalicia.plist
+    3. Load: launchctl load ~/Library/LaunchAgents/com.myalicia.plist
+    4. Verify: launchctl list | grep myalicia
+
+  KeepAlive=true means launchd auto-restarts myalicia if it crashes.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.myalicia</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <!-- Replace with the path to your virtualenv's python and the myalicia module -->
+        <string>/Users/YOUR_USERNAME/myalicia-venv/bin/python</string>
+        <string>-m</string>
+        <string>myalicia.cli</string>
+        <string>run</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- Set your secrets here, or use a .env file loaded by python-dotenv -->
+        <key>ANTHROPIC_API_KEY</key>
+        <string>YOUR_KEY_HERE</string>
+        <key>TELEGRAM_BOT_TOKEN</key>
+        <string>YOUR_TOKEN_HERE</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/YOUR_USERNAME</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/YOUR_USERNAME/.alicia/logs/stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/YOUR_USERNAME/.alicia/logs/stderr.log</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>

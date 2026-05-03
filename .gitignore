@@ -59,7 +59,6 @@ Thumbs.db
 # lines until the corresponding file passes the sanitization check.
 /alicia.py
 /skills/
-/tests/
 /bin/
 /config/
 /data/

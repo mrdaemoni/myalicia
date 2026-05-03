@@ -1,0 +1,41 @@
+# Linux systemd unit for myalicia.
+#
+# Install:
+#   1. Edit paths below for your machine
+#   2. Copy to /etc/systemd/system/myalicia.service (system-wide) OR
+#      ~/.config/systemd/user/myalicia.service (per-user, recommended)
+#   3. Reload: systemctl --user daemon-reload
+#   4. Enable: systemctl --user enable --now myalicia.service
+#   5. Verify: systemctl --user status myalicia.service
+#   6. Logs:   journalctl --user -u myalicia.service -f
+#
+# Use the per-user variant unless you need myalicia to run for multiple
+# users on the same machine.
+
+[Unit]
+Description=myalicia AI teammate
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# Path to the python in your virtualenv
+ExecStart=/home/YOUR_USERNAME/myalicia-venv/bin/python -m myalicia.cli run
+
+# Restart on crash, with a reasonable backoff
+Restart=on-failure
+RestartSec=10s
+
+# Environment variables — prefer EnvironmentFile for secrets
+EnvironmentFile=/home/YOUR_USERNAME/.alicia/.env
+# Or inline:
+# Environment="ANTHROPIC_API_KEY=sk-ant-..."
+# Environment="TELEGRAM_BOT_TOKEN=..."
+
+WorkingDirectory=/home/YOUR_USERNAME
+
+# Logging — journald handles this by default, no extra config needed
+
+[Install]
+WantedBy=default.target

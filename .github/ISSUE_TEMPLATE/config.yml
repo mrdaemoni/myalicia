@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Philosophy & background
+    url: https://www.myalicia.com/philosophy
+    about: Read why this project exists before opening an issue.
+  - name: Humorphism
+    url: https://humorphism.com
+    about: The design philosophy this project embodies.
+  - name: Architecture overview
+    url: https://www.myalicia.com/architecture
+    about: How myalicia is structured.

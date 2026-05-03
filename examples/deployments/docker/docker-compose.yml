@@ -1,0 +1,24 @@
+# docker-compose for myalicia.
+#
+# Usage:
+#   1. Copy .env.example to .env and fill in your keys
+#   2. docker-compose up -d
+#   3. Logs: docker-compose logs -f myalicia
+#   4. Stop: docker-compose down
+
+version: "3.9"
+
+services:
+  myalicia:
+    build: .
+    container_name: myalicia
+    restart: unless-stopped
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - ALICIA_VAULT_ROOT=/vault
+    volumes:
+      # Map your local Obsidian vault into the container
+      - ${VAULT_PATH:-./vault}:/vault
+      # Persist memory + config across container restarts
+      - ./alicia-config:/root/.alicia

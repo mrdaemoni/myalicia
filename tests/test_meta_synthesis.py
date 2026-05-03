@@ -317,15 +317,15 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
-        # Reroute hector_model storage to tmp too
-        from myalicia.skills import hector_model as hm
+        # Reroute user_model storage to tmp too
+        from myalicia.skills import user_model as hm
         baselines_dir = Path(td) / "baselines"
         baselines_dir.mkdir()
-        # NOTE: hector_model uses LEARNINGS_LOG (not LEARNINGS_PATH).
+        # NOTE: user_model uses LEARNINGS_LOG (not LEARNINGS_PATH).
         # Reroute MEMORY_DIR too so the .mkdir() inside append_learning
         # doesn't try to create the production memory dir.
         hm.MEMORY_DIR = Path(td)
-        hm.LEARNINGS_LOG = Path(td) / "hector_learnings.jsonl"
+        hm.LEARNINGS_LOG = Path(td) / "user_learnings.jsonl"
         hm.BASELINES_DIR = baselines_dir
 
         # Stub the Sonnet extractor to return controlled learnings
@@ -383,14 +383,14 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
-        from myalicia.skills import hector_model as hm
+        from myalicia.skills import user_model as hm
         baselines_dir = Path(td) / "baselines"
         baselines_dir.mkdir()
-        # NOTE: hector_model uses LEARNINGS_LOG (not LEARNINGS_PATH).
+        # NOTE: user_model uses LEARNINGS_LOG (not LEARNINGS_PATH).
         # Reroute MEMORY_DIR too so the .mkdir() inside append_learning
         # doesn't try to create the production memory dir.
         hm.MEMORY_DIR = Path(td)
-        hm.LEARNINGS_LOG = Path(td) / "hector_learnings.jsonl"
+        hm.LEARNINGS_LOG = Path(td) / "user_learnings.jsonl"
         hm.BASELINES_DIR = baselines_dir
 
         from myalicia.skills import meta_synthesis as ms

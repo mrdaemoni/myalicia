@@ -517,11 +517,11 @@ These tags are metadata — do NOT include them in the extracted value text. The
                     _write_hot_topic(value, ext_type, score)
 
                 # Phase 12.1 — the user-model auto-extraction. Every kept
-                # extraction also appends a learning to hector_learnings.jsonl
+                # extraction also appends a learning to user_learnings.jsonl
                 # tagged with a keyword-classified dimension. Confidence
                 # = score/5 (so 4 → 0.8, 5 → 1.0). Failures are non-fatal.
                 try:
-                    from myalicia.skills.hector_model import (
+                    from myalicia.skills.user_model import (
                         append_learning as _hm_append_learning,
                         classify_dimension as _hm_classify_dimension,
                     )

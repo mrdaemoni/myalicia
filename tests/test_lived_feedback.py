@@ -107,7 +107,7 @@ def test_list_lived_notes_finds_everything() -> None:
     sf.LIVED_DIR.mkdir(parents=True, exist_ok=True)
     for i in range(3):
         (sf.LIVED_DIR / f"p{i}.md").write_text(
-            f"# Practice {i}\n\n*Lived note — emitted 2026-04-22*\n\n"
+            f"# Practice {i}\n\n*Lived note — emitted <earlier development>*\n\n"
             f"**Descent.** [[Syn {i}]]\n**Archetype home.** Beatrice\n",
             encoding="utf-8",
         )
@@ -123,7 +123,7 @@ def test_finalize_lived_note_queues_surfacing() -> None:
     sf.LIVED_DIR.mkdir(parents=True, exist_ok=True)
     lived_path = sf.LIVED_DIR / "my-practice.md"
     lived_path.write_text(
-        "# Practice title\n\n*Lived note — emitted 2026-04-22*\n\n"
+        "# Practice title\n\n*Lived note — emitted <earlier development>*\n\n"
         "**Descent.** [[My synthesis]]\n**Archetype home.** Beatrice\n",
         encoding="utf-8",
     )
@@ -147,7 +147,7 @@ def test_finalize_lived_note_bridge_log_and_digest() -> None:
     sf.LIVED_DIR.mkdir(parents=True, exist_ok=True)
     lived_path = sf.LIVED_DIR / "my-practice.md"
     lived_path.write_text(
-        "# Public-facing attempts\n\n*Lived note — emitted 2026-04-22*\n\n"
+        "# Public-facing attempts\n\n*Lived note — emitted <earlier development>*\n\n"
         "**Descent.** [[Every real learning]]\n**Archetype home.** Beatrice\n",
         encoding="utf-8",
     )
@@ -169,7 +169,7 @@ def test_get_ready_surfacings_carries_kind_and_hint() -> None:
     sf.LIVED_DIR.mkdir(parents=True, exist_ok=True)
     lived_path = sf.LIVED_DIR / "my-practice.md"
     lived_path.write_text(
-        "# Practice title\n\n*Lived note — emitted 2026-04-22*\n\n"
+        "# Practice title\n\n*Lived note — emitted <earlier development>*\n\n"
         "**Descent.** [[Syn]]\n**Archetype home.** Psyche\n",
         encoding="utf-8",
     )
@@ -239,7 +239,7 @@ def test_check_lived_invariants_flags_missing_descent() -> None:
     sf, _ = _reload()
     sf.LIVED_DIR.mkdir(parents=True, exist_ok=True)
     (sf.LIVED_DIR / "sketchy.md").write_text(
-        "# Sketchy practice\n\n*Lived note — emitted 2026-04-22*\n\n"
+        "# Sketchy practice\n\n*Lived note — emitted <earlier development>*\n\n"
         "**Archetype home.** Beatrice\n\nNo descent link.\n",
         encoding="utf-8",
     )
@@ -254,7 +254,7 @@ def test_check_lived_invariants_flags_orphan_practice() -> None:
     sf.LIVED_DIR.mkdir(parents=True, exist_ok=True)
     # A Lived note exists but no matching practice folder does
     (sf.LIVED_DIR / "ghost.md").write_text(
-        "# Ghost\n\n*Lived note — emitted 2026-04-22*\n\n"
+        "# Ghost\n\n*Lived note — emitted <earlier development>*\n\n"
         "**Descent.** [[Something]]\n**Archetype home.** Beatrice\n",
         encoding="utf-8",
     )

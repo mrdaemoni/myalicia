@@ -29,7 +29,7 @@ MEMORY_DIR = os.path.expanduser("~/alicia/memory")
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# GAP 2 PHASE B — LIBROSA PROSODY TAGS (2026-04-18)
+# GAP 2 PHASE B — LIBROSA PROSODY TAGS (<earlier development>)
 # ═══════════════════════════════════════════════════════════════════════
 #
 # Phase A mapped the user's cadence (WPM + duration) to three tags:
@@ -55,7 +55,7 @@ MEMORY_DIR = os.path.expanduser("~/alicia/memory")
 PROSODY_MIN_AUDIO_SEC = 1.5        # librosa F0 noisy on very short clips
 PROSODY_MIN_VOICED_SEC = 0.5       # need real speech, not just ambient
 
-# Thresholds (in dBFS, Hz, seconds). Retuned 2026-04-18 (Phase B.1) based on
+# Thresholds (in dBFS, Hz, seconds). Retuned <earlier development> (Phase B.1) based on
 # live data from the user's phone mic + AGC — the original thresholds were
 # catching normal speech (baseline ~-38 dBFS) as whispered because the
 # whisper-vs-normal RMS delta was only ~2 dB. New rules require BOTH a mean
@@ -116,7 +116,7 @@ PROSODY_TAG_PRIORITY = ["whispered", "forceful", "hesitant", "tender"]
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# GAP 2 PHASE B.2 — PER-USER BASELINE CALIBRATION (2026-04-19)
+# GAP 2 PHASE B.2 — PER-USER BASELINE CALIBRATION (<earlier development>)
 # ═══════════════════════════════════════════════════════════════════════
 #
 # The PROSODY_* constants above are the HAND-TUNED DEFAULTS from B.1.2.
@@ -398,7 +398,7 @@ def _parse_timestamp(ts_str: str) -> Optional[datetime]:
     for fmt in ["%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"]:
         try:
             return datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
-        except:
+        except Exception:
             pass
     return None
 
@@ -425,7 +425,7 @@ def analyze_voice_depth_correlation(days: int = 30) -> Dict[str, Any]:
             ts = _parse_timestamp(entry.get("timestamp", ""))
             if ts and ts >= cutoff:
                 voice_messages.append(entry)
-        except:
+        except Exception:
             pass
 
     if len(voice_messages) < 10:
@@ -440,7 +440,7 @@ def analyze_voice_depth_correlation(days: int = 30) -> Dict[str, Any]:
             score = float(row.get("score", 0))
             if ts:
                 memory_by_time[ts] = score
-        except:
+        except Exception:
             pass
 
     # Correlate: for each voice message, find memory extraction within 5 minutes
@@ -488,7 +488,7 @@ def analyze_voice_depth_correlation(days: int = 30) -> Dict[str, Any]:
                     depth_by_wpm["medium"].append(best_score)
                 else:
                     depth_by_wpm["fast"].append(best_score)
-        except:
+        except Exception:
             pass
 
     # Compute averages
@@ -518,7 +518,7 @@ def get_voice_context() -> str:
     try:
         with open(voice_sig_path, 'r') as f:
             sig = json.load(f)
-    except:
+    except Exception:
         return "## Voice Intelligence\n(Unable to load voice signature.)"
 
     trend = sig.get("trend", "stable")
@@ -552,7 +552,7 @@ def detect_voice_topic_patterns(days: int = 30) -> List[Dict]:
             ts = _parse_timestamp(entry.get("timestamp", ""))
             if ts and ts >= cutoff:
                 voice_times.add(ts)
-        except:
+        except Exception:
             pass
 
     if not os.path.exists(hot_topics_path):
@@ -576,7 +576,7 @@ def detect_voice_topic_patterns(days: int = 30) -> List[Dict]:
                                     topic_voices[topic] = {"voice": 0, "total": 0}
                                 topic_voices[topic]["voice"] += 1
                                 topic_voices[topic]["total"] += 1
-    except:
+    except Exception:
         pass
 
     result = []
@@ -591,7 +591,7 @@ def detect_voice_topic_patterns(days: int = 30) -> List[Dict]:
     return sorted(result, key=lambda x: x["voice_ratio"], reverse=True)
 
 
-# Gap 2 Phase A (2026-04-18):
+# Gap 2 Phase A (<earlier development>):
 # Mapping from get_voice_response_guidance's "tone" field → text_to_voice "style"
 # enum. The TTS engine only understands its own 5 enum values; this translation
 # is the bridge. Centralised here so smoke tests can lock the policy and Phase B
@@ -612,7 +612,7 @@ TONE_TO_TTS_STYLE = {
     "deep and reflective":       "measured",
     "energetic and engaged":     "excited",
     "threading and elaborative": "measured",
-    # Phase B (prosody-driven tones, 2026-04-18)
+    # Phase B (prosody-driven tones, <earlier development>)
     "quiet and intimate":        "gentle",     # whispered
     "passionate and forceful":   "excited",    # forceful — match intensity
     "tender and close":          "gentle",     # tender

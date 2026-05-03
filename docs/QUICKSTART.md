@@ -4,17 +4,23 @@ Get from zero to a running myalicia in about 15 minutes.
 
 ## Install
 
+`myalicia` is not yet on PyPI for v0.1.0. Install from source:
+
 ```bash
-pip install myalicia
+git clone https://github.com/mrdaemoni/myalicia.git
+cd myalicia
+pip install -e .
 ```
 
-For optional integrations (Telegram, voice, Gmail, etc.):
+For optional integrations (voice, Gmail, vector search, PDF):
 
 ```bash
-pip install 'myalicia[telegram,voice]'
+pip install -e '.[voice,gmail,search,pdf]'
 # or everything at once:
-pip install 'myalicia[all]'
+pip install -e '.[all]'
 ```
+
+Once v0.2 lands, `pip install myalicia` will work directly.
 
 ## Get an Anthropic API key
 

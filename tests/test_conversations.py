@@ -137,16 +137,16 @@ def _():
         assert regs[0]["id"] == cv.DEFAULT_CONVERSATION_ID
 
 
-@test("hector_model.append_learning tags new entries with conversation_id")
+@test("user_model.append_learning tags new entries with conversation_id")
 def _():
     """End-to-end: append_learning should result in an entry with the
     field set, so future readers can filter by conversation."""
     import tempfile, os
     from pathlib import Path
     with tempfile.TemporaryDirectory() as td:
-        from myalicia.skills import hector_model as hm
+        from myalicia.skills import user_model as hm
         hm.MEMORY_DIR = Path(td)
-        hm.LEARNINGS_LOG = Path(td) / "hector_learnings.jsonl"
+        hm.LEARNINGS_LOG = Path(td) / "user_learnings.jsonl"
         hm.BASELINES_DIR = Path(td) / "baselines"
         hm.BASELINES_DIR.mkdir()
         hm.append_learning(
@@ -156,7 +156,7 @@ def _():
         entries = list(hm.get_learnings())
         assert len(entries) == 1
         assert entries[0].get("conversation_id") == "default", (
-            f"hector_model entry should be tagged: {entries[0]}"
+            f"user_model entry should be tagged: {entries[0]}"
         )
 
 

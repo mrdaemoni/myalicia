@@ -41,7 +41,7 @@ REFLECTABLE_TASKS = {
     "generate_pdf", "search_vault", "send_email", "generate_concept_note",
     "research", "synthesise_vault", "find_contradictions", "consolidate_memory",
     "remember",
-    # 2026-04-18: read_vault_note writes an episode too so that reactions on
+    # <earlier development>: read_vault_note writes an episode too so that reactions on
     # the resulting voice notes (and the intro text) can score the same
     # episode via reply_index.jsonl. Without this, read-aloud replies were
     # invisible to Gap 1's reaction scorer.

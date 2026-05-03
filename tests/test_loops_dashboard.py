@@ -64,7 +64,7 @@ def _():
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
-            multi_channel as mc, hector_model as hm,
+            multi_channel as mc, user_model as hm,
         )
         # response_capture
         rc.RESPONSES_DIR = Path(td) / "Responses"
@@ -84,9 +84,9 @@ def _():
         # multi_channel
         mc.MEMORY_DIR = td
         mc.DECISIONS_LOG_PATH = os.path.join(td, "multi_channel_decisions.jsonl")
-        # hector_model
+        # user_model
         hm.MEMORY_DIR = Path(td)
-        hm.LEARNINGS_LOG = Path(td) / "hector_learnings.jsonl"
+        hm.LEARNINGS_LOG = Path(td) / "user_learnings.jsonl"
         hm.BASELINES_DIR = Path(td) / "baselines"
 
         from myalicia.skills.loops_dashboard import render_loops_dashboard
@@ -121,7 +121,7 @@ def _():
         # Stub other modules to avoid log noise
         from myalicia.skills import (
             meta_synthesis as ms, dimension_research as dr,
-            thread_puller as tp, multi_channel as mc, hector_model as hm,
+            thread_puller as tp, multi_channel as mc, user_model as hm,
         )
         ms.MEMORY_DIR = td
         ms.META_LOG_PATH = os.path.join(td, "ms.jsonl")
@@ -152,7 +152,7 @@ def _():
 @test("loop 3 surfaces persistent thin dims as escalation-eligible")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from myalicia.skills import dimension_research as dr, hector_model as hm
+        from myalicia.skills import dimension_research as dr, user_model as hm
         dr.MEMORY_DIR = td
         dr.SCAN_HISTORY_PATH = os.path.join(td, "scan.jsonl")
         dr.ESCALATION_LOG_PATH = os.path.join(td, "esc.jsonl")
@@ -211,7 +211,7 @@ def _():
         # Stub other modules
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
-            dimension_research as dr, multi_channel as mc, hector_model as hm,
+            dimension_research as dr, multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -276,7 +276,7 @@ def _():
         # Stub other modules
         from myalicia.skills import (
             meta_synthesis as ms, dimension_research as dr,
-            thread_puller as tp, multi_channel as mc, hector_model as hm,
+            thread_puller as tp, multi_channel as mc, user_model as hm,
         )
         ms.MEMORY_DIR = td; ms.META_LOG_PATH = os.path.join(td, "ms.jsonl")
         ms.SYNTHESIS_DIR = Path(td) / "Synthesis"
@@ -326,7 +326,7 @@ def _():
         # Stub others
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
-            dimension_research as dr, multi_channel as mc, hector_model as hm,
+            dimension_research as dr, multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -397,7 +397,7 @@ def _():
         # Stub other modules
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
-            dimension_research as dr, multi_channel as mc, hector_model as hm,
+            dimension_research as dr, multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -427,7 +427,7 @@ def _():
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
-            multi_channel as mc, hector_model as hm,
+            multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -457,7 +457,7 @@ def _():
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
-            multi_channel as mc, hector_model as hm,
+            multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -493,7 +493,7 @@ def _():
         # Stub other modules
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
-            dimension_research as dr, multi_channel as mc, hector_model as hm,
+            dimension_research as dr, multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -533,7 +533,7 @@ def _():
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
-            multi_channel as mc, hector_model as hm,
+            multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -616,7 +616,7 @@ def _():
         from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
-            multi_channel as mc, hector_model as hm,
+            multi_channel as mc, user_model as hm,
         )
         rc.RESPONSES_DIR = Path(td) / "r"
         rc.CAPTURES_DIR = Path(td) / "c"
@@ -644,7 +644,7 @@ def _():
 @test("cross-loop section counts meta_synthesis-sourced learnings")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from myalicia.skills import hector_model as hm
+        from myalicia.skills import user_model as hm
         hm.MEMORY_DIR = Path(td)
         hm.LEARNINGS_LOG = Path(td) / "hl.jsonl"
         hm.BASELINES_DIR = Path(td) / "baselines"

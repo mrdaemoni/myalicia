@@ -538,7 +538,7 @@ def _loop3_gap_driven() -> str:
             recent_dimension_questions, recent_dimension_scans,
             recent_escalations, get_persistent_thin_dimensions,
         )
-        from myalicia.skills.hector_model import find_thin_dimensions
+        from myalicia.skills.user_model import find_thin_dimensions
     except Exception as e:
         return f"*3. Gap-driven outbound:* (import error: {e})"
 
@@ -694,9 +694,9 @@ def _connection_points_section() -> str:
         "13.11 thread→advance": 0,
         "13.12 voice+drawing": 0,
     }
-    # 13.9 — count meta_synthesis-sourced learnings in hector_learnings.jsonl
+    # 13.9 — count meta_synthesis-sourced learnings in user_learnings.jsonl
     try:
-        from myalicia.skills.hector_model import get_learnings
+        from myalicia.skills.user_model import get_learnings
         recent_learnings = get_learnings(since_days=30)
         counts["13.9 meta→hector"] = sum(
             1 for L in recent_learnings
@@ -865,7 +865,7 @@ def compute_loops_state(now: Optional[datetime] = None) -> dict:
             recent_dimension_questions, recent_escalations,
             get_persistent_thin_dimensions,
         )
-        from myalicia.skills.hector_model import find_thin_dimensions
+        from myalicia.skills.user_model import find_thin_dimensions
         thin_now = find_thin_dimensions(stale_after_days=14)
         questions_14d = recent_dimension_questions(within_days=14)
         questions_7d = recent_dimension_questions(within_days=7)
@@ -941,7 +941,7 @@ def _cross_loop_signal_counts() -> dict:
         "13.12 voice+drawing": 0,
     }
     try:
-        from myalicia.skills.hector_model import get_learnings
+        from myalicia.skills.user_model import get_learnings
         recent_learnings = get_learnings(since_days=30)
         counts["13.9 meta→hector"] = sum(
             1 for L in recent_learnings

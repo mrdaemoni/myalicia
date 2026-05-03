@@ -268,8 +268,8 @@ def get_week_walk_transcripts() -> list[str]:
     # Look for walk-YYYY-MM-DD.txt files
     for filepath in Path(LOG_DIR).glob("walk-*.txt"):
         try:
-            # Extract date from filename: walk-2026-04-12.txt
-            date_str = filepath.stem.replace("walk-", "")  # "2026-04-12"
+            # Extract date from filename: walk-<earlier development>.txt
+            date_str = filepath.stem.replace("walk-", "")  # "<earlier development>"
             file_date = datetime.strptime(date_str, "%Y-%m-%d")
 
             if file_date >= one_week_ago:

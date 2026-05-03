@@ -151,7 +151,7 @@ SKILL_MODULES = [
     "skills.temporal_patterns",
     "skills.muse",
     "skills.research_agenda",
-    # 2026-04-27 — Apr 20/27 architecture-scout shipments
+    # <earlier development> — Apr 20/27 architecture-scout shipments
     "skills.memory_audit",
     "skills.skill_author",
 ]
@@ -700,7 +700,7 @@ def _():
 
 @test("voice_skill: _resolve_ffmpeg finds ffmpeg on this host")
 def _():
-    # Regression guard for the 2026-04-18 launchctl-PATH fix. The Python
+    # Regression guard for the <earlier development> launchctl-PATH fix. The Python
     # process must be able to locate ffmpeg even when spawned by launchd
     # with a minimal PATH. The resolver checks current PATH + Homebrew
     # locations + direct file probe.
@@ -2207,7 +2207,7 @@ def _():
 
 @test("alicia.py system prompt explicitly steers draw tool usage (Phase 17.6)")
 def _():
-    # Regression guard: 2026-04-26 bug — the user said "Make me a drawing of
+    # Regression guard: <earlier development> bug — the user said "Make me a drawing of
     # this." Opus had `draw` in CORE_TOOLS but the system prompt's
     # Conversation-default block listed only search_vault and read_vault_note
     # as explicit tool triggers. With "Tools are the exception" steering, Opus
@@ -3457,7 +3457,7 @@ def _():
 
 @test("temporal_patterns: in deploy_safe.sh")
 def _():
-    # deploy_safe.sh auto-discovers skills/*.py via glob (post-2026-04-16 refactor);
+    # deploy_safe.sh auto-discovers skills/*.py via glob (post-<earlier development> refactor);
     # presence on disk means it will deploy. Verify file exists.
     assert os.path.isfile(os.path.join(PROJECT_ROOT, "skills", "temporal_patterns.py"))
 
@@ -3569,7 +3569,7 @@ def _():
 
 @test("muse: in deploy_safe.sh")
 def _():
-    # deploy_safe.sh auto-discovers skills/*.py via glob (post-2026-04-16 refactor);
+    # deploy_safe.sh auto-discovers skills/*.py via glob (post-<earlier development> refactor);
     # presence on disk means it will deploy. Verify file exists.
     assert os.path.isfile(os.path.join(PROJECT_ROOT, "skills", "muse.py"))
 
@@ -3842,7 +3842,7 @@ def _():
 
 @test("research_agenda: in deploy_safe.sh")
 def _():
-    # deploy_safe.sh auto-discovers skills/*.py via glob (post-2026-04-16 refactor);
+    # deploy_safe.sh auto-discovers skills/*.py via glob (post-<earlier development> refactor);
     # presence on disk means it will deploy. Verify file exists.
     assert os.path.isfile(os.path.join(PROJECT_ROOT, "skills", "research_agenda.py"))
 
@@ -3905,7 +3905,7 @@ def _():
 
 @test("analysis_coordination: in deploy_safe.sh")
 def _():
-    # deploy_safe.sh auto-discovers skills/*.py via glob (post-2026-04-16 refactor);
+    # deploy_safe.sh auto-discovers skills/*.py via glob (post-<earlier development> refactor);
     # presence on disk means it will deploy. Verify file exists.
     assert os.path.isfile(os.path.join(PROJECT_ROOT, "skills", "analysis_coordination.py"))
 
@@ -3980,7 +3980,7 @@ def _():
 
 @test("voice_intelligence: in deploy_safe.sh")
 def _():
-    # deploy_safe.sh auto-discovers skills/*.py via glob (post-2026-04-16 refactor);
+    # deploy_safe.sh auto-discovers skills/*.py via glob (post-<earlier development> refactor);
     # presence on disk means it will deploy. Verify file exists.
     assert os.path.isfile(os.path.join(PROJECT_ROOT, "skills", "voice_intelligence.py"))
 
@@ -4049,7 +4049,7 @@ def _():
 
 @test("autonomy: in deploy_safe.sh")
 def _():
-    # deploy_safe.sh auto-discovers skills/*.py via glob (post-2026-04-16 refactor);
+    # deploy_safe.sh auto-discovers skills/*.py via glob (post-<earlier development> refactor);
     # presence on disk means it will deploy. Verify file exists.
     assert os.path.isfile(os.path.join(PROJECT_ROOT, "skills", "autonomy.py"))
 
@@ -4180,7 +4180,7 @@ def _():
 
 @test("context_resolver: resolve_intent called in handle_message")
 def _():
-    # As of 2026-04-17, handle_message uses the unified resolve_intent()
+    # As of <earlier development>, handle_message uses the unified resolve_intent()
     # (not the legacy resolve_context_modules shim) so a single Haiku call
     # decides both context modules AND specialist tools.
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
@@ -4259,7 +4259,7 @@ def _():
 
 @test("tool_router: CORE_TOOLS has 4 tools")
 def _():
-    # search_vault moved to specialists 2026-04-17 to prevent over-triggering
+    # search_vault moved to specialists <earlier development> to prevent over-triggering
     # on conversational messages. Core is now the 4 truly-always-useful tools.
     from myalicia.skills.tool_router import CORE_TOOLS
     assert len(CORE_TOOLS) == 4, f"expected 4, got {len(CORE_TOOLS)}: {[t['name'] for t in CORE_TOOLS]}"
@@ -4283,7 +4283,7 @@ def _():
 
 @test("tool_router: search_vault NOT loaded for conversational messages")
 def _():
-    # Regression guard for the 2026-04-17 over-triggering fix. Affirmations,
+    # Regression guard for the <earlier development> over-triggering fix. Affirmations,
     # subjective-opinion requests, and short reactive phrases must NOT pull
     # search_vault into Sonnet's toolbox.
     from myalicia.skills.tool_router import resolve_tools
@@ -5316,7 +5316,7 @@ def _():
 
 @test("drawing_skill: manual /draw does NOT count against impulse cap")
 def _():
-    # Regression guard — 2026-04-20 ghost-entry bug. Manual /draw was
+    # Regression guard — <earlier development> ghost-entry bug. Manual /draw was
     # logged the same way as impulse drawings, so 9 manual calls at night
     # burned through the daily cap and starved Alicia's spontaneous voice
     # for a full day. Manual entries must be transparent to can_draw_now.
@@ -5399,7 +5399,7 @@ def _():
 
 @test("drawing_skill: can_draw_now uses LOCAL date, not UTC")
 def _():
-    # Regression guard — 2026-04-20 UTC-rollover-at-5-PM-Pacific bug.
+    # Regression guard — <earlier development> UTC-rollover-at-5-PM-Pacific bug.
     # Nine Sunday-evening drawings were charged against UTC Monday's
     # budget, starving lived-Monday impulses all day. "Today" must
     # mean what the user is living, not what Greenwich is living.
@@ -5728,7 +5728,7 @@ def _():
         assert s in content, f"drawing_archetypes.md missing stroke style {s}"
 
 
-# ─── Evening format variations (2026-04-19 evening_template_weights wiring) ──
+# ─── Evening format variations (<earlier development> evening_template_weights wiring) ──
 # Prior to this pass, evening_template_weights was a dead config key —
 # /improve was tuning weights that no code path read. These tests cover the
 # new EVENING_FORMATS + _pick_evening_format() dispatch and add a structural
@@ -5939,7 +5939,7 @@ def _():
         by_kind[v["kind"]] = by_kind.get(v["kind"], 0) + 1
     one_way = by_kind.get("one_way_edge", 0)
     unresolvable = by_kind.get("unresolvable", 0)
-    # Baselines ratcheted on 2026-04-22 after item #15 live finalize_all
+    # Baselines ratcheted on <earlier development> after item #15 live finalize_all
     # closed the corpus's 1,067 one-way edges → 0. Ratchet DOWNWARD only.
     # See tests/test_synthesis_finalizer_invariant.py for the authoritative ratchet.
     ONE_WAY_CEIL = 0
@@ -6453,14 +6453,14 @@ def _():
     )
 
 
-@test("hector_model + memory_skill: auto-extraction is wired (Phase 12.1)")
+@test("user_model + memory_skill: auto-extraction is wired (Phase 12.1)")
 def _():
     """Phase 12.1 — every kept memory extraction also auto-appends a learning
     to the the user-model with a keyword-classified dimension. Without this
     wiring, the learnings log only fills via /becoming learn (manual)."""
-    import myalicia.skills.hector_model as hm
+    import myalicia.skills.user_model as hm
     assert hasattr(hm, "classify_dimension"), (
-        "hector_model must export classify_dimension"
+        "user_model must export classify_dimension"
     )
     # Sanity-check classifier behavior at the smoke layer too
     assert hm.classify_dimension("workout this morning") == "body"
@@ -6470,8 +6470,8 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     mem_text = (repo_root / "skills" / "memory_skill.py").read_text(encoding="utf-8")
-    assert "from myalicia.skills.hector_model import" in mem_text, (
-        "memory_skill must import from hector_model for auto-extraction"
+    assert "from myalicia.skills.user_model import" in mem_text, (
+        "memory_skill must import from user_model for auto-extraction"
     )
     assert "_hm_classify_dimension" in mem_text, (
         "memory_skill must use classify_dimension on each kept extraction"
@@ -6487,7 +6487,7 @@ def _():
     )
 
 
-@test("hector_model: Phase 12.0 foundation is wired (becoming command + baseline + learnings)")
+@test("user_model: Phase 12.0 foundation is wired (becoming command + baseline + learnings)")
 def _():
     """Phase 12.0 establishes the the user-model: a baseline snapshot of who
     Alicia thought the user was at deploy time, plus an append-only learnings
@@ -6496,7 +6496,7 @@ def _():
     Phase 12.1+ will wire learnings into research scheduler, archetype EMA,
     and question generation. Without this foundation, none of those have
     a substrate to build on."""
-    import myalicia.skills.hector_model as hm
+    import myalicia.skills.user_model as hm
     for name in (
         "init_baseline",
         "get_active_baseline",
@@ -6509,7 +6509,7 @@ def _():
         "days_since_baseline",
         "render_becoming_dashboard",
     ):
-        assert hasattr(hm, name), f"hector_model must export {name}"
+        assert hasattr(hm, name), f"user_model must export {name}"
     # 10 canonical dimensions — small + stable
     assert len(hm.DIMENSIONS) == 10
     assert "identity" in hm.DIMENSIONS
@@ -6519,8 +6519,8 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from myalicia.skills.hector_model import" in alicia_text, (
-        "alicia.py must import from hector_model"
+    assert "from myalicia.skills.user_model import" in alicia_text, (
+        "alicia.py must import from user_model"
     )
     assert "async def cmd_becoming(" in alicia_text, (
         "alicia.py must define cmd_becoming handler"
@@ -8020,12 +8020,12 @@ def _():
     everything. With read-scoping, the conversation actually shapes how
     he sees his own arc."""
     import inspect
-    import myalicia.skills.hector_model as hm
+    import myalicia.skills.user_model as hm
 
     # 1. get_learnings accepts conversation_id kwarg
     sig = inspect.signature(hm.get_learnings)
     assert "conversation_id" in sig.parameters, (
-        "hector_model.get_learnings must accept conversation_id kwarg "
+        "user_model.get_learnings must accept conversation_id kwarg "
         "(Phase 16.2)"
     )
 
@@ -8051,7 +8051,7 @@ def _():
     )
 
     # 4. Banner indicating scope appears in the dashboard render
-    hm_text = (repo_root / "skills" / "hector_model.py").read_text(encoding="utf-8")
+    hm_text = (repo_root / "skills" / "user_model.py").read_text(encoding="utf-8")
     assert "scoped to conversation" in hm_text or "scoped to:" in hm_text, (
         "render_becoming_dashboard must surface a scope banner so the "
         "view is unambiguous about whether it's filtered"
@@ -8131,7 +8131,7 @@ def _():
         "skills/thread_puller.py",
         "skills/meta_synthesis.py",
         "skills/multi_channel.py",
-        "skills/hector_model.py",
+        "skills/user_model.py",
         "skills/dimension_research.py",
         "skills/loops_dashboard.py",
         "skills/response_capture.py",
@@ -8434,8 +8434,8 @@ def _():
     ):
         assert hasattr(dr, name), f"dimension_research must export {name}"
 
-    # _ESCALATION_TOPICS must cover every canonical hector_model dimension
-    from myalicia.skills.hector_model import DIMENSIONS as HM_DIMS
+    # _ESCALATION_TOPICS must cover every canonical user_model dimension
+    from myalicia.skills.user_model import DIMENSIONS as HM_DIMS
     for d in HM_DIMS:
         assert d in dr._ESCALATION_TOPICS, (
             f"_ESCALATION_TOPICS missing entry for {d!r}"
@@ -8480,7 +8480,7 @@ def _():
 
     # Frames must cover every dimension — Haiku needs the framing hint
     # to compose grounded questions instead of generic ones.
-    from myalicia.skills.hector_model import DIMENSIONS as HM_DIMS
+    from myalicia.skills.user_model import DIMENSIONS as HM_DIMS
     for d in HM_DIMS:
         assert d in dr._DIMENSION_FRAMES, (
             f"_DIMENSION_FRAMES missing entry for dimension '{d}'"
@@ -8623,7 +8623,7 @@ def _():
     """Phase 13.9 closes the gap between the outer-synthesis loop and the
     the user-model arc. After build_meta_synthesis writes the new file, it
     runs a follow-up Sonnet call that extracts dimension-tagged learnings
-    ABOUT HECTOR (not about the idea) and appends them to hector_learnings
+    ABOUT HECTOR (not about the idea) and appends them to user_learnings
     via append_learning. Provenance is encoded as 'meta_synthesis:<parent>'
     so /becoming can show the bridge origin."""
     from pathlib import Path
@@ -8649,9 +8649,9 @@ def _():
         "(not just imported elsewhere) — otherwise the cross-loop bridge "
         "doesn't fire on scheduled meta-synthesis builds"
     )
-    # Bridge must use hector_model.append_learning (the canonical writer)
+    # Bridge must use user_model.append_learning (the canonical writer)
     assert "append_learning" in src_text, (
-        "bridge must call hector_model.append_learning"
+        "bridge must call user_model.append_learning"
     )
     # Source-tag convention: provenance string starts with 'meta_synthesis:'
     assert "meta_synthesis:" in src_text, (

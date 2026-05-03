@@ -8,7 +8,7 @@ The system tracks who the user was vs who he's becoming. Three artefacts:
      patterns/insights/preferences/concepts at the moment Phase 12 ships.
      The reference frame against which the delta is computed.
 
-  2. Learnings log (~/alicia/memory/hector_learnings.jsonl) — append-only
+  2. Learnings log (~/alicia/memory/user_learnings.jsonl) — append-only
      record of every new insight Alicia derives about the user since the
      baseline. Each entry tagged with a dimension + confidence + source.
 
@@ -50,7 +50,7 @@ from myalicia.config import config
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-log = logging.getLogger("alicia.hector_model")
+log = logging.getLogger("alicia.user_model")
 
 
 # ── Config ──────────────────────────────────────────────────────────────────
@@ -65,7 +65,7 @@ MEMORY_DIR = Path(os.environ.get(
 BASELINES_DIR = VAULT_ROOT / "Alicia" / "Self" / "Baselines"
 
 # Learnings log lives in agent memory — it's append-only operational state.
-LEARNINGS_LOG = MEMORY_DIR / "hector_learnings.jsonl"
+LEARNINGS_LOG = MEMORY_DIR / "user_learnings.jsonl"
 
 # Files that contribute to a baseline snapshot. Each is a section of
 # Alicia's understanding; the baseline copies the *current* contents into a
@@ -256,7 +256,7 @@ def init_baseline(label: Optional[str] = None,
         f"**Captured at:** {now_utc.isoformat()}",
         "",
         "*Phase 12 reference frame. Future learnings get logged in "
-        "`hector_learnings.jsonl`; the delta between this baseline and "
+        "`user_learnings.jsonl`; the delta between this baseline and "
         f"the accumulated learnings is the arc of {USER_NAME}'s becoming.*",
         "",
         "---",

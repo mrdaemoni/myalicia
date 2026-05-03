@@ -1079,7 +1079,7 @@ def record_archetype_surfaced(archetype: str):
 ARCHETYPE_LOG_PATH = os.path.join(MEMORY_DIR, "archetype_log.jsonl")
 ARCHETYPE_EFFECTIVENESS_PATH = os.path.join(MEMORY_DIR, "archetype_effectiveness.json")
 
-# Knobs — confirmed with the user on 2026-04-18.
+# Knobs — confirmed with the user on <earlier development>.
 ARCHETYPE_EMA_HALF_LIFE_DAYS = 14
 ARCHETYPE_MIN_ATTRIBUTIONS = 5
 ARCHETYPE_CLAMP_LOW = 0.7

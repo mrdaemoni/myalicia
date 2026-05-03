@@ -9,7 +9,7 @@ for patterns the user hasn't yet named.
 
 This module fills that gap. A daily 04:00 scan reads:
   - Recent captures (writing/Responses + writing/Captures, last 14d)
-  - Recent the user-model learnings (memory/hector_learnings.jsonl)
+  - Recent the user-model learnings (memory/user_learnings.jsonl)
   - Recent meta-syntheses (memory/meta_synthesis_log.jsonl)
 
 …and asks Sonnet to identify themes that REPEAT across these sources
@@ -139,7 +139,7 @@ def _gather_stream(within_days: int = SCAN_LOOKBACK_DAYS) -> list[dict]:
 
     # Learnings
     try:
-        from myalicia.skills.hector_model import get_learnings
+        from myalicia.skills.user_model import get_learnings
         for L in (get_learnings(since_days=within_days) or []):
             claim = (L.get("claim") or "").strip()
             if claim:

@@ -39,8 +39,8 @@ from myalicia.skills.synthesis_finalizer import check_invariant, check_lived_inv
 # immediately because it means a new synthesis writer skipped the Finalizer.
 #
 # History:
-#   2026-04-22 Phase 11.0 initial: one_way=1067, unresolvable=220
-#   2026-04-22 Phase 11.0 item #15: live finalize_all closed 1067 → 0,
+#   <earlier development> Phase 11.0 initial: one_way=1067, unresolvable=220
+#   <earlier development> Phase 11.0 item #15: live finalize_all closed 1067 → 0,
 #              flipped ENFORCE_STRICT_ONE_WAY = True.
 #              Unresolvables held at 220 pending Phase B manual repair.
 

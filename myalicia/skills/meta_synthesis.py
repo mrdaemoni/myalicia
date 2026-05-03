@@ -538,7 +538,7 @@ def bridge_meta_to_hector_model(
     """Bridge the new meta-synthesis to the the user-model.
 
     1. Sonnet extracts up to 3 dimension-tagged learnings from `body`.
-    2. Each learning is appended to hector_learnings.jsonl with source
+    2. Each learning is appended to user_learnings.jsonl with source
        set to 'meta_synthesis:<parent_title>' so /becoming can show
        provenance.
 
@@ -548,12 +548,12 @@ def bridge_meta_to_hector_model(
     if not body:
         return 0
     try:
-        from myalicia.skills.hector_model import (
+        from myalicia.skills.user_model import (
             append_learning as _hm_append_learning,
             DIMENSIONS as HM_DIMENSIONS,
         )
     except Exception as e:
-        log.debug(f"bridge_meta_to_hector_model: hector_model import failed: {e}")
+        log.debug(f"bridge_meta_to_hector_model: user_model import failed: {e}")
         return 0
 
     learnings = _extract_learnings_from_meta(body, parent_title)
@@ -675,7 +675,7 @@ def build_meta_synthesis(parent_title: str) -> Optional[Path]:
     # The meta-synthesis already distilled the conversation; another small
     # Sonnet call surfaces the parts of that distillation that are facts
     # ABOUT the user (not facts about the idea). Each extraction lands in
-    # hector_learnings.jsonl with source="meta_synthesis:<parent>" so the
+    # user_learnings.jsonl with source="meta_synthesis:<parent>" so the
     # provenance is traceable in /becoming.
     try:
         n_bridged = bridge_meta_to_hector_model(

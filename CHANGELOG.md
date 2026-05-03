@@ -29,7 +29,7 @@ Built on [humorphism](https://humorphism.com), [Garry Tan](https://x.com/garryta
 ### Known limitations
 
 - `alicia.py` is still a single 7951-line file. Splitting it into `core/` modules is the major work for v0.2.0 — see [REFACTORING.md](./REFACTORING.md).
-- Tests folder (`tests/`) from the original codebase is gitignored awaiting its own sanitization pass.
+- Tests folder (`tests/`) included with the package, sanitized. Some tests require API keys or runtime state and are best run after a full `myalicia init`.
 - Apex domain `myalicia.com` redirects to `www.myalicia.com` via Namecheap; full apex HTTPS requires moving DNS to Cloudflare (planned).
 
 [0.1.0]: https://github.com/mrdaemoni/myalicia/releases/tag/v0.1.0

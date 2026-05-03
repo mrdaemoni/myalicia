@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for skills/hector_model.py — Phase 12.0 foundation."""
+"""Unit tests for skills/user_model.py — Phase 12.0 foundation."""
 from __future__ import annotations
 
 import importlib
@@ -49,9 +49,9 @@ def _seed_memory_files(mem: Path) -> None:
 
 
 def _reload():
-    if "skills.hector_model" in sys.modules:
-        importlib.reload(sys.modules["skills.hector_model"])
-    import myalicia.skills.hector_model as hm
+    if "skills.user_model" in sys.modules:
+        importlib.reload(sys.modules["skills.user_model"])
+    import myalicia.skills.user_model as hm
     return hm
 
 
@@ -68,7 +68,7 @@ def test_module_exports() -> None:
         "days_since_baseline", "render_becoming_dashboard",
         "BASELINE_SOURCES",
     ):
-        assert hasattr(hm, name), f"hector_model must export {name}"
+        assert hasattr(hm, name), f"user_model must export {name}"
 
 
 def test_init_baseline_creates_snapshot_with_all_sources() -> None:
@@ -143,7 +143,7 @@ def test_append_learning_writes_jsonl_entry() -> None:
     assert entry["confidence"] == 0.85
     assert entry["source"] == "memory_skill"
     # Persisted to disk
-    log_path = Path(os.environ["ALICIA_MEMORY_DIR"]) / "hector_learnings.jsonl"
+    log_path = Path(os.environ["ALICIA_MEMORY_DIR"]) / "user_learnings.jsonl"
     assert log_path.exists()
     line = log_path.read_text(encoding="utf-8").strip()
     parsed = json.loads(line)
@@ -353,7 +353,7 @@ def test_render_becoming_dashboard_shows_arc() -> None:
                        now=now - timedelta(days=3))
     out = hm.render_becoming_dashboard(now=now)
     # Baseline + days-since
-    assert "5 days ago" in out  # 2026-04-22 → 2026-04-27
+    assert "5 days ago" in out  # <earlier development> → <earlier development>
     # Totals
     assert "Learnings logged since baseline:" in out
     # Top moving lists practice and knowledge
@@ -401,4 +401,4 @@ if __name__ == "__main__":
     if failed:
         print(f"{failed} test(s) failed")
         sys.exit(1)
-    print("All hector_model tests passed.")
+    print("All user_model tests passed.")

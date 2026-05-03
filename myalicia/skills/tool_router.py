@@ -823,7 +823,7 @@ def _resolve_note_for_reading(query: str) -> tuple:
 
     # ── Fallback: Accept lower-confidence name matches ───────────────────
     #
-    # 2026-04-18: tightened after 'something by Pirsig' → 'How to criticize
+    # <earlier development>: tightened after 'something by Pirsig' → 'How to criticize
     # something you disagree with' misfire. The old fallback accepted ANY
     # fuzzy match, so the filler word 'something' in a no-real-content query
     # produced a confident-sounding wrong pick. Two guards now:
@@ -975,7 +975,7 @@ def _search_by_author(author: str, topic: str = "") -> tuple:
 
     scored.sort(key=lambda x: x[0], reverse=True)
 
-    # Stub filter (2026-04-18): walk down the ranked list until we find a
+    # Stub filter (<earlier development>): walk down the ranked list until we find a
     # hit whose file has enough speakable content to read aloud. A 30-byte
     # author stub like /Authors/Lila.md can top the list on literal-title
     # match but produces a 2-second voice note — we'd rather take the
@@ -1516,7 +1516,7 @@ def execute_tool(tool_name: str, tool_input: dict) -> dict:
             name = (tool_input.get("name") or "").strip().lower()
             try:
                 if name == "becoming":
-                    from myalicia.skills.hector_model import render_becoming_dashboard
+                    from myalicia.skills.user_model import render_becoming_dashboard
                     text = render_becoming_dashboard()
                 elif name == "season":
                     from myalicia.skills.season_dashboard import render_season_dashboard
@@ -1703,7 +1703,7 @@ def execute_tool(tool_name: str, tool_input: dict) -> dict:
 # Core tools cover ~80% of interactions. Specialists load based on message intent.
 
 CORE_TOOL_NAMES = {
-    # search_vault was moved to specialists (2026-04-17) to stop over-triggering
+    # search_vault was moved to specialists (<earlier development>) to stop over-triggering
     # on conversational/emotional messages. It only loads now when the message
     # contains explicit search-intent keywords. Conversation is the default.
     "read_vault_note", "remember", "recall_memory", "clarify",

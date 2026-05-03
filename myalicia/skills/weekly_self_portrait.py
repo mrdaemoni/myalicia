@@ -270,7 +270,7 @@ def _gather_week_signals(
     # is the conversation-scoped one — most informative for the
     # portrait's framing.
     try:
-        from myalicia.skills.hector_model import (
+        from myalicia.skills.user_model import (
             find_dimensions_movement, find_thin_dimensions, get_learnings,
         )
         moving = find_dimensions_movement() or []
@@ -676,7 +676,7 @@ def _gather_span_signals(*, days: int = 30) -> dict:
         log.debug(f"span noticings gather failed: {e}")
 
     try:
-        from myalicia.skills.hector_model import (
+        from myalicia.skills.user_model import (
             find_dimensions_movement, find_thin_dimensions, get_learnings,
         )
         moving = find_dimensions_movement() or []

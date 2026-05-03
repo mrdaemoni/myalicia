@@ -132,7 +132,7 @@ from myalicia.skills.meta_synthesis import (
 )
 from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
 from myalicia.skills.loops_dashboard import render_loops_dashboard
-from myalicia.skills.hector_model import (
+from myalicia.skills.user_model import (
     render_becoming_dashboard,
     init_baseline as init_hector_baseline,
     get_active_baseline as get_active_hector_baseline,
@@ -1259,7 +1259,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, tex
                 # Capture every message_id we emit for this read-aloud —
                 # intro text + each voice note — so emoji reactions on ANY
                 # of them map back to the same episode via reply_index.jsonl.
-                # Before 2026-04-18 only tool-reply text messages were tracked,
+                # Before <earlier development> only tool-reply text messages were tracked,
                 # so reacting on the audio silently missed the scoring path.
                 read_aloud_msg_ids: list[int] = []
                 intro_sent = await safe_reply_md(
@@ -1529,7 +1529,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, tex
             else:
                 # Short result — have Sonnet format it naturally.
                 #
-                # 2026-04-18 leak fix: the old prompt wrapped the tool output
+                # <earlier development> leak fix: the old prompt wrapped the tool output
                 # in "[Tool 'X' returned: ...]" text, which Sonnet then echoed
                 # back verbatim inside its reply (e.g. `Tool 'read_vault_note'
                 # returned: # Lila-440...`). That exposed tool-call syntax to
@@ -1561,7 +1561,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, tex
                 # Safety net: if any tool-call syntax leaked through anyway,
                 # strip it. Covers both the old "[Tool 'X' returned: ...]"
                 # bracket form and the naked "Tool 'X' returned: ..." form
-                # Sonnet emitted in the 2026-04-18 regression.
+                # Sonnet emitted in the <earlier development> regression.
                 reply = re.sub(
                     r"\[?Tool\s+'[^']+'\s+returned:\s*",
                     "",
@@ -1963,7 +1963,7 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Gap 3 fix: Record structured voice metadata for analysis
         voice_tags = [t.strip("[]") for t in [speech_tag, duration_tag] if t]
 
-        # ── Gap 2 Phase B (2026-04-18): librosa prosody displacement ─────
+        # ── Gap 2 Phase B (<earlier development>): librosa prosody displacement ─────
         # Run ~30-80ms acoustic analysis on the downloaded .ogg. If a
         # prosody tag fires with confidence (whispered/forceful/tender/
         # hesitant), it DISPLACES the WPM tag. The acoustic signal is
@@ -2000,7 +2000,7 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
             daemon=True,
         ).start()
 
-        # ── Gap 2 Phase C (2026-04-19): background emotion classification ─
+        # ── Gap 2 Phase C (<earlier development>): background emotion classification ─
         # Full speech-emotion model (wav2vec2-base-superb-er, 4-class
         # neu/hap/sad/ang) runs in a daemon thread IN PARALLEL with the
         # LLM call. It never gates or delays the reply. Output lands in

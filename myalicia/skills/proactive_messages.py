@@ -57,7 +57,7 @@ _DEFAULT_EVENING_WEIGHTS = {
 # Keys must match GREETING_FORMATS exactly — the pre-2026-04 config shipped
 # with "energizing"/"reflective"/"tactical", which never matched the actual
 # format list (warm_short/briefing/question_only/reflection). Caught by the
-# dead-config guardrail smoke test on 2026-04-19.
+# dead-config guardrail smoke test on <earlier development>.
 _DEFAULT_MORNING_WEIGHTS = {
     "warm_short":    0.35,
     "briefing":      0.25,

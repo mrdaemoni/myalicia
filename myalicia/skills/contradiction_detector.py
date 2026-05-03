@@ -123,7 +123,7 @@ _TENSION_CUES: tuple[str, ...] = (
     "in tension with",
     "tension between",
     # Phrase forms of "paradox" — bare keyword removed (over-fired in
-    # 2026-04-25 dogfood: 8 of 14 noise drafts were system self-reflection
+    # <earlier development> dogfood: 8 of 14 noise drafts were system self-reflection
     # like "successfully captured the paradox of..." which isn't a real
     # the user tension — it's the system patting itself on the back).
     "the paradox is",
@@ -577,7 +577,7 @@ def _rule_detect(
             continue
 
         # No active match → propose a draft only when ALL precision filters
-        # agree. Phase 11.3 hardening (2026-04-25 dogfood):
+        # agree. Phase 11.3 hardening (<earlier development> dogfood):
         #   1. Reflexion-source signals never spawn drafts (system self-talk
         #      isn't a the user tension).
         #   2. The text must contain a tightened tension cue AND not contain
@@ -726,7 +726,7 @@ def apply_drafts(
     # Append drafts block — idempotent header, append-only body.
     # Dedup against existing drafts by Evidence A prefix so daily re-runs
     # don't regenerate the same draft when the underlying signal hasn't
-    # changed (Phase 11.3 — 2026-04-25 dogfood produced 4 dupes across
+    # changed (<earlier development> produced 4 dupes across
     # day-23/day-24).
     drafts_appended = 0
     drafts_skipped_duplicate = 0

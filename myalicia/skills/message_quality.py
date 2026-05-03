@@ -73,8 +73,8 @@ def get_resonance_priorities() -> list[dict]:
 
     # Parse resonance.md format: expected to have entries like:
     # ## Note Title
-    # Read: 2024-04-10, 2024-04-11, 2024-04-12
-    # Referenced: 2024-04-09
+    # Read: <earlier development>, <earlier development>, <earlier development>
+    # Referenced: <earlier development>
 
     priorities = {}
     lines = content.split("\n")

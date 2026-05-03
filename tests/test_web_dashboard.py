@@ -114,14 +114,14 @@ def _():
         assert "summary" in s
 
 
-@test("list_alicia_skills: hector_model lands in 'Outer loops' bucket")
+@test("list_alicia_skills: user_model lands in 'Outer loops' bucket")
 def _():
     from myalicia.skills.web_dashboard import list_alicia_skills
     skills = list_alicia_skills()
-    hm = next((s for s in skills if s["module"] == "hector_model"), None)
-    assert hm is not None, "hector_model not found"
+    hm = next((s for s in skills if s["module"] == "user_model"), None)
+    assert hm is not None, "user_model not found"
     assert "Outer loops" in hm["bucket"], (
-        f"hector_model categorized as {hm['bucket']!r}; expected 'Outer loops'"
+        f"user_model categorized as {hm['bucket']!r}; expected 'Outer loops'"
     )
 
 
@@ -279,8 +279,8 @@ def _():
 @test("Phase 15.0h github_url: builds correctly encoded URLs")
 def _():
     from myalicia.skills.web_dashboard import github_url
-    assert github_url("skills/hector_model.py") == \
-        "https://github.com/mrdaemoni/alicia/blob/main/skills/hector_model.py"
+    assert github_url("skills/user_model.py") == \
+        "https://github.com/mrdaemoni/alicia/blob/main/skills/user_model.py"
     assert github_url("PIPELINE_AUDIT.md") == \
         "https://github.com/mrdaemoni/alicia/blob/main/PIPELINE_AUDIT.md"
     # Path with spaces gets URL-encoded

@@ -10,7 +10,7 @@ plane of life. Phase 12.2 closes the loop: the gap becomes the seed for
 a targeted proactive question.
 
 This module:
-  1. Identifies thin dimensions (find_thin_dimensions from hector_model).
+  1. Identifies thin dimensions (find_thin_dimensions from user_model).
   2. Picks one that hasn't been asked-about in the last 7 days.
   3. Asks Haiku to compose a single warm question targeted at that
      dimension, in Alicia's voice.
@@ -137,12 +137,12 @@ def pick_thin_dimension(
          which works as a stable rotation).
 
     Returns None when:
-      - hector_model isn't importable
+      - user_model isn't importable
       - no dimensions are thin (everything has recent learnings)
       - all thin dimensions are on cooldown
     """
     try:
-        from myalicia.skills.hector_model import find_thin_dimensions
+        from myalicia.skills.user_model import find_thin_dimensions
     except Exception as e:
         log.debug(f"pick_thin_dimension: import failed: {e}")
         return None
@@ -479,7 +479,7 @@ def run_dimension_research_scan() -> dict:
               "escalation_path": str|None}
     """
     try:
-        from myalicia.skills.hector_model import find_thin_dimensions
+        from myalicia.skills.user_model import find_thin_dimensions
         thin = find_thin_dimensions(stale_after_days=14)
     except Exception as e:
         log.warning(f"run_dimension_research_scan: thin lookup failed: {e}")

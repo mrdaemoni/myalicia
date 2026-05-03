@@ -252,7 +252,7 @@ _SKILL_BUCKETS = [
         "way_of_being",
     ]),
     (f"Outer loops ({USER_NAME} + Our relationship)", [
-        "hector_model", "meta_synthesis", "thread_puller",
+        "user_model", "meta_synthesis", "thread_puller",
         "dimension_research", "multi_channel", "multichannel_dashboard",
         "loops_dashboard", "person_diarization",
     ]),
@@ -388,8 +388,8 @@ def assemble_timeline() -> list[dict]:
             text = PIPELINE_AUDIT_PATH.read_text(encoding="utf-8")
             # Match the header line that includes a date. Two formats
             # have appeared over time:
-            #   "## Phase 11.1: Title — 2026-04-25"          (old style)
-            #   "## Phase 17.5: Title (2026-04-26 weekend)"  (newer style)
+            #   "## Phase 11.1: Title — <earlier development>"          (old style)
+            #   "## Phase 17.5: Title (<earlier development> weekend)"  (newer style)
             # Accept both so every phase reaches the dashboard timeline.
             header_re = re.compile(
                 r"^##\s+Phase\s+(.+?)\s*[—\-(\(]\s*(\d{4}-\d{2}-\d{2})",
@@ -852,7 +852,7 @@ def _hector_mind() -> dict:
     """The 10-dimension /becoming arc."""
     out: dict = {}
     try:
-        from myalicia.skills.hector_model import (
+        from myalicia.skills.user_model import (
             DIMENSIONS, get_active_baseline, get_learnings,
             compute_dimension_counts, find_thin_dimensions,
             days_since_baseline,
@@ -1171,7 +1171,7 @@ def compute_pinned_card() -> dict:
         pass
     # Priority 3: thin the user dimension
     try:
-        from myalicia.skills.hector_model import find_thin_dimensions
+        from myalicia.skills.user_model import find_thin_dimensions
         thin = find_thin_dimensions(stale_after_days=14) or []
         if thin:
             out["focus"] = (
@@ -1342,7 +1342,7 @@ def compute_today_deltas() -> dict:
         pass
     # Learnings today
     try:
-        from myalicia.skills.hector_model import get_learnings
+        from myalicia.skills.user_model import get_learnings
         for L in (get_learnings(since_days=1) or []):
             out["learnings"] += 1
     except Exception:

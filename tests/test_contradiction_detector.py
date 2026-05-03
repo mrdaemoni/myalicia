@@ -157,7 +157,7 @@ def test_rule_detect_drafts_on_tension_cue_only() -> None:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# Phase 11.3 — false-positive regression tests (2026-04-25 dogfood)
+# Phase 11.3 — false-positive regression tests (<earlier development> dogfood)
 # ═══════════════════════════════════════════════════════════════════════════
 # 14 noise drafts in 3 days surfaced 3 categories of false positive. Each
 # below is a concrete signal pulled from the live ledger that previously
@@ -494,7 +494,7 @@ if __name__ == "__main__":
         test_detect_lineage_unused,
         test_mark_lineage_unused_is_idempotent,
         test_run_daily_pass_dry_run_writes_nothing,
-        # Phase 11.3 — false-positive regressions (2026-04-25 dogfood)
+        # Phase 11.3 — false-positive regressions (<earlier development> dogfood)
         test_reflexion_source_never_drafts,
         test_system_self_praise_does_not_draft,
         test_user_affirmation_does_not_draft,

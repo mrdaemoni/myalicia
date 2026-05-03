@@ -1,5 +1,6 @@
 """
-myalicia CLI — the entry point users hit after `pip install myalicia`.
+myalicia CLI — the entry point installed when you run `pip install -e .`
+(or `pip install myalicia` once we're on PyPI in v0.2).
 
 Subcommands:
     init    — guided setup that teaches the three loops as it configures them

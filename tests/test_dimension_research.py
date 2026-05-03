@@ -3,7 +3,7 @@
 Unit tests for skills/dimension_research.py.
 
 Sandbox-friendly: log path is rerouted to a tmpfile per test. The
-hector_model.find_thin_dimensions function is monkey-patched to control
+user_model.find_thin_dimensions function is monkey-patched to control
 which dimensions appear thin without needing a real baseline.
 
 Haiku composition (compose_dimension_question) requires a live API call
@@ -65,9 +65,9 @@ def _setup_tmp_log(tmpdir: str) -> str:
 
 
 def _patch_thin(monkey_thin: list[str]) -> callable:
-    """Patch hector_model.find_thin_dimensions to return `monkey_thin`.
+    """Patch user_model.find_thin_dimensions to return `monkey_thin`.
     Returns a restore callable."""
-    import myalicia.skills.hector_model as hm
+    import myalicia.skills.user_model as hm
     original = hm.find_thin_dimensions
     hm.find_thin_dimensions = lambda **kw: list(monkey_thin)
     return lambda: setattr(hm, "find_thin_dimensions", original)
@@ -398,14 +398,14 @@ def _():
             restore()
 
 
-@test("_DIMENSION_FRAMES covers every canonical hector_model dimension")
+@test("_DIMENSION_FRAMES covers every canonical user_model dimension")
 def _():
     from myalicia.skills.dimension_research import _DIMENSION_FRAMES
-    from myalicia.skills.hector_model import DIMENSIONS as HM_DIMENSIONS
+    from myalicia.skills.user_model import DIMENSIONS as HM_DIMENSIONS
     missing = [d for d in HM_DIMENSIONS if d not in _DIMENSION_FRAMES]
     assert not missing, (
         f"_DIMENSION_FRAMES missing entries for: {missing}. "
-        f"All hector_model dimensions must have a Haiku framing hint."
+        f"All user_model dimensions must have a Haiku framing hint."
     )
 
 

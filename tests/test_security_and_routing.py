@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 # ── Test against production's classifier directly ────────────────────────────
 # Previously this file recreated SECURITY_KEYWORDS locally and tests passed
-# while production behaved differently. The 2026-04-25 dogfood incident — a
+# while production behaved differently. The <earlier development> dogfood incident — a
 # reflective L1 message classified as L4 because it contained "wired" — is
 # exactly that shadow-list trap, so we now import from alicia.py.
 #
@@ -121,7 +121,7 @@ class TestSecurityClassification:
         assert classify_security_level("SEND EMAIL to someone") == 3
         assert classify_security_level("DELETE all the things") == 4
 
-    # ── False-positive regressions (caught 2026-04-25) ────────────────────
+    # ── False-positive regressions (caught <earlier development>) ────────────────────
 
     def test_wired_does_not_trigger_l4(self):
         """Regression: 'wired' contains the substring 'wire' but is not a

@@ -1,0 +1,82 @@
+# ── Python ────────────────────────────────────────────
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+build/
+dist/
+*.egg
+
+# ── Environment & secrets ─────────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+token.json
+token.pickle
+
+# ── Logs & runtime data ──────────────────────────────
+logs/
+*.log
+
+# ── Memory (per-instance personal data; never commit) ─
+memory/
+
+# ── Generated indexes & caches ────────────────────────
+chroma_index/
+chromadb/
+*.index
+voice_cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── OS files ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDE ──────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Backups & retired files ──────────────────────────
+.backups/
+*.RETIRED
+*.backup.*.py
+
+# ── Legacy private code awaiting sanitization ────────
+# These files were carried over from the original private codebase
+# and still contain hardcoded paths and personal references. They
+# are kept locally for the extraction work and will be added to the
+# repo file-by-file as each is sanitized. Do not remove these
+# lines until the corresponding file passes the sanitization check.
+/alicia.py
+/skills/
+/tests/
+/bin/
+/config/
+/data/
+/docs/
+/scripts/
+/.claude/
+/gmail_auth.py
+/deploy_safe.sh
+/ALICIA.md
+/ALICIA_DEPLOYMENT_CHECKLIST.md
+/ALICIA_ONTOLOGY.md
+/INSTALL_PDF.md
+/LETHAL_TRIFECTA_AUDIT.md
+/NEW_MODULE_CHECKLIST.md
+/PIPELINE_AUDIT.md
+/REMOTE_ACCESS.md
+/SKILL_MD_PATCH_2026-04-26.md
+
+# ── Internal working docs (kept local until ready to publish) ──
+/EXTRACTION_PLAN.md

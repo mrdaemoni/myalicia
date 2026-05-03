@@ -1,0 +1,67 @@
+# Alicia — shipped defaults.
+#
+# These values populate a fresh install. `alicia init` writes a personalized
+# copy of this file to ~/.alicia/config.yaml that overrides anything here.
+# Environment variables (ALICIA_<SECTION>_<KEY>) override both.
+#
+# This file is read-only at runtime. Don't edit it. Edit ~/.alicia/config.yaml.
+
+user:
+  name: friend
+  handle: user
+  timezone: UTC
+
+vault:
+  root: ~/alicia-vault          # where the user's knowledge lives (typically an Obsidian vault)
+  inner: Alicia                 # subfolder where Alicia writes her own notes
+  bridge: Bridge                # surfacing queue / inbox between user and Alicia
+  wisdom: Wisdom                # synthesis output (Notice + Know loops write here)
+  self_dir: Self                # archetype + profile data
+
+archetype:
+  name: curious-builder         # one of the shipped examples in examples/archetypes/
+  path: null                    # set to a YAML path to use a custom archetype
+
+# The three surfaces through which Alicia can be reached.
+# At least one must be enabled. CLI is enabled by default for testing.
+surfaces:
+  telegram:
+    enabled: false
+    bot_token_env: TELEGRAM_BOT_TOKEN
+    allowed_chat_ids: []
+    emoji_reactions: true       # one-tap feedback that feeds Notice and Know
+  claude_code:
+    enabled: false
+  cli:
+    enabled: true
+
+# Which Anthropic model drives each relationship loop.
+# Cheap by default — turn the dial up only where depth matters.
+models:
+  listen: claude-haiku-4-5-20251001     # Listen loop — conversation, seconds
+  notice: claude-sonnet-4-6             # Notice loop — synthesis, minutes-hours
+  know: claude-opus-4-6                 # Know loop — autonomous reflection, daily-weekly
+  api_key_env: ANTHROPIC_API_KEY
+
+voice:
+  enabled: false
+  tts_engine: edge-tts
+  voice_id: en-US-JennyNeural
+
+# Weekly podcast generation from your vault — the Notice loop in audio form.
+podcast:
+  enabled: false
+  schedule_cron: "0 9 * * 0"    # Sunday 9 AM
+  target_minutes: 10
+
+# Cadences for the three relationship loops. Disable a loop to silence it
+# entirely (useful for first-time setup or low-volume periods).
+loops:
+  listen_enabled: true
+  notice_enabled: true
+  know_enabled: true
+  morning_message_time: "06:30"   # Notice loop — morning briefing
+  midday_message_time: "12:30"    # Notice loop — midday nudge
+  evening_reflection_time: "21:00" # Notice loop — evening reflection
+  weekly_synthesis_day: Sunday    # Know loop — weekly deep pass
+  weekly_synthesis_time: "20:00"

@@ -348,19 +348,19 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py")) as f:
         src = f.read()
-    assert "from skills.graph_intelligence import" in src
+    assert "from myalicia.skills.graph_intelligence import" in src
 
 @test("alicia.py imports analyze_trajectories")
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py")) as f:
         src = f.read()
-    assert "from skills.trajectory import analyze_trajectories" in src
+    assert "from myalicia.skills.trajectory import analyze_trajectories" in src
 
 @test("alicia.py imports append_weekly_snapshot")
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py")) as f:
         src = f.read()
-    assert "from skills.vault_metrics import append_weekly_snapshot" in src
+    assert "from myalicia.skills.vault_metrics import append_weekly_snapshot" in src
 
 @test("handle_message has 10-step pipeline")
 def _():
@@ -899,8 +899,8 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         src = f.read()
-    assert "from skills.agent_triggers import" in src, (
-        "alicia.py must import from skills.agent_triggers"
+    assert "from myalicia.skills.agent_triggers import" in src, (
+        "alicia.py must import from myalicia.skills.agent_triggers"
     )
     assert "agent_trigger" in src and "agent_is_running" in src, (
         "alicia.py must expose agent_trigger / agent_is_running aliases for /tasks etc."
@@ -1028,7 +1028,7 @@ def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         src = f.read()
     # Import present
-    assert "from skills.reaction_scorer import" in src, (
+    assert "from myalicia.skills.reaction_scorer import" in src, (
         "alicia.py must import reaction_scorer"
     )
     assert "track_reply_for_reaction" in src, (
@@ -1213,7 +1213,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         src = f.read()
-    assert "from skills.daily_signal import" in src, (
+    assert "from myalicia.skills.daily_signal import" in src, (
         "alicia.py must import daily_signal writers"
     )
     assert "signal_record_tool_call(" in src, (
@@ -2295,7 +2295,7 @@ def t():
 
 @test("prosody_calibration: hard-coded defaults snapshot captured")
 def t():
-    from skills import voice_intelligence as vi
+    from myalicia.skills import voice_intelligence as vi
     assert hasattr(vi, "_HARDCODED_DEFAULTS"), (
         "voice_intelligence must snapshot PROSODY_* constants at import"
     )
@@ -2354,7 +2354,7 @@ def t():
         rebuild_prosody_baseline, load_calibrated_thresholds,
         CLAMP_PCT, THRESHOLD_MAP,
     )
-    from skills import voice_intelligence as vi
+    from myalicia.skills import voice_intelligence as vi
 
     d = tempfile.mkdtemp(prefix="b2_")
     log = os.path.join(d, "log.jsonl")
@@ -2403,7 +2403,7 @@ def t():
 @test("voice_intelligence: _maybe_reload_calibration exists and applies thresholds")
 def t():
     import json, os
-    from skills import voice_intelligence as vi
+    from myalicia.skills import voice_intelligence as vi
 
     assert callable(getattr(vi, "_maybe_reload_calibration", None)), (
         "voice_intelligence must expose _maybe_reload_calibration"
@@ -2552,7 +2552,7 @@ def t():
     import json, os, tempfile
     from myalicia.skills.emotion_model import record_emotion_entry, EMOTION_LOG_PATH
     # Redirect log to a temp file to avoid polluting real memory/
-    from skills import emotion_model as em
+    from myalicia.skills import emotion_model as em
     real_path = em.EMOTION_LOG_PATH
     with tempfile.TemporaryDirectory() as td:
         tmp_path = os.path.join(td, "emotion_log.jsonl")
@@ -2618,8 +2618,8 @@ def t():
 @test("alicia.py threads run_emotion_async in handle_voice (background)")
 def t():
     src = open("alicia.py").read()
-    assert "from skills.emotion_model import" in src, (
-        "alicia.py must import from skills.emotion_model"
+    assert "from myalicia.skills.emotion_model import" in src, (
+        "alicia.py must import from myalicia.skills.emotion_model"
     )
     # At least two occurrences expected: one in the import, one inside
     # handle_voice as the thread target.
@@ -2686,7 +2686,7 @@ def _():
     import ast
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), encoding="utf-8") as f:
         source = f.read()
-    assert "from skills.vault_ingest import" in source, "vault_ingest not imported in alicia.py"
+    assert "from myalicia.skills.vault_ingest import" in source, "vault_ingest not imported in alicia.py"
     assert "run_ingest_scan" in source, "run_ingest_scan not in alicia.py"
     assert "send_ingest_scan" in source, "send_ingest_scan scheduler function not in alicia.py"
 
@@ -2770,7 +2770,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py")) as f:
         src = f.read()
-    assert "from skills.conversation_mode import" in src
+    assert "from myalicia.skills.conversation_mode import" in src
 
 @test("/call and /endcall commands registered")
 def _():
@@ -2819,7 +2819,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py")) as f:
         src = f.read()
-    assert "from skills.unpack_mode import" in src
+    assert "from myalicia.skills.unpack_mode import" in src
 
 @test("/unpack and /done commands registered")
 def _():
@@ -2861,7 +2861,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py")) as f:
         src = f.read()
-    assert "from skills.pipecat_call import" in src
+    assert "from myalicia.skills.pipecat_call import" in src
 
 @test("cmd_call tries Pipecat before fallback")
 def _():
@@ -2930,11 +2930,11 @@ for mod_name, func_name in ANALYSIS_MODULES:
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py")) as f:
         src = f.read()
-    assert "from skills.analysis_contradiction import" in src
-    assert "from skills.analysis_temporal import" in src
-    assert "from skills.analysis_growth_edge import" in src
-    assert "from skills.analysis_dialogue_depth import" in src
-    assert "from skills.analysis_briefing import" in src
+    assert "from myalicia.skills.analysis_contradiction import" in src
+    assert "from myalicia.skills.analysis_temporal import" in src
+    assert "from myalicia.skills.analysis_growth_edge import" in src
+    assert "from myalicia.skills.analysis_dialogue_depth import" in src
+    assert "from myalicia.skills.analysis_briefing import" in src
 
 @test("analysis modules scheduled in alicia.py")
 def _():
@@ -3100,27 +3100,27 @@ alicia_src = open(os.path.join(PROJECT_ROOT, "alicia.py")).read()
 
 @test("alicia.py imports afterglow")
 def _():
-    assert "from skills.afterglow import" in alicia_src
+    assert "from myalicia.skills.afterglow import" in alicia_src
 
 @test("alicia.py imports thinking_modes")
 def _():
-    assert "from skills.thinking_modes import" in alicia_src
+    assert "from myalicia.skills.thinking_modes import" in alicia_src
 
 @test("alicia.py imports voice_signature")
 def _():
-    assert "from skills.voice_signature import" in alicia_src
+    assert "from myalicia.skills.voice_signature import" in alicia_src
 
 @test("alicia.py imports session_threads")
 def _():
-    assert "from skills.session_threads import" in alicia_src
+    assert "from myalicia.skills.session_threads import" in alicia_src
 
 @test("alicia.py imports overnight_synthesis")
 def _():
-    assert "from skills.overnight_synthesis import" in alicia_src
+    assert "from myalicia.skills.overnight_synthesis import" in alicia_src
 
 @test("alicia.py imports message_quality")
 def _():
-    assert "from skills.message_quality import" in alicia_src
+    assert "from myalicia.skills.message_quality import" in alicia_src
 
 @test("alicia.py has cmd_walk handler")
 def _():
@@ -3168,7 +3168,7 @@ def _():
 
 @test("alicia.py imports way_of_being")
 def _():
-    assert "from skills.way_of_being import" in alicia_src
+    assert "from myalicia.skills.way_of_being import" in alicia_src
 
 @test("alicia.py has self_reflection scheduler")
 def _():
@@ -3241,7 +3241,7 @@ for func_name in INNER_LIFE_FUNCTIONS:
 
 @test("alicia.py imports inner_life")
 def _():
-    assert "from skills.inner_life import" in alicia_src
+    assert "from myalicia.skills.inner_life import" in alicia_src
 
 @test("alicia.py has inner_life in pipeline_modules")
 def _():
@@ -3341,7 +3341,7 @@ for func_name in FEEDBACK_FUNCTIONS:
 
 @test("alicia.py imports feedback_loop")
 def _():
-    assert "from skills.feedback_loop import" in alicia_src
+    assert "from myalicia.skills.feedback_loop import" in alicia_src
 
 @test("alicia.py has feedback_loop in pipeline_modules")
 def _():
@@ -3447,7 +3447,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.temporal_patterns import" in content
+    assert "from myalicia.skills.temporal_patterns import" in content
 
 @test("temporal_patterns: wired in scheduler")
 def _():
@@ -3553,7 +3553,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.muse import" in content
+    assert "from myalicia.skills.muse import" in content
 
 @test("muse: wired in scheduler (muse_moment)")
 def _():
@@ -3820,7 +3820,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.research_agenda import" in content
+    assert "from myalicia.skills.research_agenda import" in content
 
 @test("research_agenda: wired in scheduler (03:00)")
 def _():
@@ -3895,7 +3895,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.analysis_coordination import" in content
+    assert "from myalicia.skills.analysis_coordination import" in content
 
 @test("analysis_coordination: in pipeline_modules")
 def _():
@@ -3970,7 +3970,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.voice_intelligence import" in content
+    assert "from myalicia.skills.voice_intelligence import" in content
 
 @test("voice_intelligence: in pipeline_modules")
 def _():
@@ -4039,7 +4039,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.autonomy import" in content
+    assert "from myalicia.skills.autonomy import" in content
 
 @test("autonomy: in pipeline_modules")
 def _():
@@ -4176,7 +4176,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.context_resolver import" in content
+    assert "from myalicia.skills.context_resolver import" in content
 
 @test("context_resolver: resolve_intent called in handle_message")
 def _():
@@ -4415,7 +4415,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.person_diarization import" in content
+    assert "from myalicia.skills.person_diarization import" in content
 
 @test("person_diarization: wired in weekly pass")
 def _():
@@ -4487,7 +4487,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.skill_config import" in content
+    assert "from myalicia.skills.skill_config import" in content
 
 # ── 40. Self-Improvement Engine ─────────────────────────────────────────
 print("\n🔧 Self-Improvement Engine (/improve)")
@@ -4515,7 +4515,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.self_improve import" in content
+    assert "from myalicia.skills.self_improve import" in content
 
 @test("self_improve: wired in weekly pass")
 def _():
@@ -4585,7 +4585,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.episode_scorer import" in content
+    assert "from myalicia.skills.episode_scorer import" in content
 
 @test("episode_scorer: get_rewarded_reflections used in retrieval")
 def _():
@@ -4636,7 +4636,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.meta_reflexion import" in content
+    assert "from myalicia.skills.meta_reflexion import" in content
 
 @test("meta_reflexion: wired in weekly pass")
 def _():
@@ -4761,7 +4761,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "bridge_state.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import" in content
+    assert "from myalicia.skills.bridge_protocol import" in content
     assert "write_bridge_json" in content
 
 @test("bridge_protocol: valid syntax")
@@ -4776,42 +4776,42 @@ print("\n🌉  Track D #D1 — analysis/* writers migrated to bridge_protocol")
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "analysis_contradiction.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import write_bridge_text" in content
+    assert "from myalicia.skills.bridge_protocol import write_bridge_text" in content
     assert "write_bridge_text(" in content
 
 @test("analysis_dialogue_depth: migrated to write_bridge_text")
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "analysis_dialogue_depth.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import write_bridge_text" in content
+    assert "from myalicia.skills.bridge_protocol import write_bridge_text" in content
     assert "write_bridge_text(" in content
 
 @test("analysis_temporal: migrated to write_bridge_text")
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "analysis_temporal.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import write_bridge_text" in content
+    assert "from myalicia.skills.bridge_protocol import write_bridge_text" in content
     assert "write_bridge_text(" in content
 
 @test("analysis_growth_edge: migrated to write_bridge_text")
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "analysis_growth_edge.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import write_bridge_text" in content
+    assert "from myalicia.skills.bridge_protocol import write_bridge_text" in content
     assert "write_bridge_text(" in content
 
 @test("memory_skill: telegram-session write migrated to write_bridge_text")
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "memory_skill.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import write_bridge_text" in content
+    assert "from myalicia.skills.bridge_protocol import write_bridge_text" in content
     assert 'write_bridge_text(f"telegram-sessions/' in content
 
 @test("feedback_loop: reader migrated to get_latest_report")
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "feedback_loop.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import get_latest_report" in content
+    assert "from myalicia.skills.bridge_protocol import get_latest_report" in content
     # No more ad-hoc os.listdir sweeps across BRIDGE_DIR
     assert "os.listdir(BRIDGE_DIR)" not in content
 
@@ -4819,7 +4819,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "analysis_coordination.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import list_bridge_reports" in content
+    assert "from myalicia.skills.bridge_protocol import list_bridge_reports" in content
     # The glob(os.path.join(BRIDGE_DIR, ...)) pattern is gone
     assert "glob(os.path.join(BRIDGE_DIR," not in content
 
@@ -4827,7 +4827,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "way_of_being.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import get_latest_report" in content
+    assert "from myalicia.skills.bridge_protocol import get_latest_report" in content
     # No more os.listdir(bridge_path) sweeps
     assert "os.listdir(bridge_path)" not in content
 
@@ -4835,7 +4835,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "skills", "analysis_briefing.py"), 'r') as f:
         content = f.read()
-    assert "from skills.bridge_protocol import list_bridge_reports" in content
+    assert "from myalicia.skills.bridge_protocol import list_bridge_reports" in content
     assert "BRIDGE_FOLDER.glob(pattern)" not in content
 
 # ── 42c. Bridge Schema (§6.5 JSON-schema validation) ────────────────────
@@ -5178,7 +5178,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), 'r') as f:
         content = f.read()
-    assert "from skills.skill_library import" in content
+    assert "from myalicia.skills.skill_library import" in content
 
 @test("skill_library: wired in weekly pass")
 def _():
@@ -5237,7 +5237,7 @@ def _():
     import tempfile
     from pathlib import Path
     from PIL import Image
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     # Shrink params so the test runs fast (~0.5s)
     orig = ds._params_for_archetype
     def small(arc, seed):
@@ -5263,7 +5263,7 @@ def _():
 def _():
     import tempfile
     from pathlib import Path
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     real_log = ds.DRAWING_LOG
     with tempfile.TemporaryDirectory() as td:
         ds.DRAWING_LOG = Path(td) / "empty.jsonl"
@@ -5277,7 +5277,7 @@ def _():
 def _():
     import tempfile, json, time
     from pathlib import Path
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     real_log = ds.DRAWING_LOG
     with tempfile.TemporaryDirectory() as td:
         ds.DRAWING_LOG = Path(td) / "log.jsonl"
@@ -5299,7 +5299,7 @@ def _():
 def _():
     import tempfile
     from pathlib import Path
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     real_log = ds.DRAWING_LOG
     with tempfile.TemporaryDirectory() as td:
         ds.DRAWING_LOG = Path(td) / "rt.jsonl"
@@ -5322,7 +5322,7 @@ def _():
     # for a full day. Manual entries must be transparent to can_draw_now.
     import tempfile, json, time
     from pathlib import Path
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     real_log = ds.DRAWING_LOG
     real_max = ds.MAX_PER_DAY
     real_gap = ds.MIN_HOURS_BETWEEN
@@ -5355,7 +5355,7 @@ def _():
 def _():
     import tempfile, json, time
     from pathlib import Path
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     real_log = ds.DRAWING_LOG
     real_max = ds.MAX_PER_DAY
     real_gap = ds.MIN_HOURS_BETWEEN
@@ -5404,7 +5404,7 @@ def _():
     # budget, starving lived-Monday impulses all day. "Today" must
     # mean what the user is living, not what Greenwich is living.
     import inspect
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     src = inspect.getsource(ds.can_draw_now)
     # Must NOT use UTC-anchored "today"
     assert "datetime.now(timezone.utc).date()" not in src, (
@@ -5421,7 +5421,7 @@ def _():
 @test("drawing_skill: get_drawing_stats uses LOCAL date")
 def _():
     import inspect
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     src = inspect.getsource(ds.get_drawing_stats)
     assert "datetime.now(timezone.utc).date()" not in src, \
         "get_drawing_stats must use local date for 'today'"
@@ -5471,7 +5471,7 @@ def _():
     # both sides must be in the same timezone — local — otherwise the
     # count is off by a full day for users outside UTC.
     import inspect
-    from skills import episode_scorer as es
+    from myalicia.skills import episode_scorer as es
     # Find the stats function that computes indexed_today
     funcs = [name for name in dir(es)
              if callable(getattr(es, name)) and not name.startswith("_")]
@@ -5493,7 +5493,7 @@ def _():
 def _():
     with open(os.path.join(PROJECT_ROOT, "alicia.py"), "r") as f:
         content = f.read()
-    assert "from skills.drawing_skill import" in content, \
+    assert "from myalicia.skills.drawing_skill import" in content, \
         "drawing_skill not imported in alicia.py"
     assert "generate_drawing" in content
     assert "record_drawing_sent" in content
@@ -5700,7 +5700,7 @@ def _():
     # must actually render end-to-end on a small canvas without raising.
     import tempfile
     from pathlib import Path
-    from skills import drawing_skill as ds
+    from myalicia.skills import drawing_skill as ds
     # Pick a dense archetype to exercise the variable-stroke path
     params = ds._params_for_archetype("psyche", seed=777)
     params.canvas = (320, 320)
@@ -5745,7 +5745,7 @@ def _():
 
 @test("proactive_messages: every evening format has a builder function")
 def _():
-    from skills import proactive_messages as pm
+    from myalicia.skills import proactive_messages as pm
     for fmt in pm.EVENING_FORMATS:
         fn_name = f"_evening_{fmt}"
         assert hasattr(pm, fn_name), \
@@ -6010,7 +6010,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.circulation_composer import" in alicia_text, (
+    assert "from myalicia.skills.circulation_composer import" in alicia_text, (
         "alicia.py must import circulation_composer — composer is not wired in."
     )
     assert "decide_for_slot(\"morning\")" in alicia_text, (
@@ -6088,7 +6088,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.contradiction_detector import" in alicia_text, (
+    assert "from myalicia.skills.contradiction_detector import" in alicia_text, (
         "alicia.py must import contradiction_detector — detector is not wired in."
     )
     assert "USE_CONTRADICTION_DETECTOR" in alicia_text, (
@@ -6170,7 +6170,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.practice_runner import" in alicia_text, (
+    assert "from myalicia.skills.practice_runner import" in alicia_text, (
         "alicia.py must import practice_runner — runner is not wired in."
     )
     assert "USE_PRACTICE_RUNNER" in alicia_text, (
@@ -6212,7 +6212,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.response_capture import" in alicia_text, (
+    assert "from myalicia.skills.response_capture import" in alicia_text, (
         "alicia.py must import response_capture — capture is not wired in."
     )
     assert "capture_response_if_responsive" in alicia_text, (
@@ -6256,7 +6256,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.wisdom_dashboard import render_wisdom_dashboard" in alicia_text, (
+    assert "from myalicia.skills.wisdom_dashboard import render_wisdom_dashboard" in alicia_text, (
         "alicia.py must import render_wisdom_dashboard"
     )
     assert "async def cmd_wisdom(" in alicia_text, (
@@ -6470,7 +6470,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     mem_text = (repo_root / "skills" / "memory_skill.py").read_text(encoding="utf-8")
-    assert "from skills.hector_model import" in mem_text, (
+    assert "from myalicia.skills.hector_model import" in mem_text, (
         "memory_skill must import from hector_model for auto-extraction"
     )
     assert "_hm_classify_dimension" in mem_text, (
@@ -6519,7 +6519,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.hector_model import" in alicia_text, (
+    assert "from myalicia.skills.hector_model import" in alicia_text, (
         "alicia.py must import from hector_model"
     )
     assert "async def cmd_becoming(" in alicia_text, (
@@ -6594,7 +6594,7 @@ def _():
 
     alicia_text = (Path(__file__).resolve().parent.parent
                    / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.loops_dashboard import render_loops_dashboard" in alicia_text
+    assert "from myalicia.skills.loops_dashboard import render_loops_dashboard" in alicia_text
     assert "async def cmd_loops(" in alicia_text
     assert '"loops"' in alicia_text and "cmd_loops" in alicia_text
 
@@ -6807,7 +6807,7 @@ def _():
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
 
     # Midday handler must fetch the sidecar
-    assert "from skills.emergent_themes import get_last_noticing_context" in alicia_text, (
+    assert "from myalicia.skills.emergent_themes import get_last_noticing_context" in alicia_text, (
         "midday handler must import get_last_noticing_context (Phase 18.0)"
     )
     assert "noticing_ctx = get_last_noticing_context()" in alicia_text, (
@@ -8046,7 +8046,7 @@ def _():
     assert "render_becoming_dashboard(conversation_id=scope_to)" in alicia_text, (
         "cmd_becoming must pass scope_to into render_becoming_dashboard"
     )
-    assert "from skills.conversations import current_conversation_id" in alicia_text, (
+    assert "from myalicia.skills.conversations import current_conversation_id" in alicia_text, (
         "cmd_becoming must import current_conversation_id"
     )
 
@@ -8319,7 +8319,7 @@ def _():
 
     alicia_text = (Path(__file__).resolve().parent.parent
                    / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.multichannel_dashboard import render_multichannel_dashboard" in alicia_text, (
+    assert "from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard" in alicia_text, (
         "alicia.py must import render_multichannel_dashboard"
     )
     assert "async def cmd_multichannel(" in alicia_text, (
@@ -8401,7 +8401,7 @@ def _():
         "decide_drawing_amplification must be called from "
         "_maybe_amplify_with_drawing, not just imported elsewhere"
     )
-    assert "from skills.multi_channel import" in fn_body, (
+    assert "from myalicia.skills.multi_channel import" in fn_body, (
         "smart decider should be imported lazily inside the function so "
         "import failures fall back to the legacy gate"
     )
@@ -8489,7 +8489,7 @@ def _():
     # Wired into proactive_messages.build_midday_message
     pm_text = (Path(__file__).resolve().parent.parent
                / "skills" / "proactive_messages.py").read_text(encoding="utf-8")
-    assert "from skills.dimension_research import" in pm_text, (
+    assert "from myalicia.skills.dimension_research import" in pm_text, (
         "proactive_messages.py must import from dimension_research"
     )
     midday_idx = pm_text.find("def build_midday_message(")
@@ -8683,7 +8683,7 @@ def _():
 
     alicia_text = (Path(__file__).resolve().parent.parent
                    / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.meta_synthesis import" in alicia_text, (
+    assert "from myalicia.skills.meta_synthesis import" in alicia_text, (
         "alicia.py must import from meta_synthesis"
     )
     assert "async def cmd_metasynthesis(" in alicia_text, (
@@ -8769,7 +8769,7 @@ def _():
 
     pm_text = (Path(__file__).resolve().parent.parent
                / "skills" / "proactive_messages.py").read_text(encoding="utf-8")
-    assert "from skills.thread_puller import" in pm_text, (
+    assert "from myalicia.skills.thread_puller import" in pm_text, (
         "proactive_messages.py must import from thread_puller"
     )
     assert "build_thread_pull_message" in pm_text, (
@@ -8831,7 +8831,7 @@ def _():
     # alicia.py wiring — import + handler + registration
     alicia_text = (Path(__file__).resolve().parent.parent
                    / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.season_dashboard import render_season_dashboard" in alicia_text, (
+    assert "from myalicia.skills.season_dashboard import render_season_dashboard" in alicia_text, (
         "alicia.py must import render_season_dashboard"
     )
     assert "async def cmd_season(" in alicia_text, (
@@ -8892,7 +8892,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     alicia_text = (repo_root / "alicia.py").read_text(encoding="utf-8")
-    assert "from skills.effectiveness_dashboard import render_effectiveness_dashboard" \
+    assert "from myalicia.skills.effectiveness_dashboard import render_effectiveness_dashboard" \
         in alicia_text, "alicia.py must import render_effectiveness_dashboard"
     assert "async def cmd_effectiveness(" in alicia_text, (
         "alicia.py must define cmd_effectiveness handler"
@@ -9011,7 +9011,7 @@ def _():
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
     pr_text = (repo_root / "skills" / "practice_runner.py").read_text(encoding="utf-8")
-    assert "from skills.synthesis_finalizer import finalize_lived_note" in pr_text, (
+    assert "from myalicia.skills.synthesis_finalizer import finalize_lived_note" in pr_text, (
         "close_practice must call synthesis_finalizer.finalize_lived_note — "
         "the Lived → Synthesis feedback loop is structurally required."
     )

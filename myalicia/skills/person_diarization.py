@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"), max_retries=5)
 
 MODEL_OPUS = "claude-opus-4-20250514"
-PROFILES_DIR = f"/Users/alicia/Documents/{USER_HANDLE}-alicia/Alicia/Self/Profiles"
+PROFILES_DIR = str(config.vault.self_path / "Profiles")
 MEMORY_DIR = os.path.expanduser("~/alicia/memory")
 
 

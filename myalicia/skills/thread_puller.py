@@ -45,7 +45,7 @@ USER_HANDLE = config.user.handle
 
 log = logging.getLogger("alicia.thread_puller")
 
-PROFILES_DIR = f"/Users/alicia/Documents/{USER_HANDLE}-alicia/Alicia/Self/Profiles"
+PROFILES_DIR = str(config.vault.self_path / "Profiles")
 MEMORY_DIR = os.path.expanduser("~/alicia/memory")
 THREAD_PULLS_PATH = os.path.join(MEMORY_DIR, "thread_pulls.jsonl")
 

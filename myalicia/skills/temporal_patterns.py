@@ -146,7 +146,7 @@ def analyze_voice_patterns(days: int = 30) -> dict:
     try:
         # Check both possible paths
         for path in [VOICE_META_LOG,
-                     f"/Users/alicia/Documents/{USER_HANDLE}-alicia/voice_metadata_log.jsonl"]:
+                     str(config.vault.root / "voice_metadata_log.jsonl")]:
             if not os.path.exists(path):
                 continue
             with open(path, 'r') as f:

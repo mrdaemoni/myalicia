@@ -24,24 +24,26 @@ classifiers = [
 ]
 
 # Core dependencies — installed by `pip install myalicia`.
-# Optional integrations are in [project.optional-dependencies] below.
+# Anything imported unconditionally by alicia.py or core/ belongs here.
+# Optional integrations live in [project.optional-dependencies] below.
 dependencies = [
     "anthropic>=0.30.0",
     "pyyaml>=6.0",
     "python-dotenv>=1.0",
+    "python-telegram-bot>=21.0",   # primary surface; alicia.py imports it unconditionally
+    "schedule>=1.2",                # the Notice/Know loop scheduler
+    "jsonschema>=4.0",              # bridge_schema validation
 ]
 
 [project.optional-dependencies]
-# Pick what you want: pip install 'myalicia[telegram,voice]'
-telegram = ["python-telegram-bot>=21.0"]
+# Pick what you want: pip install 'myalicia[voice,gmail]'
 voice = ["edge-tts>=6.0"]
 gmail = ["google-auth>=2.0", "google-auth-oauthlib>=1.0", "google-api-python-client>=2.0"]
 search = ["chromadb>=0.4", "sentence-transformers>=2.0"]
 pdf = ["reportlab>=4.0"]
-schedule = ["schedule>=1.2"]
+calls = ["pipecat>=0.1", "aiohttp>=3.9"]   # voice-call mode (pipecat_call.py)
 # Convenience meta — pip install 'myalicia[all]'
 all = [
-    "python-telegram-bot>=21.0",
     "edge-tts>=6.0",
     "google-auth>=2.0",
     "google-auth-oauthlib>=1.0",
@@ -49,7 +51,8 @@ all = [
     "chromadb>=0.4",
     "sentence-transformers>=2.0",
     "reportlab>=4.0",
-    "schedule>=1.2",
+    "pipecat>=0.1",
+    "aiohttp>=3.9",
 ]
 
 [project.scripts]

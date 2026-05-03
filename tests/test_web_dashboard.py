@@ -152,7 +152,7 @@ def _():
 
 @test("HTTP server: serves /healthz on a free port")
 def _():
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     # Give the daemon thread a beat to bind
@@ -170,7 +170,7 @@ def _():
 
 @test("HTTP server: GET / returns the HTML page")
 def _():
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -192,7 +192,7 @@ def _():
 
 @test("HTTP server: GET /api/state.json returns valid JSON with full contract")
 def _():
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -326,7 +326,7 @@ def _():
     """Verify the 12h / 36h thresholds. We can't mutate real file mtimes
     cleanly, so test the threshold logic directly via a tmp file."""
     with tempfile.TemporaryDirectory() as td:
-        from skills import web_dashboard as wd
+        from myalicia.skills import web_dashboard as wd
         # Reroute MEMORY_DIR + heartbeat search
         wd.MEMORY_DIR = Path(td)
         # Create a heartbeat file with a tunable mtime
@@ -438,7 +438,7 @@ def _():
 
 @test("Phase 15.0i: GET /manifest.json returns PWA manifest")
 def _():
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -457,7 +457,7 @@ def _():
 
 @test("Phase 15.0i: HTML head includes manifest link + apple-touch meta")
 def _():
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -476,12 +476,12 @@ def _():
     import urllib.request
     with tempfile.TemporaryDirectory() as td:
         # Reroute capture dirs to tmp
-        from skills import response_capture as rc
+        from myalicia.skills import response_capture as rc
         original_captures = rc.CAPTURES_DIR
         rc.CAPTURES_DIR = Path(td) / "Captures"
         rc.CAPTURES_DIR.mkdir(parents=True)
         try:
-            from skills import web_dashboard as wd
+            from myalicia.skills import web_dashboard as wd
             port = _free_port()
             wd.start_web_dashboard(port=port)
             time.sleep(0.3)
@@ -507,7 +507,7 @@ def _():
 def _():
     import urllib.request
     import urllib.error
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -550,7 +550,7 @@ def _():
     """Open the SSE stream, read at least one 'data:' event, then disconnect.
     Verifies headers + initial event payload + JSON well-formed."""
     import socket
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -592,7 +592,7 @@ def _():
 def _():
     """The dashboard JS should prefer SSE, only falling back to
     polling on browsers without EventSource."""
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -617,7 +617,7 @@ def _():
 
 @test("Phase 15.2c GET /api/network.json returns shape")
 def _():
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -696,7 +696,7 @@ def _():
     do many times per minute. Before Phase 15.2d, each such close
     printed a 14-line traceback to stderr."""
     import socket
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)
@@ -716,7 +716,7 @@ def _():
 
 @test("HTTP server: idempotent — second start_web_dashboard on same port no-ops")
 def _():
-    from skills import web_dashboard as wd
+    from myalicia.skills import web_dashboard as wd
     port = _free_port()
     wd.start_web_dashboard(port=port)
     time.sleep(0.3)

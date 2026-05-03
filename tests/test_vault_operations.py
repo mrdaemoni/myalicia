@@ -19,7 +19,7 @@ class TestVaultResolver:
         """resolve_note should return a dict with path and title."""
         with patch("skills.vault_resolver.VAULT_ROOT", tmp_vault):
             try:
-                from skills.vault_resolver import resolve_note
+                from myalicia.skills.vault_resolver import resolve_note
                 result = resolve_note("Quality Before Objects")
                 assert isinstance(result, dict)
                 assert "path" in result or "error" in result
@@ -30,7 +30,7 @@ class TestVaultResolver:
         """Non-existent notes should return error, not crash."""
         with patch("skills.vault_resolver.VAULT_ROOT", tmp_vault):
             try:
-                from skills.vault_resolver import resolve_note
+                from myalicia.skills.vault_resolver import resolve_note
                 result = resolve_note("This Note Definitely Does Not Exist XYZ123")
                 assert isinstance(result, dict)
                 # Should indicate failure somehow
@@ -43,7 +43,7 @@ class TestVaultMetrics:
 
     def test_determine_level_novice(self):
         """Low counts should be Novice level."""
-        from skills.vault_metrics import determine_level
+        from myalicia.skills.vault_metrics import determine_level
         result = determine_level(synthesis_count=3, cluster_pairs=2, coverage_pct=0.1)
         assert isinstance(result, dict)
         assert "current" in result, f"Missing 'current' key. Got: {result.keys()}"
@@ -51,7 +51,7 @@ class TestVaultMetrics:
 
     def test_determine_level_progression(self):
         """Higher counts should yield higher levels."""
-        from skills.vault_metrics import determine_level
+        from myalicia.skills.vault_metrics import determine_level
         low = determine_level(synthesis_count=3, cluster_pairs=2, coverage_pct=0.1)
         high = determine_level(synthesis_count=100, cluster_pairs=50, coverage_pct=0.9)
 
@@ -66,7 +66,7 @@ class TestVaultMetrics:
                  patch("skills.vault_metrics.get_cluster_pairs_bridged", return_value=(12, 28)), \
                  patch("skills.vault_metrics.get_source_coverage", return_value=(0.65, 120)), \
                  patch("skills.vault_metrics.get_voice_ratio", return_value=(0.15, 200)):
-                from skills.vault_metrics import compute_all_metrics
+                from myalicia.skills.vault_metrics import compute_all_metrics
                 result = compute_all_metrics()
                 assert isinstance(result, dict)
         except Exception as e:
@@ -74,7 +74,7 @@ class TestVaultMetrics:
 
     def test_format_dashboard_returns_string(self):
         """format_knowledge_dashboard should return a formatted string."""
-        from skills.vault_metrics import format_knowledge_dashboard
+        from myalicia.skills.vault_metrics import format_knowledge_dashboard
         metrics = {
             "level": {
                 "current": {"emoji": "🌅", "level": 2, "name": "Apprentice", "description": "First connections"},
@@ -109,7 +109,7 @@ class TestQuoteSkill:
 
         with patch("skills.quote_skill.QUOTES_FOLDER", quotes_dir):
             try:
-                from skills.quote_skill import get_random_quote
+                from myalicia.skills.quote_skill import get_random_quote
                 result = get_random_quote()
                 assert isinstance(result, str)
             except Exception:
@@ -123,7 +123,7 @@ class TestQuoteSkill:
 
         with patch("skills.quote_skill.QUOTES_FOLDER", empty_dir):
             try:
-                from skills.quote_skill import get_random_quote
+                from myalicia.skills.quote_skill import get_random_quote
                 result = get_random_quote()
                 assert isinstance(result, str)
             except Exception:

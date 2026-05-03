@@ -18,7 +18,7 @@ class TestVoiceStatus:
     def test_get_voice_status_returns_dict(self):
         """get_voice_status should always return a diagnostic dict."""
         try:
-            from skills.voice_skill import get_voice_status
+            from myalicia.skills.voice_skill import get_voice_status
             status = get_voice_status()
             assert isinstance(status, dict)
             # Should have at least these keys
@@ -30,7 +30,7 @@ class TestVoiceStatus:
     def test_voice_status_detects_ffmpeg(self):
         """Voice status should report whether ffmpeg is available."""
         try:
-            from skills.voice_skill import get_voice_status
+            from myalicia.skills.voice_skill import get_voice_status
             status = get_voice_status()
             # ffmpeg_available should be a boolean
             if "ffmpeg_available" in status:
@@ -45,7 +45,7 @@ class TestTTSCleaning:
     def test_clean_for_tts_removes_markdown(self):
         """TTS text should have Markdown formatting stripped."""
         try:
-            from skills.voice_skill import _clean_for_tts
+            from myalicia.skills.voice_skill import _clean_for_tts
         except ImportError:
             pytest.skip("_clean_for_tts not available")
 
@@ -64,7 +64,7 @@ class TestTTSCleaning:
     def test_clean_for_tts_handles_empty(self):
         """Empty text should not crash TTS cleaning."""
         try:
-            from skills.voice_skill import _clean_for_tts
+            from myalicia.skills.voice_skill import _clean_for_tts
             result = _clean_for_tts("")
             assert isinstance(result, str)
         except ImportError:

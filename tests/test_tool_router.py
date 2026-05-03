@@ -56,7 +56,7 @@ class TestRouteMessage:
         mock_client.messages.create.return_value = make_text_response(
             "Quality is the event at which the subject becomes aware of the object."
         )
-        from skills.tool_router import route_message
+        from myalicia.skills.tool_router import route_message
         result = route_message("system prompt", [{"role": "user", "content": "test"}])
 
         assert result["type"] == "text"
@@ -68,7 +68,7 @@ class TestRouteMessage:
         mock_client.messages.create.return_value = make_tool_response(
             "search_vault", {"query": "quality"}, thinking="Let me search the vault."
         )
-        from skills.tool_router import route_message
+        from myalicia.skills.tool_router import route_message
         result = route_message("system prompt", [{"role": "user", "content": "find quality"}])
 
         assert result["type"] == "tool_use"
@@ -80,7 +80,7 @@ class TestRouteMessage:
     def test_api_error_returns_error_type(self, mock_client):
         """API errors should return type='error', not crash."""
         mock_client.messages.create.side_effect = Exception("API timeout")
-        from skills.tool_router import route_message
+        from myalicia.skills.tool_router import route_message
         result = route_message("system prompt", [{"role": "user", "content": "test"}])
 
         assert result["type"] == "error"
@@ -99,7 +99,7 @@ class TestRouteMessage:
         but we need to ensure the error is logged and the user sees a useful message.
         """
         mock_client.messages.create.side_effect = ConnectionError("Network failure")
-        from skills.tool_router import route_message
+        from myalicia.skills.tool_router import route_message
         result = route_message("system prompt", [{"role": "user", "content": "test"}])
 
         assert result["type"] == "error", "Router should return 'error' type on API failure"
@@ -114,7 +114,7 @@ class TestExecuteTool:
 
     def test_unknown_tool_returns_error(self):
         """Unknown tools should return {success: False} not crash."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         result = execute_tool("nonexistent_tool", {"arg": "value"})
         assert result["success"] is False
         assert "Unknown tool" in result["error"]
@@ -123,7 +123,7 @@ class TestExecuteTool:
 
     def test_recent_responses_requires_synthesis_title(self):
         """Missing or empty synthesis_title returns {success: False}."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         result = execute_tool("recent_responses", {})
         assert result["success"] is False
         assert "synthesis_title" in result["error"].lower()
@@ -134,7 +134,7 @@ class TestExecuteTool:
         """When no responses exist, return a success=True with a 'compose
         normally' hint, not an error — Sonnet should know it's safe to skip
         past-conversation references."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         with patch(
             "skills.response_capture.get_responses_for_synthesis",
             return_value=[],
@@ -150,7 +150,7 @@ class TestExecuteTool:
     def test_recent_responses_formats_results_for_sonnet(self):
         """When responses exist, return them in a Sonnet-friendly format
         (newest first, with timestamp + channel + archetype + body excerpt)."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         fake_responses = [
             {
                 "captured_at": "2026-04-25T18:00:00+00:00",
@@ -191,7 +191,7 @@ class TestExecuteTool:
 
     def test_send_email_returns_confirm_action(self):
         """send_email should NEVER send directly — always returns confirm_email action."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         result = execute_tool("send_email", {
             "to": "test@example.com",
             "subject": "Test",
@@ -206,14 +206,14 @@ class TestExecuteTool:
         """remember tool should return the confirmation string."""
         # We need to patch the import inside execute_tool
         with patch.dict("sys.modules", {}):
-            from skills.tool_router import execute_tool
+            from myalicia.skills.tool_router import execute_tool
             with patch("skills.memory_skill.remember_manual", return_value="Remembered: key = value"):
                 result = execute_tool("remember", {"key": "test_key", "value": "test_value"})
                 assert result["success"] is True
 
     def test_tool_exception_returns_error_dict(self):
         """Any exception in tool execution should return {success: False, error: str}."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         # generate_pdf with impossible input should fail gracefully
         with patch("skills.pdf_skill.generate_pdf_from_query", side_effect=FileNotFoundError("no such note")):
             result = execute_tool("generate_pdf", {"note_name": "nonexistent_note_xyz"})
@@ -224,14 +224,14 @@ class TestExecuteTool:
     def test_search_vault_with_top_k(self, mock_search):
         """search_vault should pass top_k parameter."""
         mock_search.return_value = "Results here"
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         with patch("skills.semantic_search.semantic_search_formatted", return_value="Results"):
             result = execute_tool("search_vault", {"query": "quality", "top_k": 3})
             assert result["success"] is True
 
     def test_research_depth_routing(self):
         """Research tool should route to correct depth function."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
 
         for depth, expected_func in [("quick", "research_quick"), ("brief", "research_brief"), ("deep", "research_deep")]:
             with patch(f"skills.research_skill.{expected_func}", return_value=("Summary", "/path")) as mock_fn:
@@ -254,7 +254,7 @@ class TestToolResultHandling:
 
     def test_tool_result_none_handling(self):
         """Tools that return None in result field should be handled."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
 
         # Simulate each tool that could return None
         tools_that_might_return_none = [

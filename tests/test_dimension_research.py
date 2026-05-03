@@ -57,7 +57,7 @@ def _run_all() -> int:
 
 def _setup_tmp_log(tmpdir: str) -> str:
     """Reroute the dimension log path to a tmp file. Returns the path."""
-    from skills import dimension_research as dr
+    from myalicia.skills import dimension_research as dr
     p = os.path.join(tmpdir, "dimension_questions_log.jsonl")
     dr.MEMORY_DIR = tmpdir
     dr.DIMENSION_LOG_PATH = p
@@ -67,7 +67,7 @@ def _setup_tmp_log(tmpdir: str) -> str:
 def _patch_thin(monkey_thin: list[str]) -> callable:
     """Patch hector_model.find_thin_dimensions to return `monkey_thin`.
     Returns a restore callable."""
-    import skills.hector_model as hm
+    import myalicia.skills.hector_model as hm
     original = hm.find_thin_dimensions
     hm.find_thin_dimensions = lambda **kw: list(monkey_thin)
     return lambda: setattr(hm, "find_thin_dimensions", original)
@@ -80,7 +80,7 @@ def _patch_thin(monkey_thin: list[str]) -> callable:
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills.dimension_research import (
+        from myalicia.skills.dimension_research import (
             record_dimension_question_asked, recent_dimension_questions,
         )
         record_dimension_question_asked("body", "have you moved today?")
@@ -101,7 +101,7 @@ def _():
             f.write(json.dumps({"ts": old_ts, "dimension": "wealth", "question": "x"}) + "\n")
             f.write(json.dumps({"ts": new_ts, "dimension": "creative", "question": "y"}) + "\n")
 
-        from skills.dimension_research import recent_dimension_questions
+        from myalicia.skills.dimension_research import recent_dimension_questions
         recent = recent_dimension_questions(within_days=7)
         dims = [e["dimension"] for e in recent]
         assert "creative" in dims
@@ -117,7 +117,7 @@ def _():
         _setup_tmp_log(td)
         restore = _patch_thin(["body", "wealth", "shadow"])
         try:
-            from skills.dimension_research import pick_thin_dimension
+            from myalicia.skills.dimension_research import pick_thin_dimension
             assert pick_thin_dimension() == "body"
         finally:
             restore()
@@ -127,7 +127,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills.dimension_research import (
+        from myalicia.skills.dimension_research import (
             pick_thin_dimension, record_dimension_question_asked,
         )
         record_dimension_question_asked("body", "asked recently")
@@ -145,7 +145,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills.dimension_research import (
+        from myalicia.skills.dimension_research import (
             pick_thin_dimension, record_dimension_question_asked,
         )
         record_dimension_question_asked("body", "x")
@@ -163,7 +163,7 @@ def _():
         _setup_tmp_log(td)
         restore = _patch_thin([])
         try:
-            from skills.dimension_research import pick_thin_dimension
+            from myalicia.skills.dimension_research import pick_thin_dimension
             assert pick_thin_dimension() is None
         finally:
             restore()
@@ -180,7 +180,7 @@ def _():
 
         restore = _patch_thin(["body", "wealth"])
         try:
-            from skills.dimension_research import pick_thin_dimension
+            from myalicia.skills.dimension_research import pick_thin_dimension
             # 7-day cooldown — 10d-old is OUTSIDE cooldown → body is eligible
             assert pick_thin_dimension(cooldown_days=7) == "body"
             # 14-day cooldown — 10d-old is INSIDE cooldown → body skipped
@@ -198,7 +198,7 @@ def _():
         _setup_tmp_log(td)
         restore = _patch_thin(["practice", "creative"])
         try:
-            from skills.dimension_research import run_dimension_research_scan
+            from myalicia.skills.dimension_research import run_dimension_research_scan
             r = run_dimension_research_scan()
             assert r["thin_dimensions"] == ["practice", "creative"]
             assert r["next_candidate"] == "practice"
@@ -211,7 +211,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills.dimension_research import (
+        from myalicia.skills.dimension_research import (
             record_dimension_question_asked, run_dimension_research_scan,
         )
         record_dimension_question_asked("practice", "x")
@@ -231,7 +231,7 @@ def _():
         _setup_tmp_log(td)
         restore = _patch_thin([])
         try:
-            from skills.dimension_research import run_dimension_research_scan
+            from myalicia.skills.dimension_research import run_dimension_research_scan
             r = run_dimension_research_scan()
             assert r["thin_dimensions"] == []
             assert r["next_candidate"] is None
@@ -246,7 +246,7 @@ def _():
 @test("Phase 12.4 record + recent scan history: round-trip")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.SCAN_HISTORY_PATH = os.path.join(td, "dimension_scan_history.jsonl")
         dr.record_dimension_scan(["body", "wealth"], "body")
@@ -261,7 +261,7 @@ def _():
 @test("Phase 12.4 get_persistent_thin_dimensions: needs N scans of same dim")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.SCAN_HISTORY_PATH = os.path.join(td, "dimension_scan_history.jsonl")
 
@@ -280,7 +280,7 @@ def _():
 @test("Phase 12.4 get_persistent_thin_dimensions: all dims dropping out")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.SCAN_HISTORY_PATH = os.path.join(td, "dimension_scan_history.jsonl")
         dr.record_dimension_scan(["body"], "body")
@@ -291,7 +291,7 @@ def _():
 @test("Phase 12.4 escalation log: round-trip and cooldown filter")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.ESCALATION_LOG_PATH = os.path.join(td, "dimension_escalation_log.jsonl")
         dr.record_dimension_escalation("body", "energy practices",
@@ -307,7 +307,7 @@ def _():
 @test("Phase 12.4 pick_escalation_target: prefers non-cooldown dim")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.SCAN_HISTORY_PATH = os.path.join(td, "dimension_scan_history.jsonl")
         dr.ESCALATION_LOG_PATH = os.path.join(td, "dimension_escalation_log.jsonl")
@@ -331,7 +331,7 @@ def _():
 @test("Phase 12.4 escalate_to_research: handles missing topic mapping")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.ESCALATION_LOG_PATH = os.path.join(td, "dimension_escalation_log.jsonl")
         # nonexistent dimension → no topic, no crash, returns None
@@ -345,7 +345,7 @@ def _():
     log the failure (so /multichannel-style observability sees it) and
     return None — never raise."""
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.ESCALATION_LOG_PATH = os.path.join(td, "dimension_escalation_log.jsonl")
         # Force import failure by pre-poisoning sys.modules
@@ -371,7 +371,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         log_path = _setup_tmp_log(td)
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.SCAN_HISTORY_PATH = os.path.join(td, "dimension_scan_history.jsonl")
         dr.ESCALATION_LOG_PATH = os.path.join(td, "dimension_escalation_log.jsonl")
@@ -400,8 +400,8 @@ def _():
 
 @test("_DIMENSION_FRAMES covers every canonical hector_model dimension")
 def _():
-    from skills.dimension_research import _DIMENSION_FRAMES
-    from skills.hector_model import DIMENSIONS as HM_DIMENSIONS
+    from myalicia.skills.dimension_research import _DIMENSION_FRAMES
+    from myalicia.skills.hector_model import DIMENSIONS as HM_DIMENSIONS
     missing = [d for d in HM_DIMENSIONS if d not in _DIMENSION_FRAMES]
     assert not missing, (
         f"_DIMENSION_FRAMES missing entries for: {missing}. "

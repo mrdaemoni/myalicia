@@ -795,7 +795,7 @@ def validate_improve_outputs(lookback_days: int = 7, window_days: int = 7) -> Di
         # write (we never want schema drift to silently *drop* data;
         # better to write a line with a warning and fix later).
         try:
-            from skills import bridge_schema
+            from myalicia.skills import bridge_schema
             for entry in validations:
                 try:
                     bridge_schema.validate_jsonl_line(

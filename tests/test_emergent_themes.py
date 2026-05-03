@@ -44,7 +44,7 @@ def _run_all() -> int:
 
 def _setup_tmp(td: str) -> None:
     """Reroute MEMORY_DIR + EMERGENT_THEMES_PATH to tmp."""
-    from skills import emergent_themes as et
+    from myalicia.skills import emergent_themes as et
     et.MEMORY_DIR = td
     et.EMERGENT_THEMES_PATH = os.path.join(td, "emergent_themes.jsonl")
 
@@ -56,7 +56,7 @@ def _setup_tmp(td: str) -> None:
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import (
+        from myalicia.skills.emergent_themes import (
             record_emergent_theme, recent_emergent_themes,
         )
         record_emergent_theme(
@@ -80,7 +80,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import (
+        from myalicia.skills.emergent_themes import (
             record_emergent_theme, recent_emergent_themes,
         )
         record_emergent_theme(
@@ -101,7 +101,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import (
+        from myalicia.skills.emergent_themes import (
             record_emergent_theme, pick_theme_to_surface,
         )
         record_emergent_theme(theme="low", evidence=["x"], recurrence=3)
@@ -116,7 +116,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import (
+        from myalicia.skills.emergent_themes import (
             record_emergent_theme, pick_theme_to_surface, MIN_RECURRENCE,
         )
         # Only 2 mentions — below MIN_RECURRENCE=3
@@ -128,7 +128,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import (
+        from myalicia.skills.emergent_themes import (
             record_emergent_theme, pick_theme_to_surface,
             record_theme_acknowledged,
         )
@@ -142,7 +142,7 @@ def _():
     """A theme surfaced 7 days ago should NOT be re-surfaced (cooldown=14d)."""
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         # Manually write entries to control timestamps
         recent = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
         with open(et.EMERGENT_THEMES_PATH, "w") as f:
@@ -161,7 +161,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         # Seed an eligible theme
         et.record_emergent_theme(
             theme="the white line",
@@ -192,7 +192,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="theme to surface", evidence=["a", "b"], recurrence=3,
         )
@@ -210,7 +210,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import build_noticing_proactive
+        from myalicia.skills.emergent_themes import build_noticing_proactive
         assert build_noticing_proactive() is None
 
 
@@ -218,7 +218,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(theme="x", evidence=["y"], recurrence=3)
         et.compose_noticing_message = lambda theme, weather=None: None
         assert et.build_noticing_proactive() is None
@@ -231,7 +231,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(theme="ack me", evidence=["x"], recurrence=4)
         et.record_theme_acknowledged("ack me")
         # Pick should now be None — acknowledged themes are filtered
@@ -245,7 +245,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="tagged theme", evidence=["x"], recurrence=3,
         )
@@ -263,7 +263,7 @@ def _():
 def _():
     """Sandbox has no captures/learnings/metas → empty stream → no
     detection runs (saves a Sonnet call)."""
-    from skills.emergent_themes import _gather_stream
+    from myalicia.skills.emergent_themes import _gather_stream
     s = _gather_stream(within_days=14)
     # In sandbox this is empty; in production it'll have entries.
     assert isinstance(s, list)
@@ -276,7 +276,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import get_themes_summary
+        from myalicia.skills.emergent_themes import get_themes_summary
         s = get_themes_summary()
         assert s["total"] == 0
         assert s["by_status"] == {"pending": 0, "surfaced": 0, "acknowledged": 0}
@@ -288,7 +288,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(theme="alpha", evidence=["x"], recurrence=3)
         et.record_emergent_theme(theme="beta", evidence=["y"], recurrence=4)
         et.record_emergent_theme(theme="gamma", evidence=["z"], recurrence=5)
@@ -305,7 +305,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="theme one",
             evidence=["evidence quote here", "second quote"],
@@ -323,7 +323,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="surfaceable", evidence=["x"], recurrence=4,
         )
@@ -336,7 +336,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills.emergent_themes import render_noticings_for_telegram
+        from myalicia.skills.emergent_themes import render_noticings_for_telegram
         out = render_noticings_for_telegram()
         assert "Noticings" in out
         assert "No themes tracked yet" in out
@@ -346,7 +346,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="the white line", evidence=["from drawing"], recurrence=3,
         )
@@ -368,7 +368,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="lead theme",
             evidence=["this distinctive quote"],
@@ -385,9 +385,9 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         # Override loader to return no entries
-        import skills.emotion_model as em
+        import myalicia.skills.emotion_model as em
         original = em.load_recent_emotions
         em.load_recent_emotions = lambda days=7, path=None: []
         try:
@@ -400,8 +400,8 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
-        import skills.emotion_model as em
+        from myalicia.skills import emergent_themes as et
+        import myalicia.skills.emotion_model as em
         original = em.load_recent_emotions
         em.load_recent_emotions = lambda days=7, path=None: [
             {"emotion_label": "sad"},
@@ -418,8 +418,8 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
-        import skills.emotion_model as em
+        from myalicia.skills import emergent_themes as et
+        import myalicia.skills.emotion_model as em
         original = em.load_recent_emotions
         em.load_recent_emotions = lambda days=7, path=None: [
             {"emotion_label": "hap"},
@@ -437,7 +437,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="tender-day theme", evidence=["x"], recurrence=4,
         )
@@ -471,7 +471,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="suppressed", evidence=["x"], recurrence=4,
         )
@@ -494,7 +494,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.record_emergent_theme(
             theme="normal-day theme", evidence=["x"], recurrence=4,
         )
@@ -523,7 +523,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et._clear_last_noticing_context()
         et.record_emergent_theme(
             theme="ceremonial test", evidence=["x"], recurrence=4,
@@ -554,7 +554,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et._clear_last_noticing_context()
         et.record_emergent_theme(theme="banner test", evidence=["x"], recurrence=4)
         et.compose_noticing_message = (
@@ -579,7 +579,7 @@ def _():
     get_last_noticing_context returns None for stale entries."""
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         from datetime import datetime as _dt, timezone as _tz, timedelta as _td
         et._clear_last_noticing_context()
         # Manually populate with a stale timestamp
@@ -596,7 +596,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et._clear_last_noticing_context()
         assert et.get_last_noticing_context() is None
 
@@ -608,7 +608,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.NOTICING_VOICE_CACHE_DIR = os.path.join(td, "voice_cache")
         result = et.get_cached_noticing_voice(
             theme="never cached", voice_text="some text", style="gentle",
@@ -620,7 +620,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.NOTICING_VOICE_CACHE_DIR = os.path.join(td, "voice_cache")
         # Create a fake source file
         src = os.path.join(td, "src.ogg")
@@ -642,7 +642,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.NOTICING_VOICE_CACHE_DIR = os.path.join(td, "voice_cache")
         src = os.path.join(td, "src.ogg")
         with open(src, "wb") as f:
@@ -664,7 +664,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.NOTICING_VOICE_CACHE_DIR = os.path.join(td, "voice_cache")
         et.NOTICING_VOICE_CACHE_TTL_HOURS = 0.001  # ~3.6 seconds
         src = os.path.join(td, "src.ogg")
@@ -685,7 +685,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp(td)
-        from skills import emergent_themes as et
+        from myalicia.skills import emergent_themes as et
         et.NOTICING_VOICE_CACHE_DIR = os.path.join(td, "voice_cache")
         src = os.path.join(td, "src.ogg")
         with open(src, "wb") as f:

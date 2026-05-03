@@ -176,7 +176,7 @@ _DIMENSION_FRAMES = {
     "knowledge":     "what he's reading, learning, integrating intellectually",
     "practice":      "the daily practices and rituals that shape his life",
     "relationships": "his wife, family, friendships, the bonds that hold him",
-    "work":          "Amazon, his work output, leadership, professional craft",
+    "work":          "the user's work output, leadership, professional craft",
     "voice":         "his writing, essays, public expression, the work he publishes",
     "body":          "physical practice, energy, sleep, movement, embodiment",
     "wealth":        "money, security, financial trajectory, abundance",

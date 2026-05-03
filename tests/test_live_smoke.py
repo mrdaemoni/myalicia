@@ -100,11 +100,11 @@ class TestToolRouterWiring:
     """Verify tool_router has all expected tools defined."""
 
     def test_tools_list_populated(self):
-        from skills.tool_router import TOOLS
+        from myalicia.skills.tool_router import TOOLS
         assert len(TOOLS) >= 10, f"Expected 10+ tools, got {len(TOOLS)}"
 
     def test_all_expected_tools_present(self):
-        from skills.tool_router import TOOLS
+        from myalicia.skills.tool_router import TOOLS
         tool_names = {t["name"] for t in TOOLS}
         expected = {
             "remember", "search_vault", "send_email",
@@ -114,11 +114,11 @@ class TestToolRouterWiring:
         assert not missing, f"Missing tools: {missing}"
 
     def test_execute_tool_exists(self):
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         assert callable(execute_tool)
 
     def test_route_message_exists(self):
-        from skills.tool_router import route_message
+        from myalicia.skills.tool_router import route_message
         assert callable(route_message)
 
 
@@ -126,15 +126,15 @@ class TestReflexionConstitutionWiring:
     """Verify reflexion and constitution modules have expected gating functions."""
 
     def test_reflexion_gating_functions_exist(self):
-        from skills.reflexion import should_reflect
+        from myalicia.skills.reflexion import should_reflect
         assert callable(should_reflect)
 
     def test_constitution_gating_functions_exist(self):
-        from skills.constitution import should_evaluate
+        from myalicia.skills.constitution import should_evaluate
         assert callable(should_evaluate)
 
     def test_trajectory_recorder_class_exists(self):
-        from skills.trajectory import TrajectoryRecorder
+        from myalicia.skills.trajectory import TrajectoryRecorder
         assert TrajectoryRecorder is not None
 
 
@@ -142,11 +142,11 @@ class TestProactiveMessageWiring:
     """Verify proactive message system is wired correctly."""
 
     def test_get_startup_stats_exists(self):
-        from skills.proactive_messages import get_startup_stats
+        from myalicia.skills.proactive_messages import get_startup_stats
         assert callable(get_startup_stats)
 
     def test_generate_morning_greeting_exists(self):
-        from skills.proactive_messages import generate_morning_greeting
+        from myalicia.skills.proactive_messages import generate_morning_greeting
         assert callable(generate_morning_greeting)
 
 
@@ -154,15 +154,15 @@ class TestVaultSystemWiring:
     """Verify vault operations modules are functional."""
 
     def test_vault_resolver_has_resolve(self):
-        from skills.vault_resolver import resolve_note
+        from myalicia.skills.vault_resolver import resolve_note
         assert callable(resolve_note)
 
     def test_vault_metrics_has_determine_level(self):
-        from skills.vault_metrics import determine_level
+        from myalicia.skills.vault_metrics import determine_level
         assert callable(determine_level)
 
     def test_vault_metrics_has_dashboard(self):
-        from skills.vault_metrics import format_knowledge_dashboard
+        from myalicia.skills.vault_metrics import format_knowledge_dashboard
         assert callable(format_knowledge_dashboard)
 
 

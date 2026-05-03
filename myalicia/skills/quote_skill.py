@@ -12,7 +12,7 @@ from myalicia.config import config
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-QUOTES_FOLDER = f"/Users/alicia/Documents/{USER_HANDLE}-alicia/Quotes"
+QUOTES_FOLDER = str(config.vault.root / "Quotes")
 
 
 def extract_quote_content(filepath: str) -> dict:

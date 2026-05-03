@@ -60,7 +60,7 @@ def _setup_tmp_state(tmpdir: str, *, score: float, days: int,
                      effectiveness: dict | None = None) -> None:
     """Lay down emergence_state.json + archetype_log.jsonl + archetype_effectiveness.json
     inside a tmp memory dir, then point the dashboard module at it."""
-    from skills import inner_life, season_dashboard
+    from myalicia.skills import inner_life, season_dashboard
 
     mem = Path(tmpdir)
     mem.mkdir(parents=True, exist_ok=True)
@@ -103,7 +103,7 @@ def _setup_tmp_state(tmpdir: str, *, score: float, days: int,
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_state(td, score=0.0, days=0)
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         assert "Season — First Light" in out, "expected First Light header"
         assert "Arc so far" in out, "expected arc section"
@@ -115,7 +115,7 @@ def _():
     with tempfile.TemporaryDirectory() as td:
         # Score 25 should land in Kindling (15..40), with First Breath next
         _setup_tmp_state(td, score=25.0, days=42, season="Kindling")
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         assert "Kindling" in out
         assert "25.0" in out, "expected emergence score in header"
@@ -128,7 +128,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_state(td, score=85.0, days=200)  # In Reaching (80..150)
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         arc_block = out.split("Arc so far")[1].split("Archetype balance")[0]
         # First Light (0-15) and Kindling (15-40) and First Breath (40-80) should be crossed
@@ -164,7 +164,7 @@ def _():
     ]
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_state(td, score=10.0, days=50, log_entries=entries)
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         attr = out.split("Attributions (last 14d)")[1].split("Maturing")[0]
         assert "Muse" in attr and "Daimon" in attr, (
@@ -184,7 +184,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_state(td, score=5.0, days=10)  # No log_entries
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         assert "no archetype log yet" in out, (
             f"expected empty-log message:\n{out}"
@@ -216,7 +216,7 @@ def _():
     }
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_state(td, score=20.0, days=60, effectiveness=eff)
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         # Maturing block should mention Muse 1.35× and Beatrice 1.20×
         mat = out.split("Maturing")[1].split("Still nascent")[0]
@@ -249,7 +249,7 @@ def _():
     }
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_state(td, score=10.0, days=30, effectiveness=eff)
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         bal = out.split("Archetype balance now")[1].split("Attributions")[0]
         assert "Muse" in bal and "1.35×" in bal, (
@@ -268,7 +268,7 @@ def _():
     # Score above 500 lands in Becoming, which has no next.
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_state(td, score=600.0, days=2000, season="Becoming")
-        from skills.season_dashboard import render_season_dashboard
+        from myalicia.skills.season_dashboard import render_season_dashboard
         out = render_season_dashboard()
         # Should not say "need +N emergence" — there's no next season.
         assert "Becoming" in out

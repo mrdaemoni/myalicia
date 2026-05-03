@@ -33,7 +33,7 @@ def _fresh_env() -> tuple[Path, Path]:
 def _reload_runner():
     if "skills.practice_runner" in sys.modules:
         importlib.reload(sys.modules["skills.practice_runner"])
-    import skills.practice_runner as pr
+    import myalicia.skills.practice_runner as pr
     return pr
 
 
@@ -214,7 +214,7 @@ def test_close_practice_embeds_captures_made_during_practice() -> None:
     # Reload response_capture too so they share env
     if "skills.response_capture" in sys.modules:
         importlib.reload(sys.modules["skills.response_capture"])
-    import skills.response_capture as rc
+    import myalicia.skills.response_capture as rc
 
     p = pr.promote_synthesis_to_practice(
         title="Test practice", synthesis_title="Some synthesis",
@@ -339,7 +339,7 @@ def test_record_log_entry_queues_practice_progress_surfacing() -> None:
     # Reload finalizer too so its module-level paths match the new env
     if "skills.synthesis_finalizer" in sys.modules:
         importlib.reload(sys.modules["skills.synthesis_finalizer"])
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
 
     p = pr.promote_synthesis_to_practice(
         title="Public-facing attempts at the not-yet-good",
@@ -371,7 +371,7 @@ def test_practice_progress_surfacing_expires_after_24h() -> None:
     pr = _reload_runner()
     if "skills.synthesis_finalizer" in sys.modules:
         importlib.reload(sys.modules["skills.synthesis_finalizer"])
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
 
     p = pr.promote_synthesis_to_practice(
         title="Test practice", synthesis_title="s", synthesis_path="",

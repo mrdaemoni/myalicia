@@ -45,14 +45,14 @@ def _reload_composer():
     ):
         if m in sys.modules:
             importlib.reload(sys.modules[m])
-    import skills.circulation_composer as cc
+    import myalicia.skills.circulation_composer as cc
     return cc
 
 
 def test_import_and_public_api() -> None:
     """Every public name named in the design doc exists."""
     # Ensure VAULT_ROOT points at the real vault for parse tests
-    import skills.circulation_composer as cc
+    import myalicia.skills.circulation_composer as cc
     for name in (
         "decide_for_slot", "record_reaction", "check_invariants",
         "CirculationDecision", "Archetype", "Channel",
@@ -63,7 +63,7 @@ def test_import_and_public_api() -> None:
 
 
 def test_archetype_and_channel_enums() -> None:
-    from skills.circulation_composer import Archetype, Channel
+    from myalicia.skills.circulation_composer import Archetype, Channel
     assert Archetype.DAIMON.value == "Daimon"
     assert Archetype.MUSE.value == "Muse"
     assert Channel.NO_SEND.value == "no_send"
@@ -144,7 +144,7 @@ def test_surfacing_branch_uses_finalizer_queue(monkeypatch=None) -> None:
     def fake_mark_delivered(entry_id, stage_name):
         calls["mark"].append((entry_id, stage_name))
 
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
     sf.get_ready_surfacings = fake_get_ready_surfacings
     sf.mark_surfacing_delivered = fake_mark_delivered
 
@@ -173,7 +173,7 @@ def test_broken_record_dedup() -> None:
         "voice_hint": "still-warm",
         "source": "synthesis_finalize:Same synthesis:fresh",
     }
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
     sf.get_ready_surfacings = lambda now=None: [fake_surfacing]
     sf.mark_surfacing_delivered = lambda eid, sn: None
 
@@ -358,7 +358,7 @@ def test_record_send_augments_existing_log_entry() -> None:
         "voice_hint": "still-warm",
         "source": "synthesis_finalize:Some synthesis:fresh",
     }
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
     sf.get_ready_surfacings = lambda now=None: [fake_surfacing]
     sf.mark_surfacing_delivered = lambda eid, stage: None
 
@@ -419,7 +419,7 @@ def test_record_send_then_response_capture_uses_rendered_prompt() -> None:
         "voice_hint": "still-warm",
         "source": "synthesis_finalize:Three weeks ago insight:fresh",
     }
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
     sf.get_ready_surfacings = lambda now=None: [fake_surfacing]
     sf.mark_surfacing_delivered = lambda eid, stage: None
 
@@ -432,7 +432,7 @@ def test_record_send_then_response_capture_uses_rendered_prompt() -> None:
     if "skills.response_capture" in sys.modules:
         import importlib
         importlib.reload(sys.modules["skills.response_capture"])
-    import skills.response_capture as rc
+    import myalicia.skills.response_capture as rc
     out = rc.capture_if_responsive(
         "still very true",
         channel="text",
@@ -602,7 +602,7 @@ def test_practice_progress_surfacing_drives_composer_with_practice_voice() -> No
         "archetype_hint": "Beatrice",
     }
     calls = {"mark": []}
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
     sf.get_ready_surfacings = lambda now=None: [fake_surfacing]
     sf.mark_surfacing_delivered = lambda eid, stage: calls["mark"].append(
         (eid, stage)

@@ -53,7 +53,7 @@ def _run_all() -> int:
 
 
 def _setup_tmp_log(tmpdir: str) -> str:
-    from skills import multi_channel as mc
+    from myalicia.skills import multi_channel as mc
     p = os.path.join(tmpdir, "multi_channel_decisions.jsonl")
     mc.MEMORY_DIR = tmpdir
     mc.DECISIONS_LOG_PATH = p
@@ -226,7 +226,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills import multi_channel as mc
+        from myalicia.skills import multi_channel as mc
         original_ask = mc._ask_judge
         mc._ask_judge = lambda text, arch, src, sc: (True, "vivid imagery present")
         try:
@@ -247,7 +247,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills import multi_channel as mc
+        from myalicia.skills import multi_channel as mc
         original_ask = mc._ask_judge
         mc._ask_judge = lambda text, arch, src, sc: (False, "purely conversational")
         try:
@@ -454,7 +454,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills import multi_channel as mc
+        from myalicia.skills import multi_channel as mc
         original = mc._ask_voice_judge
         mc._ask_voice_judge = lambda text, slot: (True, "intimate prose")
         try:
@@ -471,7 +471,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills import multi_channel as mc
+        from myalicia.skills import multi_channel as mc
         original = mc._ask_voice_judge
         mc._ask_voice_judge = lambda text, slot: (False, "reads better silently")
         try:
@@ -521,7 +521,7 @@ def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
         # Stub bridge_text_to_drawing_caption to return None
-        from skills import drawing_skill as ds
+        from myalicia.skills import drawing_skill as ds
         original = ds.bridge_text_to_drawing_caption
         ds.bridge_text_to_drawing_caption = lambda text, archetype, original_caption: None
         try:
@@ -540,7 +540,7 @@ def _():
     with tempfile.TemporaryDirectory() as td:
         log_path = _setup_tmp_log(td)
         # Stub caption preview + Haiku tail
-        from skills import drawing_skill as ds, multi_channel as mc
+        from myalicia.skills import drawing_skill as ds, multi_channel as mc
         original_caption = ds.bridge_text_to_drawing_caption
         ds.bridge_text_to_drawing_caption = lambda text, archetype, original_caption: \
             "the white line refusing to break"

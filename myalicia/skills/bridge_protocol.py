@@ -106,7 +106,7 @@ def _maybe_validate(filename: str, payload: Any) -> None:
     strict enforcement should call `bridge_schema.validate_strict`.
     """
     try:
-        from skills import bridge_schema  # noqa: WPS433
+        from myalicia.skills import bridge_schema  # noqa: WPS433
     except ImportError:
         return
     try:

@@ -24,7 +24,7 @@ def _fresh_env() -> tuple[Path, Path]:
 def _reload():
     if "skills.effectiveness_dashboard" in sys.modules:
         importlib.reload(sys.modules["skills.effectiveness_dashboard"])
-    import skills.effectiveness_dashboard as ed
+    import myalicia.skills.effectiveness_dashboard as ed
     return ed
 
 
@@ -275,7 +275,7 @@ def test_phase_13_15_meta_quality_buckets_by_level() -> None:
     )
 
     # Stub most_responded_syntheses to control capture counts
-    import skills.response_capture as rc
+    import myalicia.skills.response_capture as rc
     original = rc.most_responded_syntheses
     rc.most_responded_syntheses = lambda n=100: [
         ("Plain claim", 2),       # plain: 2 captures
@@ -308,7 +308,7 @@ def test_phase_13_15_meta_quality_no_data() -> None:
     """Empty / no-syntheses-on-disk degrades gracefully."""
     vault, _ = _fresh_env()
     (vault / "Alicia" / "Wisdom" / "Synthesis").mkdir(parents=True, exist_ok=True)
-    import skills.response_capture as rc
+    import myalicia.skills.response_capture as rc
     original = rc.most_responded_syntheses
     rc.most_responded_syntheses = lambda n=100: []
     try:

@@ -128,7 +128,7 @@ def _():
         # we may not see it yet — fall back to checking the default-disk
         # behavior by setting the path directly.
         from pathlib import Path
-        from skills import conversations as cv
+        from myalicia.skills import conversations as cv
         cv.CONVERSATIONS_PATH = Path(td) / "conversations.json"
         cv._invalidate_cache()
         regs = cv.list_conversations()
@@ -144,7 +144,7 @@ def _():
     import tempfile, os
     from pathlib import Path
     with tempfile.TemporaryDirectory() as td:
-        from skills import hector_model as hm
+        from myalicia.skills import hector_model as hm
         hm.MEMORY_DIR = Path(td)
         hm.LEARNINGS_LOG = Path(td) / "hector_learnings.jsonl"
         hm.BASELINES_DIR = Path(td) / "baselines"
@@ -165,7 +165,7 @@ def _():
     import tempfile, os, json
     from pathlib import Path
     with tempfile.TemporaryDirectory() as td:
-        from skills import multi_channel as mc
+        from myalicia.skills import multi_channel as mc
         mc.MEMORY_DIR = td
         mc.DECISIONS_LOG_PATH = os.path.join(td, "mc.jsonl")
         mc.record_multi_channel_decision({
@@ -181,7 +181,7 @@ def _():
 def _():
     import tempfile, os, json
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr
+        from myalicia.skills import dimension_research as dr
         dr.MEMORY_DIR = td
         dr.DIMENSION_LOG_PATH = os.path.join(td, "qa.jsonl")
         dr.record_dimension_question_asked("body", "have you moved?")
@@ -194,7 +194,7 @@ def _():
 def _():
     import tempfile, os, json
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "tp.jsonl")
         tp.record_thread_pull("a thread", "a message")
@@ -210,7 +210,7 @@ def _isolate_registry(td):
     """Reroute conversations.CONVERSATIONS_PATH + invalidate cache so
     each test gets a clean registry on disk."""
     from pathlib import Path
-    from skills import conversations as cv
+    from myalicia.skills import conversations as cv
     cv.CONVERSATIONS_PATH = Path(td) / "conversations.json"
     cv._invalidate_cache()
 
@@ -301,7 +301,7 @@ def _():
     import tempfile
     with tempfile.TemporaryDirectory() as td:
         _isolate_registry(td)
-        from skills import conversations as cv
+        from myalicia.skills import conversations as cv
         cv.add_conversation("work", "work-Alicia")
         cv.set_active_conversation("work")
         # Simulate process restart: invalidate cache, force re-read
@@ -395,7 +395,7 @@ def _():
     from pathlib import Path
     with tempfile.TemporaryDirectory() as td:
         _isolate_registry(td)
-        from skills import conversations as cv
+        from myalicia.skills import conversations as cv
         # Manually write a state where active points at a missing id
         path = Path(td) / "conversations.json"
         path.write_text(json.dumps({

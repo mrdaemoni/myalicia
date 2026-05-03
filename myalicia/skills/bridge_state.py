@@ -3,7 +3,7 @@
 Alicia — Bridge State Snapshot (H2)
 
 Writes a small machine-readable JSON file at
-/Users/alicia/Documents/user-alicia/Alicia/Bridge/alicia-state.json
+<vault.bridge_path>/alicia-state.json
 containing Alicia's current vitals: season, emergence score, archetype
 weights, last voice interaction, mood signal, hot threads, last score-5
 reaction.

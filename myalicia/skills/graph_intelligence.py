@@ -33,7 +33,10 @@ GRAPH_REPORT_FILE = os.path.join(MEMORY_DIR, "graph_health.md")
 LINK_SUGGESTIONS_FILE = os.path.join(MEMORY_DIR, "link_suggestions.json")
 
 # Folders to exclude from graph analysis
-EXCLUDED_FOLDERS = {'.obsidian', '.trash', 'DwH', 'Amazon', 'BITC', 'CIID', 'People', 'templates', 'Alejandra', 'Ana Julia', 'Benefits'}
+# Folders excluded from graph traversal. Generic defaults only — users
+# extend this list in their own config to skip personal subfolders
+# (employer/project/people directories that aren't part of synthesis).
+EXCLUDED_FOLDERS = {'.obsidian', '.trash', '.git', '__pycache__', 'templates'}
 
 # The 8 knowledge clusters
 CLUSTERS = ["Quality", "Mastery", "Environment", "Measurement",

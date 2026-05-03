@@ -49,7 +49,7 @@ def _run_all() -> int:
 
 def _setup_tmp_log(tmpdir: str) -> str:
     """Reroute the multi_channel log to a tmp file. Returns the path."""
-    from skills import multi_channel as mc
+    from myalicia.skills import multi_channel as mc
     p = os.path.join(tmpdir, "multi_channel_decisions.jsonl")
     mc.MEMORY_DIR = tmpdir
     mc.DECISIONS_LOG_PATH = p
@@ -73,7 +73,7 @@ def _seed_log(path: str, entries: list[dict]) -> None:
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_tmp_log(td)
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         assert "Multichannel — last 24h" in out
         assert "No decisions logged yet" in out
@@ -107,7 +107,7 @@ def _():
              "score": 2.2, "archetype": "psyche", "source_kind": "surfacing",
              "rationale": "purely conversational", "text_hash": "d3", "decision_id": "z"},
         ])
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         # Header
         assert "Multichannel — last 24h" in out
@@ -132,7 +132,7 @@ def _():
              "slot": "evening", "rationale": "cap reached",
              "text_hash": "v1", "text_len": 80},
         ])
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         assert "saturation guard tripped" in out
 
@@ -165,7 +165,7 @@ def _():
             for e in entries:
                 f.write(json.dumps(e) + "\n")
 
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         assert "Recent decisions:" in out
         # Both fire emojis present
@@ -191,7 +191,7 @@ def _():
                 "rationale": "new", "text_hash": "new", "text_len": 50,
             }) + "\n")
 
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         # Only the new (within 24h) entry should count → "1 fired"
         assert "1 fired" in out, (
@@ -207,7 +207,7 @@ def _():
             {"channel": "voice", "voice": True, "path": "fast_voice_default",
              "slot": "midday", "rationale": "x", "text_hash": "v1", "text_len": 50},
         ])
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         assert "Voice:" in out
         assert "1 fired" in out
@@ -224,7 +224,7 @@ def _():
             {"channel": "voice", "voice": True, "path": "fast_voice_default",
              "slot": "morning", "rationale": "x", "text_hash": "v1", "text_len": 50},
         ])
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         assert "Coherent moments" in out
         assert "none in last 24h" in out
@@ -268,7 +268,7 @@ def _():
                 "rationale": "the white line refusing to break", "text_hash": "c3",
             }) + "\n")
 
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         assert "3 in last 24h" in out, f"expected '3 in last 24h': {out!r}"
         assert "Muse 2" in out and "Daimon 1" in out
@@ -291,7 +291,7 @@ def _():
              "path": "voice_drawing_tail", "archetype": "daimon",
              "rationale": "tail", "text_hash": "c2"},
         ])
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         # Voice + drawing channels should both report no decisions —
         # the coherent_moment entries belong to their own section, not the per-channel rollup.
@@ -316,7 +316,7 @@ def _():
     try:
         # Need a fresh import of the dashboard so the import inside it re-runs
         _sys.modules.pop("skills.multichannel_dashboard", None)
-        from skills.multichannel_dashboard import render_multichannel_dashboard
+        from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
         out = render_multichannel_dashboard()
         assert "/multichannel error" in out, f"expected error message, got:\n{out}"
     finally:

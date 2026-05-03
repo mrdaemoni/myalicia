@@ -43,8 +43,8 @@ def _reload():
     for mod in ("skills.synthesis_finalizer", "skills.practice_runner"):
         if mod in sys.modules:
             importlib.reload(sys.modules[mod])
-    import skills.synthesis_finalizer as sf
-    import skills.practice_runner as pr
+    import myalicia.skills.synthesis_finalizer as sf
+    import myalicia.skills.practice_runner as pr
     return sf, pr
 
 
@@ -288,7 +288,7 @@ def test_check_lived_invariants_flags_unused() -> None:
 
 def test_practice_runner_export_hook() -> None:
     """Guardrail: practice_runner must import the finalizer hook."""
-    import skills.practice_runner as pr
+    import myalicia.skills.practice_runner as pr
     src = Path(pr.__file__).read_text(encoding="utf-8")
     assert "from skills.synthesis_finalizer import finalize_lived_note" in src, (
         "close_practice must call finalize_lived_note (Lived → Synthesis feedback)"

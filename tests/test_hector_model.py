@@ -248,7 +248,7 @@ def test_classify_dimension_keyword_routing() -> None:
         ("I had a great workout this morning",                 "body"),
         ("Need to think about my 401k allocation",             "wealth"),
         ("Conversation with my wife about parenting",          "relationships"),
-        ("Sprint review with my design team at Amazon",        "work"),
+        ("Sprint review with my design team at work",        "work"),
         ("Drafted a new essay about quality",                  "voice"),
         ("Did some art making this evening",                   "creative"),
         ("Returning to the same morning ritual",               "practice"),
@@ -327,7 +327,7 @@ def test_classify_dimension_word_boundary_no_substring_false_positives() -> None
     assert hm.classify_dimension("morning routine going well") == "practice"
 
     # Genuine mentions still classify correctly
-    assert hm.classify_dimension("Amazon promotion came through") == "work"
+    assert hm.classify_dimension("My promotion came through") == "work"
     assert hm.classify_dimension("walking the dog tonight") == "body"
 
 

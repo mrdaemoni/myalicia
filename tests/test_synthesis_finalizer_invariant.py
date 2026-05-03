@@ -30,7 +30,7 @@ from pathlib import Path
 # Allow running from repo root
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from skills.synthesis_finalizer import check_invariant, check_lived_invariants  # noqa: E402
+from myalicia.skills.synthesis_finalizer import check_invariant, check_lived_invariants  # noqa: E402
 
 
 # ── Baselines ──────────────────────────────────────────────────────────────
@@ -88,7 +88,7 @@ def test_synthesis_graph_bidirectional() -> None:
 
 def test_finalizer_is_importable() -> None:
     """Smoke — every export named in the design doc must exist."""
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
     for name in (
         "finalize", "finalize_all", "check_invariant", "parse_synthesis",
         "resolve_wikilink", "classify_wikilink",
@@ -109,7 +109,7 @@ def test_lived_is_in_canonical_sources() -> None:
     canonical source tier list ever drops LIVED_DIR it means someone has
     silently removed the feedback loop — CI red.
     """
-    import skills.synthesis_finalizer as sf
+    import myalicia.skills.synthesis_finalizer as sf
     assert sf.LIVED_DIR in sf.CANONICAL_SOURCE_DIRS, (
         "LIVED_DIR must be in CANONICAL_SOURCE_DIRS — the Lived → Synthesis "
         "feedback loop depends on it being first-class."

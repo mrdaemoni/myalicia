@@ -61,19 +61,19 @@ print("\n📦 Import Verification")
 
 @task_test("Import all skill modules")
 def _():
-    from skills.proactive_messages import build_startup_stats, build_startup_greeting, build_midday_message, build_evening_message
-    from skills.vault_intelligence import run_daily_tagging_pass, format_daily_report, run_weekly_deep_pass
-    from skills.curiosity_engine import run_curiosity_scan, detect_novelty, get_curiosity_context_for_message
-    from skills.vault_metrics import compute_all_metrics, format_knowledge_dashboard, append_weekly_snapshot
-    from skills.graph_intelligence import run_graph_health_report
-    from skills.trajectory import analyze_trajectories, TrajectoryRecorder
-    from skills.memory_skill import consolidate_all_memory, extract_from_message, build_session_context
-    from skills.reflexion import should_reflect, reflect_on_task, get_relevant_reflections
-    from skills.metacognition import assess_confidence, should_use_opus
-    from skills.constitution import should_evaluate, evaluate_output
-    from skills.semantic_search import index_vault, semantic_search, get_index_stats
-    from skills.tool_router import route_message, execute_tool, TOOLS
-    from skills.voice_skill import get_voice_status
+    from myalicia.skills.proactive_messages import build_startup_stats, build_startup_greeting, build_midday_message, build_evening_message
+    from myalicia.skills.vault_intelligence import run_daily_tagging_pass, format_daily_report, run_weekly_deep_pass
+    from myalicia.skills.curiosity_engine import run_curiosity_scan, detect_novelty, get_curiosity_context_for_message
+    from myalicia.skills.vault_metrics import compute_all_metrics, format_knowledge_dashboard, append_weekly_snapshot
+    from myalicia.skills.graph_intelligence import run_graph_health_report
+    from myalicia.skills.trajectory import analyze_trajectories, TrajectoryRecorder
+    from myalicia.skills.memory_skill import consolidate_all_memory, extract_from_message, build_session_context
+    from myalicia.skills.reflexion import should_reflect, reflect_on_task, get_relevant_reflections
+    from myalicia.skills.metacognition import assess_confidence, should_use_opus
+    from myalicia.skills.constitution import should_evaluate, evaluate_output
+    from myalicia.skills.semantic_search import index_vault, semantic_search, get_index_stats
+    from myalicia.skills.tool_router import route_message, execute_tool, TOOLS
+    from myalicia.skills.voice_skill import get_voice_status
     return "all 13 modules imported"
 
 
@@ -82,7 +82,7 @@ print("\n📊 Vault Metrics (no API calls)")
 
 @task_test("compute_all_metrics()")
 def _():
-    from skills.vault_metrics import compute_all_metrics
+    from myalicia.skills.vault_metrics import compute_all_metrics
     metrics = compute_all_metrics()
     assert "synthesis_count" in metrics, "Missing synthesis_count"
     assert "level" in metrics, "Missing level info"
@@ -91,7 +91,7 @@ def _():
 
 @task_test("format_knowledge_dashboard()")
 def _():
-    from skills.vault_metrics import compute_all_metrics, format_knowledge_dashboard
+    from myalicia.skills.vault_metrics import compute_all_metrics, format_knowledge_dashboard
     metrics = compute_all_metrics()
     dashboard = format_knowledge_dashboard(metrics)
     assert "Level" in dashboard, "Dashboard missing Level header"
@@ -105,7 +105,7 @@ print("\n🌅 Morning Message (API call)")
 
 @task_test("build_startup_stats()")
 def _():
-    from skills.proactive_messages import build_startup_stats
+    from myalicia.skills.proactive_messages import build_startup_stats
     stats = build_startup_stats()
     assert "Alicia is online" in stats, "Missing online header"
     assert "Level" in stats, "Missing level info in stats"
@@ -114,7 +114,7 @@ def _():
 
 @task_test("build_startup_greeting()")
 def _():
-    from skills.proactive_messages import build_startup_greeting
+    from myalicia.skills.proactive_messages import build_startup_greeting
     greeting = build_startup_greeting()
     assert len(greeting) > 10, "Greeting too short"
     return greeting[:100]
@@ -123,7 +123,7 @@ print("\n☀️ Midday Message (API call)")
 
 @task_test("build_midday_message()")
 def _():
-    from skills.proactive_messages import build_midday_message
+    from myalicia.skills.proactive_messages import build_midday_message
     msg = build_midday_message()
     assert len(msg) > 10, "Midday message too short"
     return msg[:100]
@@ -132,7 +132,7 @@ print("\n🌙 Evening Message (API call)")
 
 @task_test("build_evening_message()")
 def _():
-    from skills.proactive_messages import build_evening_message
+    from myalicia.skills.proactive_messages import build_evening_message
     msg = build_evening_message()
     assert len(msg) > 10, "Evening message too short"
     return msg[:100]
@@ -143,21 +143,21 @@ print("\n🔍 Curiosity Engine")
 
 @task_test("run_curiosity_scan()")
 def _():
-    from skills.curiosity_engine import run_curiosity_scan
+    from myalicia.skills.curiosity_engine import run_curiosity_scan
     result = run_curiosity_scan()
     assert isinstance(result, dict), f"Expected dict, got {type(result)}"
     return f"questions_generated: {result.get('questions_generated', '?')}, gaps: {result.get('gaps_detected', '?')}"
 
 @task_test("detect_novelty('What is Nishida Kitaro absolute nothingness?')")
 def _():
-    from skills.curiosity_engine import detect_novelty
+    from myalicia.skills.curiosity_engine import detect_novelty
     result = detect_novelty("What is Nishida Kitaro absolute nothingness?")
     assert isinstance(result, dict), f"Expected dict, got {type(result)}"
     return f"is_novel: {result.get('is_novel')}, score: {result.get('curiosity_score', '?')}"
 
 @task_test("get_curiosity_context_for_message('mastery and deliberate practice')")
 def _():
-    from skills.curiosity_engine import get_curiosity_context_for_message
+    from myalicia.skills.curiosity_engine import get_curiosity_context_for_message
     ctx = get_curiosity_context_for_message("mastery and deliberate practice")
     return f"context length: {len(ctx)} chars" if ctx else "empty context"
 
@@ -167,8 +167,8 @@ print("\n🧠 Metacognition")
 
 @task_test("assess_confidence() + should_use_opus()")
 def _():
-    from skills.metacognition import assess_confidence, should_use_opus
-    from skills.memory_skill import get_memory_summary
+    from myalicia.skills.metacognition import assess_confidence, should_use_opus
+    from myalicia.skills.memory_skill import get_memory_summary
     memory = get_memory_summary()
     assessment = assess_confidence("Tell me about Heidegger's concept of Dasein", memory, "")
     use_opus = should_use_opus(assessment)
@@ -180,13 +180,13 @@ print("\n🪞 Reflexion")
 
 @task_test("get_relevant_reflections()")
 def _():
-    from skills.reflexion import get_relevant_reflections
+    from myalicia.skills.reflexion import get_relevant_reflections
     reflections = get_relevant_reflections("conversation", "Tell me about my reading list")
     return f"reflections length: {len(reflections)} chars"
 
 @task_test("should_reflect() gating")
 def _():
-    from skills.reflexion import should_reflect
+    from myalicia.skills.reflexion import should_reflect
     assert should_reflect("synthesise_vault") == True, "Should reflect on synthesise_vault"
     assert should_reflect("get_random_quote") == False, "Should NOT reflect on get_random_quote"
     return "gating correct"
@@ -197,7 +197,7 @@ print("\n📜 Constitution")
 
 @task_test("should_evaluate() gating")
 def _():
-    from skills.constitution import should_evaluate
+    from myalicia.skills.constitution import should_evaluate
     assert should_evaluate("synthesise_vault") == True
     assert should_evaluate("conversation") == False
     return "gating correct"
@@ -208,13 +208,13 @@ print("\n🔎 Semantic Search")
 
 @task_test("get_index_stats()")
 def _():
-    from skills.semantic_search import get_index_stats
+    from myalicia.skills.semantic_search import get_index_stats
     stats = get_index_stats()
     return stats[:100]
 
 @task_test("semantic_search('mastery and deliberate practice')")
 def _():
-    from skills.semantic_search import semantic_search
+    from myalicia.skills.semantic_search import semantic_search
     hits = semantic_search("mastery and deliberate practice", n_results=3)
     return f"{len(hits)} hits: {[h.get('title', '?')[:30] for h in hits]}"
 
@@ -224,7 +224,7 @@ print("\n🔧 Tool Router")
 
 @task_test("route_message() with model parameter")
 def _():
-    from skills.tool_router import route_message
+    from myalicia.skills.tool_router import route_message
     import inspect
     sig = inspect.signature(route_message)
     assert "model" in sig.parameters, "model parameter missing from route_message"
@@ -239,7 +239,7 @@ def _():
 
 @task_test("route_message() with Opus escalation")
 def _():
-    from skills.tool_router import route_message
+    from myalicia.skills.tool_router import route_message
     result = route_message(
         "You are Alicia, a helpful assistant.",
         [{"role": "user", "content": "Hello"}],
@@ -254,7 +254,7 @@ print("\n🕸 Graph Intelligence")
 
 @task_test("run_graph_health_report()")
 def _():
-    from skills.graph_intelligence import run_graph_health_report
+    from myalicia.skills.graph_intelligence import run_graph_health_report
     report = run_graph_health_report()
     assert len(report) > 20, "Report too short"
     return f"{len(report)} chars: {report[:80]}..."
@@ -265,7 +265,7 @@ print("\n📈 Trajectory")
 
 @task_test("TrajectoryRecorder lifecycle")
 def _():
-    from skills.trajectory import TrajectoryRecorder
+    from myalicia.skills.trajectory import TrajectoryRecorder
     t = TrajectoryRecorder("test message")
     t.record_metacog({"confidence": 8, "confidence_level": "high"})
     t.record_routing({"type": "text"})
@@ -287,14 +287,14 @@ print("\n💾 Memory")
 
 @task_test("build_session_context()")
 def _():
-    from skills.memory_skill import build_session_context
+    from myalicia.skills.memory_skill import build_session_context
     ctx = build_session_context("hello")
     assert len(ctx) > 10, "Session context too short"
     return f"{len(ctx)} chars"
 
 @task_test("get_memory_summary()")
 def _():
-    from skills.memory_skill import get_memory_summary
+    from myalicia.skills.memory_skill import get_memory_summary
     summary = get_memory_summary()
     assert len(summary) > 10
     return f"{len(summary)} chars"
@@ -305,7 +305,7 @@ print("\n🎤 Voice")
 
 @task_test("get_voice_status()")
 def _():
-    from skills.voice_skill import get_voice_status
+    from myalicia.skills.voice_skill import get_voice_status
     status = get_voice_status()
     return json.dumps(status)
 
@@ -315,7 +315,7 @@ print("\n🌿 Daily Vault Pass (light check only)")
 
 @task_test("run_daily_tagging_pass() — dry import")
 def _():
-    from skills.vault_intelligence import run_daily_tagging_pass, format_daily_report
+    from myalicia.skills.vault_intelligence import run_daily_tagging_pass, format_daily_report
     # Don't actually run it (expensive) — just verify callable
     assert callable(run_daily_tagging_pass)
     assert callable(format_daily_report)
@@ -327,11 +327,11 @@ print("\n🧬 Weekly Tasks (dry check only)")
 
 @task_test("Weekly functions are importable and callable")
 def _():
-    from skills.vault_intelligence import run_weekly_deep_pass
-    from skills.trajectory import analyze_trajectories
-    from skills.memory_skill import consolidate_all_memory
-    from skills.vault_metrics import append_weekly_snapshot
-    from skills.graph_intelligence import run_graph_health_report
+    from myalicia.skills.vault_intelligence import run_weekly_deep_pass
+    from myalicia.skills.trajectory import analyze_trajectories
+    from myalicia.skills.memory_skill import consolidate_all_memory
+    from myalicia.skills.vault_metrics import append_weekly_snapshot
+    from myalicia.skills.graph_intelligence import run_graph_health_report
     assert all(callable(f) for f in [run_weekly_deep_pass, analyze_trajectories, consolidate_all_memory, append_weekly_snapshot, run_graph_health_report])
     return "all 5 weekly functions callable"
 
@@ -341,7 +341,7 @@ print("\n🎨 Drawing Skill")
 
 @task_test("generate_drawing() produces a real PNG on disk", timeout_sec=30)
 def _():
-    from skills.drawing_skill import generate_drawing, VALID_ARCHETYPES
+    from myalicia.skills.drawing_skill import generate_drawing, VALID_ARCHETYPES
     from pathlib import Path
     from PIL import Image
     # Render one drawing (deterministic seed so this test is repeatable).
@@ -361,7 +361,7 @@ def _():
 
 @task_test("can_draw_now() + record_drawing_sent() integrate", timeout_sec=5)
 def _():
-    from skills.drawing_skill import can_draw_now, get_drawing_stats
+    from myalicia.skills.drawing_skill import can_draw_now, get_drawing_stats
     # Function returns (bool, reason); either outcome is valid, just shape
     ok, reason = can_draw_now()
     assert isinstance(ok, bool) and isinstance(reason, str)
@@ -377,7 +377,7 @@ def _():
     import os as _os
     from pathlib import Path
     from PIL import Image
-    from skills.drawing_skill import generate_drawing, VALID_ARCHETYPES
+    from myalicia.skills.drawing_skill import generate_drawing, VALID_ARCHETYPES
 
     if not _os.getenv("ANTHROPIC_API_KEY"):
         return "skipped (no ANTHROPIC_API_KEY)"
@@ -405,7 +405,7 @@ def _():
 def _():
     import os as _os
     from pathlib import Path
-    from skills.drawing_skill import (
+    from myalicia.skills.drawing_skill import (
         generate_drawing, build_drawing_state_snapshot, VALID_ARCHETYPES,
     )
     if not _os.getenv("ANTHROPIC_API_KEY"):

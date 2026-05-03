@@ -138,7 +138,7 @@ def _():
 @test("record_thread_pull + recent_thread_pulls: round-trip")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
 
@@ -155,7 +155,7 @@ def _():
 @test("recent_thread_pulls: respects window")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
 
         old_ts = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
@@ -231,7 +231,7 @@ def _():
 @test("build_thread_pull_message: returns None when no profile dir")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.PROFILES_DIR = os.path.join(td, "does-not-exist")
         out = tp.build_thread_pull_message()
         assert out is None, f"expected None with no profile, got {out!r}"
@@ -249,7 +249,7 @@ def _():
 @test("Phase 13.11 mark_thread_pull_replied: matches recent pull and writes reply record")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
 
@@ -279,7 +279,7 @@ def _():
 @test("Phase 13.11 mark_thread_pull_replied: returns None for non-thread-pull text")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
         result = tp.mark_thread_pull_replied(
@@ -291,7 +291,7 @@ def _():
 @test("Phase 13.11 advanced_threads: groups replies by thread_summary")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
 
@@ -318,7 +318,7 @@ def _():
 @test("Phase 13.11 recent_thread_pulls: skips reply records (kind='reply')")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
         msg = f"{tp.THREAD_PULL_BANNER}\n\nbody"
@@ -335,7 +335,7 @@ def _():
 @test("build_thread_pull_message: returns None when profile has no Open Threads")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.PROFILES_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
         with open(os.path.join(td, "2026-W18-hector.md"), "w") as f:

@@ -32,7 +32,7 @@ class TestTextMessageFlow:
         with patch("skills.tool_router.client") as mock_client:
             mock_client.messages.create.return_value = response
 
-            from skills.tool_router import route_message
+            from myalicia.skills.tool_router import route_message
             result = route_message(
                 "You are Alicia.",
                 [{"role": "user", "content": "What is quality?"}]
@@ -58,7 +58,7 @@ class TestTextMessageFlow:
         with patch("skills.tool_router.client") as mock_client:
             mock_client.messages.create.return_value = response
 
-            from skills.tool_router import route_message
+            from myalicia.skills.tool_router import route_message
             routed = route_message(
                 "You are Alicia.",
                 [{"role": "user", "content": "Remember my favorite color is deep blue"}]
@@ -68,7 +68,7 @@ class TestTextMessageFlow:
 
             # Step 2: Execute the tool
             with patch("skills.memory_skill.remember_manual", return_value="Remembered: favorite_color = deep blue"):
-                from skills.tool_router import execute_tool
+                from myalicia.skills.tool_router import execute_tool
                 result = execute_tool(routed["tool_name"], routed["tool_input"])
                 assert result["success"] is True
                 assert "deep blue" in result["result"]
@@ -81,7 +81,7 @@ class TestTextMessageFlow:
         with patch("skills.tool_router.client") as mock_client:
             mock_client.messages.create.side_effect = Exception("API unavailable")
 
-            from skills.tool_router import route_message
+            from myalicia.skills.tool_router import route_message
             result = route_message("system", [{"role": "user", "content": "test"}])
 
             assert result["type"] == "error"
@@ -125,7 +125,7 @@ class TestMemoryExtractionFlow:
              patch("skills.memory_skill.PREFERENCES_FILE", str(mem_dir / "preferences.md")), \
              patch("skills.memory_skill.CONCEPTS_FILE", str(mem_dir / "concepts.md")), \
              patch("skills.memory_skill.VAULT_MEMORY_DIR", str(vault_mem)):
-            from skills.memory_skill import extract_from_message
+            from myalicia.skills.memory_skill import extract_from_message
             result = extract_from_message(
                 "I've been deeply interested in the measurement problem in quantum mechanics "
                 "and how it relates to consciousness and observation."
@@ -170,7 +170,7 @@ class TestEmailConfirmationFlow:
         send_email tool should NEVER send directly.
         It must return action='confirm_email' first.
         """
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         result = execute_tool("send_email", {
             "to": "boss@company.com",
             "subject": "Project update",
@@ -183,7 +183,7 @@ class TestEmailConfirmationFlow:
 
     def test_email_data_preserved_in_confirmation(self):
         """All email fields should be preserved in the confirmation data."""
-        from skills.tool_router import execute_tool
+        from myalicia.skills.tool_router import execute_tool
         input_data = {
             "to": "colleague@work.com",
             "subject": "Meeting notes",

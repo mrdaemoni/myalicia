@@ -27,7 +27,7 @@ MEMORY_DIR     = os.path.expanduser("~/alicia/memory")
 ALICIA_MD      = os.path.expanduser("~/alicia/ALICIA.md")
 VAULT          = str(config.vault.inner_path)
 VAULT_ROOT     = str(config.vault.root)
-QUOTES_FOLDER  = f"/Users/alicia/Documents/{USER_HANDLE}-alicia/Quotes"
+QUOTES_FOLDER  = str(config.vault.root / "Quotes")
 
 MEMORY_FILE    = os.path.join(MEMORY_DIR, "MEMORY.md")
 PATTERNS_FILE  = os.path.join(MEMORY_DIR, "patterns.md")

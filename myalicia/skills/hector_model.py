@@ -90,7 +90,7 @@ DIMENSIONS: tuple[str, ...] = (
     "knowledge",      # what he's learning, reading, synthesizing
     "practice",       # disciplines, rituals, daily structure
     "relationships",  # family, friends, professional
-    "work",           # design leadership, Amazon, career arc
+    "work",           # work, leadership, career arc
     "voice",          # writing, speaking, expression
     "body",           # health, fitness, embodiment
     "wealth",         # money, planning, accumulation

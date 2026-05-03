@@ -80,7 +80,9 @@ INDEX_FOLDERS = {
 }
 
 # Excluded from scanning
-EXCLUDED_DIRS = {".obsidian", ".trash", ".git", "__pycache__", "templates", "DwH", "Amazon", "BITC", "CIID", "Alejandra", "Ana Julia", "Benefits"}
+# Dirs excluded from ingest. Generic defaults only — users extend
+# in their own config for personal subfolders.
+EXCLUDED_DIRS = {'.obsidian', '.trash', '.git', '__pycache__', 'templates'}
 
 # The 8 knowledge clusters for context
 CLUSTERS = [

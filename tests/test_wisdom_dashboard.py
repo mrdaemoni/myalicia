@@ -30,7 +30,7 @@ def _reload():
     ):
         if mod in sys.modules:
             importlib.reload(sys.modules[mod])
-    import skills.wisdom_dashboard as wd
+    import myalicia.skills.wisdom_dashboard as wd
     return wd
 
 
@@ -78,7 +78,7 @@ def test_dashboard_shows_active_practice_with_next_check_in() -> None:
     vault, mem = _fresh_env()
     wd = _reload()
     # Seed an active practice via practice_runner
-    import skills.practice_runner as pr
+    import myalicia.skills.practice_runner as pr
     importlib.reload(pr)
     pr.promote_synthesis_to_practice(
         title="Public-facing attempts at the not-yet-good",

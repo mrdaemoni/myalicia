@@ -61,7 +61,7 @@ def _setup_vault(tmpdir: str) -> tuple[Path, Path]:
     mem = Path(tmpdir) / "memory"
     mem.mkdir(parents=True, exist_ok=True)
 
-    from skills import meta_synthesis as ms
+    from myalicia.skills import meta_synthesis as ms
     ms.SYNTHESIS_DIR = synth
     ms.MEMORY_DIR = str(mem)
     ms.META_LOG_PATH = str(mem / "meta_synthesis_log.jsonl")
@@ -121,7 +121,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
-        from skills import meta_synthesis as ms
+        from myalicia.skills import meta_synthesis as ms
         ms.record_meta_synthesis("Parent A", "Child A", "/v/Child A.md", 4)
         recent = ms.has_recent_meta("Parent A", within_days=14)
         assert recent is not None
@@ -134,7 +134,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
-        from skills import meta_synthesis as ms
+        from myalicia.skills import meta_synthesis as ms
         old_ts = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
         with open(ms.META_LOG_PATH, "w") as f:
             f.write(json.dumps({
@@ -223,7 +223,7 @@ def _():
         (synth / "Recently meta'd.md").write_text("# x", encoding="utf-8")
         (synth / "Recently meta'd grew.md").write_text("# x", encoding="utf-8")
 
-        from skills import meta_synthesis as ms
+        from myalicia.skills import meta_synthesis as ms
         # Both have a recent meta: one at count=4 (no growth), one at count=3 (growth)
         ms.record_meta_synthesis("Recently meta'd", "C1", "/v/C1.md", 4)
         ms.record_meta_synthesis("Recently meta'd grew", "C2", "/v/C2.md", 3)
@@ -261,7 +261,7 @@ def _():
         (synth / "Small growth.md").write_text("# x", encoding="utf-8")
         (synth / "Fresh entry.md").write_text("# x", encoding="utf-8")
 
-        from skills import meta_synthesis as ms
+        from myalicia.skills import meta_synthesis as ms
         ms.record_meta_synthesis("Big growth", "Cb", "/Cb.md", 3)
         ms.record_meta_synthesis("Small growth", "Cs", "/Cs.md", 5)
 
@@ -318,7 +318,7 @@ def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
         # Reroute hector_model storage to tmp too
-        from skills import hector_model as hm
+        from myalicia.skills import hector_model as hm
         baselines_dir = Path(td) / "baselines"
         baselines_dir.mkdir()
         # NOTE: hector_model uses LEARNINGS_LOG (not LEARNINGS_PATH).
@@ -329,7 +329,7 @@ def _():
         hm.BASELINES_DIR = baselines_dir
 
         # Stub the Sonnet extractor to return controlled learnings
-        from skills import meta_synthesis as ms
+        from myalicia.skills import meta_synthesis as ms
         original = ms._extract_learnings_from_meta
         ms._extract_learnings_from_meta = lambda body, parent_title: [
             {"dimension": "knowledge",
@@ -367,7 +367,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
-        from skills import meta_synthesis as ms
+        from myalicia.skills import meta_synthesis as ms
         original = ms._extract_learnings_from_meta
         ms._extract_learnings_from_meta = lambda body, parent_title: []
         try:
@@ -383,7 +383,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
-        from skills import hector_model as hm
+        from myalicia.skills import hector_model as hm
         baselines_dir = Path(td) / "baselines"
         baselines_dir.mkdir()
         # NOTE: hector_model uses LEARNINGS_LOG (not LEARNINGS_PATH).
@@ -393,7 +393,7 @@ def _():
         hm.LEARNINGS_LOG = Path(td) / "hector_learnings.jsonl"
         hm.BASELINES_DIR = baselines_dir
 
-        from skills import meta_synthesis as ms
+        from myalicia.skills import meta_synthesis as ms
         original = ms._extract_learnings_from_meta
         ms._extract_learnings_from_meta = lambda body, parent_title: [
             {"dimension": "fictional_dimension", "claim": "x", "confidence": 0.7},

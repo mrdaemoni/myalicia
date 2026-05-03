@@ -61,7 +61,7 @@ def _():
     every section should render without raising."""
     with tempfile.TemporaryDirectory() as td:
         # Reroute every module's storage paths into tmp
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
             multi_channel as mc, hector_model as hm,
@@ -104,7 +104,7 @@ def _():
 @test("loop 1 surfaces capture count + most-responded")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import response_capture as rc
+        from myalicia.skills import response_capture as rc
         rc.RESPONSES_DIR = Path(td) / "Responses"
         rc.CAPTURES_DIR = Path(td) / "Captures"
         rc.RESPONSES_DIR.mkdir(parents=True)
@@ -119,7 +119,7 @@ def _():
             )
 
         # Stub other modules to avoid log noise
-        from skills import (
+        from myalicia.skills import (
             meta_synthesis as ms, dimension_research as dr,
             thread_puller as tp, multi_channel as mc, hector_model as hm,
         )
@@ -152,7 +152,7 @@ def _():
 @test("loop 3 surfaces persistent thin dims as escalation-eligible")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import dimension_research as dr, hector_model as hm
+        from myalicia.skills import dimension_research as dr, hector_model as hm
         dr.MEMORY_DIR = td
         dr.SCAN_HISTORY_PATH = os.path.join(td, "scan.jsonl")
         dr.ESCALATION_LOG_PATH = os.path.join(td, "esc.jsonl")
@@ -167,7 +167,7 @@ def _():
         hm.find_thin_dimensions = lambda **kw: ["body"]
 
         # Stub every other module to avoid noise
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             thread_puller as tp, multi_channel as mc,
         )
@@ -197,7 +197,7 @@ def _():
 @test("loop 4 surfaces pull/reply rate")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "tp.jsonl")
 
@@ -209,7 +209,7 @@ def _():
         tp.mark_thread_pull_replied(msg_a, capture_path="/x.md")
 
         # Stub other modules
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, multi_channel as mc, hector_model as hm,
         )
@@ -251,7 +251,7 @@ def _():
 def _():
     """Captures: 2 in last 7d, 5 in 7-14d window → ↓-3."""
     with tempfile.TemporaryDirectory() as td:
-        from skills import response_capture as rc
+        from myalicia.skills import response_capture as rc
         rc.RESPONSES_DIR = Path(td) / "Responses"
         rc.CAPTURES_DIR = Path(td) / "Captures"
         rc.RESPONSES_DIR.mkdir(parents=True)
@@ -274,7 +274,7 @@ def _():
             )
 
         # Stub other modules
-        from skills import (
+        from myalicia.skills import (
             meta_synthesis as ms, dimension_research as dr,
             thread_puller as tp, multi_channel as mc, hector_model as hm,
         )
@@ -302,7 +302,7 @@ def _():
 def _():
     """Pulls: 3 this week, 1 last week → ↑+2. Replies: 1 this week, 0 last → ↑+1."""
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "tp.jsonl")
         now = datetime.now(timezone.utc)
@@ -324,7 +324,7 @@ def _():
                 f.write(json.dumps(e) + "\n")
 
         # Stub others
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, multi_channel as mc, hector_model as hm,
         )
@@ -381,7 +381,7 @@ def _():
     haven't fired for 3+ weeks. The latency we care about is fire latency,
     not engagement latency."""
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "tp.jsonl")
 
@@ -395,7 +395,7 @@ def _():
             }) + "\n")
 
         # Stub other modules
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, multi_channel as mc, hector_model as hm,
         )
@@ -424,7 +424,7 @@ def _():
     HAVE fired but stopped should be flagged."""
     with tempfile.TemporaryDirectory() as td:
         # Reroute everything to empty tmp
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
             multi_channel as mc, hector_model as hm,
@@ -454,7 +454,7 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         # Reroute every module so all latest-getters return None
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
             multi_channel as mc, hector_model as hm,
@@ -480,7 +480,7 @@ def _():
 @test("Phase 14.8 detect_dormant_loops: flags loops with old activity")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import thread_puller as tp
+        from myalicia.skills import thread_puller as tp
         tp.MEMORY_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "tp.jsonl")
         # Write a thread-pull from 30 days ago
@@ -491,7 +491,7 @@ def _():
                 "message": f"{tp.THREAD_PULL_BANNER}\n\nbody",
             }) + "\n")
         # Stub other modules
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, multi_channel as mc, hector_model as hm,
         )
@@ -523,14 +523,14 @@ def _():
 @test("Phase 14.8 unalerted_dormant_loops: suppresses already-alerted loops")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import loops_dashboard as ld
+        from myalicia.skills import loops_dashboard as ld
         ld.MEMORY_DIR = Path(td)
         ld.DORMANCY_ALERTS_PATH = Path(td) / "dormancy_alerts.jsonl"
         # Pre-record an alert for thread_pull
         ld.record_dormancy_alert("thread_pull", 25)
 
         # Stub everything else; thread_pull dormant
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
             multi_channel as mc, hector_model as hm,
@@ -613,7 +613,7 @@ def _():
 def _():
     """The static ASCII diagram should appear at the end of /loops."""
     with tempfile.TemporaryDirectory() as td:
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
             multi_channel as mc, hector_model as hm,
@@ -644,7 +644,7 @@ def _():
 @test("cross-loop section counts meta_synthesis-sourced learnings")
 def _():
     with tempfile.TemporaryDirectory() as td:
-        from skills import hector_model as hm
+        from myalicia.skills import hector_model as hm
         hm.MEMORY_DIR = Path(td)
         hm.LEARNINGS_LOG = Path(td) / "hl.jsonl"
         hm.BASELINES_DIR = Path(td) / "baselines"
@@ -668,7 +668,7 @@ def _():
         )
 
         # Stub everything else
-        from skills import (
+        from myalicia.skills import (
             response_capture as rc, meta_synthesis as ms,
             dimension_research as dr, thread_puller as tp,
             multi_channel as mc,

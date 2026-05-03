@@ -17,7 +17,7 @@ class TestReflexionGating:
 
     def test_should_reflect_on_deep_tools(self):
         """Deep-work tools should trigger reflexion."""
-        from skills.reflexion import should_reflect
+        from myalicia.skills.reflexion import should_reflect
         deep_tools = [
             "generate_pdf", "search_vault", "send_email",
             "generate_concept_note", "research", "synthesise_vault",
@@ -28,7 +28,7 @@ class TestReflexionGating:
 
     def test_should_not_reflect_on_trivial(self):
         """Trivial tools should NOT waste API calls on reflexion."""
-        from skills.reflexion import should_reflect
+        from myalicia.skills.reflexion import should_reflect
         trivial = ["get_random_quote", "get_vault_stats", "inbox_summary", "knowledge_dashboard"]
         for tool in trivial:
             assert should_reflect(tool) is False, f"Should NOT reflect on: {tool}"
@@ -39,14 +39,14 @@ class TestConstitutionGating:
 
     def test_evaluable_tasks(self):
         """Only deep-work tasks should get constitutional evaluation."""
-        from skills.constitution import should_evaluate
+        from myalicia.skills.constitution import should_evaluate
         evaluable = ["generate_concept_note", "research", "synthesise_vault", "find_contradictions"]
         for tool in evaluable:
             assert should_evaluate(tool) is True, f"Should evaluate: {tool}"
 
     def test_non_evaluable_tasks(self):
         """Lightweight tools should skip constitution."""
-        from skills.constitution import should_evaluate
+        from myalicia.skills.constitution import should_evaluate
         non_evaluable = ["get_random_quote", "get_vault_stats", "remember"]
         for tool in non_evaluable:
             assert should_evaluate(tool) is False, f"Should NOT evaluate: {tool}"
@@ -57,13 +57,13 @@ class TestTrajectoryRecorder:
 
     def test_recorder_creation(self):
         """TrajectoryRecorder should initialize without errors."""
-        from skills.trajectory import TrajectoryRecorder
+        from myalicia.skills.trajectory import TrajectoryRecorder
         recorder = TrajectoryRecorder("Test message about quality")
         assert recorder is not None
 
     def test_recorder_records_all_steps(self):
         """Recorder should accept all step types without crashing."""
-        from skills.trajectory import TrajectoryRecorder
+        from myalicia.skills.trajectory import TrajectoryRecorder
         recorder = TrajectoryRecorder("Test message")
 
         recorder.record_metacog({"confidence": 4, "knowledge_source": "vault"})
@@ -74,7 +74,7 @@ class TestTrajectoryRecorder:
 
     def test_recorder_significance_detection(self):
         """Recorder should correctly identify significant interactions."""
-        from skills.trajectory import TrajectoryRecorder
+        from myalicia.skills.trajectory import TrajectoryRecorder
 
         # Tool use is significant
         recorder = TrajectoryRecorder("Create a PDF")
@@ -85,7 +85,7 @@ class TestTrajectoryRecorder:
 
     def test_recorder_save_creates_file(self, tmp_path):
         """Recorder save should create a trajectory JSON file."""
-        from skills.trajectory import TrajectoryRecorder
+        from myalicia.skills.trajectory import TrajectoryRecorder
         trajectory_dir = str(tmp_path / "trajectories")
         os.makedirs(trajectory_dir, exist_ok=True)
 
@@ -120,21 +120,21 @@ class TestMetacognition:
         response.content = [text_block]
         mock_client.messages.create.return_value = response
 
-        from skills.metacognition import assess_confidence
+        from myalicia.skills.metacognition import assess_confidence
         result = assess_confidence("What is quality?", "memory context", "vault context")
         assert isinstance(result, dict)
         assert "confidence" in result
 
     def test_metacog_prompt_injection_returns_string(self):
         """get_metacog_prompt_injection should return a usable prompt string."""
-        from skills.metacognition import get_metacog_prompt_injection
+        from myalicia.skills.metacognition import get_metacog_prompt_injection
         assessment = {"confidence": 3, "knowledge_source": "memory", "has_conflicts": True}
         result = get_metacog_prompt_injection(assessment)
         assert isinstance(result, str)
 
     def test_should_use_opus_for_low_confidence(self):
         """Low confidence should recommend Opus."""
-        from skills.metacognition import should_use_opus
+        from myalicia.skills.metacognition import should_use_opus
         low = {"confidence": 1, "knowledge_source": "none", "has_conflicts": True}
         high = {"confidence": 5, "knowledge_source": "vault", "has_conflicts": False}
 
@@ -149,20 +149,20 @@ class TestNoveltyDetection:
 
     def test_detect_novelty_returns_dict(self):
         """detect_novelty should return a dict with expected keys."""
-        from skills.curiosity_engine import detect_novelty
+        from myalicia.skills.curiosity_engine import detect_novelty
         result = detect_novelty("I've been thinking about Nishida Kitaro and nothingness")
         assert isinstance(result, dict)
         assert "is_novel" in result or "novel_items" in result
 
     def test_format_novelty_prompt_returns_string(self):
         """format_novelty_prompt should return a usable string."""
-        from skills.curiosity_engine import format_novelty_prompt
+        from myalicia.skills.curiosity_engine import format_novelty_prompt
         novelty = {"is_novel": True, "novel_items": ["Nishida Kitaro"], "curiosity_score": 4}
         result = format_novelty_prompt(novelty)
         assert isinstance(result, str)
 
     def test_novelty_with_empty_message(self):
         """Empty messages should not crash novelty detection."""
-        from skills.curiosity_engine import detect_novelty
+        from myalicia.skills.curiosity_engine import detect_novelty
         result = detect_novelty("")
         assert isinstance(result, dict)

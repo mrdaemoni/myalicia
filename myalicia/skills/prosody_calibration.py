@@ -234,7 +234,7 @@ def _defaults_from_voice_intelligence() -> Dict[str, float]:
     so we can anchor clamps to code-defined defaults even after a calibration
     has already overwritten the in-memory value."""
     try:
-        from skills import voice_intelligence as vi
+        from myalicia.skills import voice_intelligence as vi
     except Exception as e:
         logger.warning(f"prosody_calibration: cannot import voice_intelligence: {e}")
         return {}

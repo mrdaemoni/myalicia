@@ -63,11 +63,13 @@ Thumbs.db
 /bin/
 /config/
 /data/
-/docs/
 /scripts/
 /.claude/
 /gmail_auth.py
 /deploy_safe.sh
+# Legacy /docs/SKILL.md is an internal-development guide from the original
+# private codebase. Not part of the public docs; blocked from re-entering.
+/docs/SKILL.md
 /ALICIA.md
 /ALICIA_DEPLOYMENT_CHECKLIST.md
 /ALICIA_ONTOLOGY.md
@@ -80,3 +82,4 @@ Thumbs.db
 
 # ── Internal working docs (kept local until ready to publish) ──
 /EXTRACTION_PLAN.md
+/GIT_SETUP.md

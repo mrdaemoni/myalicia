@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "myalicia"
+version = "0.1.0"
+description = "An AI teammate that grows into the shape of the person it serves — the tangible example of humorphism"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "myalicia contributors" }]
+keywords = ["ai", "agent", "humorphism", "obsidian", "personal-knowledge", "teammate"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Communications :: Chat",
+    "Topic :: Office/Business",
+]
+
+# Core dependencies — installed by `pip install myalicia`.
+# Optional integrations are in [project.optional-dependencies] below.
+dependencies = [
+    "anthropic>=0.30.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Pick what you want: pip install 'myalicia[telegram,voice]'
+telegram = ["python-telegram-bot>=21.0"]
+voice = ["edge-tts>=6.0"]
+gmail = ["google-auth>=2.0", "google-auth-oauthlib>=1.0", "google-api-python-client>=2.0"]
+search = ["chromadb>=0.4", "sentence-transformers>=2.0"]
+pdf = ["reportlab>=4.0"]
+schedule = ["schedule>=1.2"]
+# Convenience meta — pip install 'myalicia[all]'
+all = [
+    "python-telegram-bot>=21.0",
+    "edge-tts>=6.0",
+    "google-auth>=2.0",
+    "google-auth-oauthlib>=1.0",
+    "google-api-python-client>=2.0",
+    "chromadb>=0.4",
+    "sentence-transformers>=2.0",
+    "reportlab>=4.0",
+    "schedule>=1.2",
+]
+
+[project.scripts]
+myalicia = "myalicia.cli:main"
+
+[project.urls]
+Homepage = "https://myalicia.com"
+Repository = "https://github.com/mrdaemoni/myalicia"
+Issues = "https://github.com/mrdaemoni/myalicia/issues"
+Philosophy = "https://humorphism.com"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["myalicia*"]
+
+[tool.setuptools.package-data]
+myalicia = ["defaults.yaml", "py.typed"]

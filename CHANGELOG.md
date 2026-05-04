@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] — 2026-05-04
+
+A polish release covering Phase 2e–2g extractions, the cross-skill path sweep, install-friction fixes, and a small clarifying tweak to the Papers page.
+
+### Added
+
+- **`myalicia.core.main`** populated: `ALICIA_MENU_COMMANDS` and `set_alicia_menu_commands` extracted from `alicia.py`. First real content for what will eventually be the runtime entry point.
+- **`config.py` constants**: `ALICIA_HOME`, `LOGS_DIR`, `MEMORY_DIR`, `ENV_FILE` — per-instance paths derived from `USER_CONFIG_DIR` (`~/.alicia/` by default, overridable via `ALICIA_HOME` env var).
+
+### Changed
+
+- **Cross-skill path sweep**: 99 hardcoded `~/alicia/` references across 56 skill files replaced with config-driven equivalents (`MEMORY_DIR`, `LOGS_DIR`, `ENV_FILE`, etc.). Without this, `pip install myalicia` would have failed for any user not running on the original codebase's machine layout.
+- **`alicia.py` paths**: 12 sites updated to use config-driven paths (load_dotenv, LOG_FILE, voice cache, hot_topics.md, analytical_briefing.md, user-facing log-tail messages).
+- **Quickstart docs**: README and `docs/QUICKSTART.md` now lead with `pipx install myalicia` and document the venv path for developers — fixes the PEP 668 externally-managed-environment friction every new macOS user was hitting.
+
+### Fixed
+
+- **Papers page**: corrected the humorphism source citation to use humorphism.com's own definition rather than an external write-up.
+
+### Internal
+
+- `alicia.py` shrunk a further ~3 KB (cumulative shrink ~16 KB since v0.1.0).
+
 ## [0.1.1] — 2026-05-04
 
 A consolidation release that extends Phase 1 of the `core/` extraction with several leaf moves, makes `myalicia run` actually wire up the runtime, and fixes a Python 3.12 syntax-check regression.
@@ -58,5 +81,6 @@ Built on [humorphism](https://humorphism.com), [Garry Tan](https://x.com/garryta
 - Tests folder (`tests/`) included with the package, sanitized. Some tests require API keys or runtime state and are best run after a full `myalicia init`.
 - Apex domain `myalicia.com` redirects to `www.myalicia.com` via Namecheap; full apex HTTPS requires moving DNS to Cloudflare (planned).
 
+[0.1.2]: https://github.com/mrdaemoni/myalicia/releases/tag/v0.1.2
 [0.1.1]: https://github.com/mrdaemoni/myalicia/releases/tag/v0.1.1
 [0.1.0]: https://github.com/mrdaemoni/myalicia/releases/tag/v0.1.0

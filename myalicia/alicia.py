@@ -329,23 +329,8 @@ SEASONS_DESC = {
 }
 
 # ── Markdown-safe send helpers ───────────────────────────────────────────────
-from telegram.error import BadRequest as TelegramBadRequest
-
-async def safe_reply_md(message, text: str, **kwargs):
-    """Send with Markdown, fall back to plain text on parse errors."""
-    try:
-        return await message.reply_text(text, parse_mode="Markdown", **kwargs)
-    except TelegramBadRequest:
-        plain = text.replace("*", "").replace("_", "").replace("`", "")
-        return await message.reply_text(plain, **kwargs)
-
-async def safe_send_md(bot, chat_id, text: str, **kwargs):
-    """send_message with Markdown, fall back to plain text on parse errors."""
-    try:
-        return await bot.send_message(chat_id=chat_id, text=text, parse_mode="Markdown", **kwargs)
-    except TelegramBadRequest:
-        plain = text.replace("*", "").replace("_", "").replace("`", "")
-        return await bot.send_message(chat_id=chat_id, text=plain, **kwargs)
+# Extracted to core/telegram_safety.py in v0.1.x.
+from myalicia.core.telegram_safety import safe_reply_md, safe_send_md
 
 
 async def _send_dashboard(message, text: str, *, name: str,

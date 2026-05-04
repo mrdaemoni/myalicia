@@ -29,8 +29,25 @@ jobs:
 
       - name: Compile every Python file
         run: |
-          set -e
-          find myalicia -name '*.py' -print0 | xargs -0 -n1 python -m py_compile
+          # Per-file py_compile so a single failure shows the exact file.
+          # Use a Python script so we can collect ALL failures (not exit on first).
+          python <<'PY'
+          import sys, py_compile
+          from pathlib import Path
+          failures = []
+          for f in sorted(Path("myalicia").rglob("*.py")):
+              try:
+                  py_compile.compile(str(f), doraise=True)
+              except py_compile.PyCompileError as e:
+                  failures.append((str(f), str(e)))
+          if failures:
+              print(f"\nFAILED on {len(failures)} files:")
+              for path, err in failures:
+                  print(f"\n── {path} ──")
+                  print(err[:1000])
+              sys.exit(1)
+          print(f"All {sum(1 for _ in Path('myalicia').rglob('*.py'))} files compile cleanly.")
+          PY
 
       - name: Verify config layer loads
         run: python -c "import sys; sys.path.insert(0, '.'); from myalicia.config import config; print(config.user.name)"

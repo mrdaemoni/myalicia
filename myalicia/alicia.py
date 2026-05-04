@@ -436,28 +436,10 @@ from myalicia.core.security import (
 # ── Obsidian writer ───────────────────────────────────────────────────────────
 # Extracted to core/vault_io.py in v0.1.0. write_to_obsidian and
 # write_daily_log live there now and route through config.vault.*.
-from myalicia.core.vault_io import write_to_obsidian, write_daily_log
+from myalicia.core.vault_io import write_to_obsidian, write_daily_log, get_vault_context
 
-# ── Semantic context builder ──────────────────────────────────────────────────
+# Semantic context builder extracted to core.vault_io.get_vault_context
 
-def get_vault_context(user_message):
-    """Retrieve semantically relevant vault notes and format as context + source links."""
-    if not user_message or len(user_message) < 10:
-        return "", []
-    try:
-        hits = semantic_search(user_message, n_results=4)
-        if not hits:
-            return "", []
-        lines = [f"\n## Relevant notes from {USER_NAME}'s vault\n"]
-        sources = []
-        for h in hits:
-            relative  = h["filepath"].replace(VAULT_ROOT + "/", "")
-            deep_link = f"obsidian://open?vault={USER_HANDLE}-alicia&file={quote(relative, safe='/')}"
-            lines.append(f"### {h['title']}\n{h['snippet'][:300]}\n")
-            sources.append(f"[{h['title']}]({deep_link})")
-        return "\n".join(lines), sources
-    except Exception:
-        return "", []
 
 # ── System prompt ─────────────────────────────────────────────────────────────
 

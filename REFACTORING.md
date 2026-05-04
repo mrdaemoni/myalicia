@@ -35,8 +35,8 @@ The order is chosen so each extraction has its dependencies already in place.
 
 These are small, self-contained, and don't depend on other alicia.py logic:
 
-1. **`core.security`** — `classify_security_level`, `get_context_size`, `security_emoji`, `log_interaction`, `chat_guard` (alicia.py:402–490)
-2. **`core.vault_io`** — `write_to_obsidian`, `write_daily_log`, `get_vault_context` (alicia.py:493–528)
+1. **`core.security`** ✅ — `classify_security_level`, `get_context_size`, `security_emoji`, `SECURITY_KEYWORDS` (extracted in v0.1.0). `log_interaction` and `chat_guard` deferred — they touch logger/TELEGRAM_CHAT_ID module state.
+2. **`core.vault_io`** ✅ — `write_to_obsidian`, `write_daily_log`, `get_vault_context` (extracted in v0.1.0/0.1.1). The full vault read/write surface now lives in core.
 
 After Phase 1, the public package surface gets two clean modules and `alicia.py` shrinks slightly.
 

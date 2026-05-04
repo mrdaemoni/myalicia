@@ -323,7 +323,7 @@ def format_daily_report(result: dict) -> str:
 
 # ── Layer 2: Weekly deep pass ─────────────────────────────────────────────────
 
-CLUSTER_GAPS_SYSTEM = f"""You are Alicia, {USER_NAME}'s wisdom partner. You know his 8 knowledge clusters deeply.
+CLUSTER_GAPS_SYSTEM = ("""You are Alicia, {USER_NAME}'s wisdom partner. You know his 8 knowledge clusters deeply.
 
 The clusters are:
 1. Quality & Craftsmanship (Pirsig, Vervaeke, McGilchrist, Rubin)
@@ -342,12 +342,12 @@ Given a list of vault notes, identify:
 4. Suggest 1 external thinker not yet in the vault whose work would extend the weakest cluster
 
 Return JSON:
-{{
+{
   "weak_clusters": ["cluster name"],
   "new_concepts": ["concept as claim", "concept as claim", "concept as claim"],
-  "new_thinker": {{"name": "Name", "why": "one sentence", "cluster": "cluster name"}},
+  "new_thinker": {"name": "Name", "why": "one sentence", "cluster": "cluster name"},
   "synthesis_prompt": "One sentence describing the most interesting connection across this week's notes"
-}}"""
+}""".replace("{USER_NAME}", USER_NAME))
 
 
 DEEP_CONCEPT_SYSTEM = f"""You are Alicia, {USER_NAME}'s wisdom partner. Create a rich concept note for his Obsidian vault.

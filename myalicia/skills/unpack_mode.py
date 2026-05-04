@@ -346,7 +346,7 @@ def build_memory_extraction_prompt() -> dict:
     Build a second prompt to extract memory-level insights (score 4-5) from the session.
     Returns dict with system prompt and messages for API call.
     """
-    system = f"""Extract the highest-signal insights from this unpack session for {USER_NAME}'s long-term memory.
+    system = ("""Extract the highest-signal insights from this unpack session for {USER_NAME}'s long-term memory.
 
 For each insight, provide:
 - A one-sentence claim (not a topic)
@@ -357,11 +357,11 @@ Only extract score 4-5 insights. If nothing qualifies, return an empty list.
 
 Respond in this exact JSON format:
 [
-  {{"claim": "...", "score": 5, "cluster": "Quality & Mastery"}},
-  {{"claim": "...", "score": 4, "cluster": "Risk & Antifragility"}}
+  {"claim": "...", "score": 5, "cluster": "Quality & Mastery"},
+  {"claim": "...", "score": 4, "cluster": "Risk & Antifragility"}
 ]
 
-Knowledge clusters: Quality & Mastery, Risk & Antifragility, Systems Thinking, Stoic/Classical Wisdom, Meaning & Purpose, Learning & Knowledge, Leadership & Strategy, Creativity & Expression"""
+Knowledge clusters: Quality & Mastery, Risk & Antifragility, Systems Thinking, Stoic/Classical Wisdom, Meaning & Purpose, Learning & Knowledge, Leadership & Strategy, Creativity & Expression""".replace("{USER_NAME}", USER_NAME))
 
     messages = [{"role": "user", "content": f"Unpack session transcript:\n\n{_full_transcript}"}]
 

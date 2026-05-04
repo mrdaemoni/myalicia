@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "myalicia"
-version = "0.1.2"
+version = "0.1.3"
 description = "An AI teammate that grows into the shape of the person it serves — the tangible example of humorphism"
 readme = "README.md"
 license = { text = "MIT" }

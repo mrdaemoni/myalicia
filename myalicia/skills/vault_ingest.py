@@ -238,23 +238,23 @@ def find_concept_notes() -> list:
 
 # ── Ingest Step 1: Summarize ─────────────────────────────────────────────────
 
-SUMMARIZE_SYSTEM = f"""You are Alicia, an intelligence agent that maintains {USER_NAME}'s knowledge vault.
+SUMMARIZE_SYSTEM = ("""You are Alicia, an intelligence agent that maintains {USER_NAME}'s knowledge vault.
 
 You are processing a new source that has entered the vault. Your job is to extract the key information for integration into the knowledge base.
 
 Return a JSON object with:
-{{
+{
   "summary": "2-3 sentence summary of the core ideas",
   "key_concepts": ["concept1", "concept2", ...],  // 3-7 key concepts/ideas
   "thinkers": ["name1", "name2", ...],  // authors/thinkers mentioned or relevant
   "clusters": ["cluster1", ...],  // which of the 8 knowledge clusters this relates to
   "claims": ["claim1", "claim2", ...],  // 2-5 specific claims or insights that could be cross-referenced
   "potential_links": ["existing note name", ...]  // vault notes this should link to (use your best guess)
-}}
+}
 
 The 8 knowledge clusters are: Quality, Self-Mastery, Environment, Measurement, Relationships, Compounding, Technology & Humanity, Depth of Knowing.
 
-Return ONLY valid JSON, no markdown fences."""
+Return ONLY valid JSON, no markdown fences.""".replace("{USER_NAME}", USER_NAME))
 
 
 def summarize_source(name: str, content: str, folder: str) -> dict:
@@ -289,24 +289,24 @@ def summarize_source(name: str, content: str, folder: str) -> dict:
 
 # ── Ingest Step 2: Update Synthesis Notes ─────────────────────────────────────
 
-UPDATE_SYNTHESIS_SYSTEM = f"""You are Alicia. A new source has entered {USER_NAME}'s vault. You're checking if an existing synthesis note should be updated to reference this new source.
+UPDATE_SYNTHESIS_SYSTEM = ("""You are Alicia. A new source has entered {USER_NAME}'s vault. You're checking if an existing synthesis note should be updated to reference this new source.
 
 You'll receive:
 - The new source's summary and key concepts
 - An existing synthesis note's content
 
 If the new source is relevant to this synthesis note, return a JSON object:
-{{
+{
   "relevant": true,
   "update_section": "A 1-2 sentence addition to weave into the synthesis note, referencing the new source with a [[wikilink]]",
   "where": "after which existing paragraph or section this should be added (quote first 5 words)"
-}}
+}
 
 If the new source is NOT relevant, return:
-{{"relevant": false}}
+{"relevant": false}
 
 Be selective — only flag genuine conceptual connections, not superficial keyword overlap.
-Return ONLY valid JSON."""
+Return ONLY valid JSON.""".replace("{USER_NAME}", USER_NAME))
 
 
 def update_synthesis_notes(source_name: str, summary: dict) -> list:
@@ -390,17 +390,17 @@ def update_synthesis_notes(source_name: str, summary: dict) -> list:
 
 # ── Ingest Step 3: Update Entity/Concept Pages ───────────────────────────────
 
-UPDATE_ENTITY_SYSTEM = f"""You are Alicia. A new source has entered {USER_NAME}'s vault. You need to update an existing concept/entity page to reference this new source.
+UPDATE_ENTITY_SYSTEM = ("""You are Alicia. A new source has entered {USER_NAME}'s vault. You need to update an existing concept/entity page to reference this new source.
 
 Return a JSON object:
-{{
+{
   "relevant": true,
   "addition": "1-2 sentences to add, referencing the new source with [[wikilink]]. Should enrich the concept page with the new perspective or data point."
-}}
+}
 
-Or if not relevant: {{"relevant": false}}
+Or if not relevant: {"relevant": false}
 
-Return ONLY valid JSON."""
+Return ONLY valid JSON.""".replace("{USER_NAME}", USER_NAME))
 
 
 def update_entity_pages(source_name: str, summary: dict) -> list:
@@ -465,27 +465,27 @@ def update_entity_pages(source_name: str, summary: dict) -> list:
 
 # ── Ingest Step 4: Contradiction Check ────────────────────────────────────────
 
-CONTRADICTION_SYSTEM = f"""You are Alicia. A new source has entered {USER_NAME}'s vault. Check if any of its claims contradict existing knowledge.
+CONTRADICTION_SYSTEM = ("""You are Alicia. A new source has entered {USER_NAME}'s vault. Check if any of its claims contradict existing knowledge.
 
 You'll receive the new source's claims and a selection of existing vault content.
 
 If you find contradictions, return:
-{{
+{
   "contradictions": [
-    {{
+    {
       "new_claim": "what the new source says",
       "existing_claim": "what the vault currently says",
       "existing_note": "name of the note with the existing claim",
       "severity": "minor|moderate|major",
       "note": "brief explanation of the tension"
-    }}
+    }
   ]
-}}
+}
 
-If no contradictions: {{"contradictions": []}}
+If no contradictions: {"contradictions": []}
 
 Be thoughtful — genuine intellectual tensions are valuable, not superficial wording differences.
-Return ONLY valid JSON."""
+Return ONLY valid JSON.""".replace("{USER_NAME}", USER_NAME))
 
 
 def check_contradictions(source_name: str, summary: dict) -> list:

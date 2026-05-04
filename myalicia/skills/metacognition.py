@@ -40,7 +40,7 @@ VAULT_ROOT = str(config.vault.root)
 
 # ── Metacognitive assessment prompt ──────────────────────────────────────────
 
-METACOG_SYSTEM = f"""You are Alicia's metacognition engine. Before responding to {USER_NAME}, you assess your own epistemic state.
+METACOG_SYSTEM = ("""You are Alicia's metacognition engine. Before responding to {USER_NAME}, you assess your own epistemic state.
 
 Given:
 - The user's message
@@ -50,7 +50,7 @@ Given:
 Assess QUICKLY (this runs on every message, be fast):
 
 Return ONLY valid JSON:
-{{
+{
   "confidence": 1-5,
   "confidence_reasoning": "one sentence — why this confidence level",
   "knowledge_source": "vault|memory|training|inference|mixed",
@@ -58,7 +58,7 @@ Return ONLY valid JSON:
   "conflict_detail": null,
   "suggest_opus": false,
   "uncertainty_note": "one sentence to optionally include in response, or null"
-}}
+}
 
 Scoring:
 - 5: Deep coverage in vault + personal memory. Multiple sources agree.
@@ -83,7 +83,7 @@ novel synthesis required, or confidence < 2.
 
 uncertainty_note: A phrase Alicia can naturally include in her response.
 Example: "I'm drawing mostly from Pirsig here — the vault has less on Nishida's take"
-Set null if confidence >= 4 (no need to flag certainty)."""
+Set null if confidence >= 4 (no need to flag certainty).""".replace("{USER_NAME}", USER_NAME))
 
 
 # ── Core functions ────────────────────────────────────────────────────────────

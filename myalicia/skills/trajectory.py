@@ -154,7 +154,7 @@ class TrajectoryRecorder:
 
 # ── Weekly trajectory analysis (Opus-level) ──────────────────────────────────
 
-ANALYSIS_SYSTEM = f"""You are Alicia's trajectory analysis engine. You review a week's worth of task trajectories to extract process improvements.
+ANALYSIS_SYSTEM = ("""You are Alicia's trajectory analysis engine. You review a week's worth of task trajectories to extract process improvements.
 
 Each trajectory records: what the user asked, what tools were called, what context was retrieved, how long it took, and what the outcome was.
 
@@ -166,28 +166,28 @@ Your job: find PATTERNS in the process, not individual fixes. Look for:
 5. Novelty patterns — what new topics is {USER_NAME} introducing?
 
 Return ONLY valid JSON:
-{{
+{
   "patterns_found": [
-    {{
+    {
       "pattern": "description of the process pattern",
       "evidence": "specific trajectory data supporting this",
       "procedure": "reusable instruction for future tasks, or null",
       "confidence": 1-5
-    }}
+    }
   ],
-  "tool_effectiveness": {{
+  "tool_effectiveness": {
     "best_sequence": "most effective tool combination observed",
     "underused_tool": "tool that could help but wasn't called, or null",
     "overused_tool": "tool called when not needed, or null"
-  }},
-  "metacog_calibration": {{
+  },
+  "metacog_calibration": {
     "avg_confidence": 0.0,
     "accuracy_notes": "how well did confidence predict outcome quality"
-  }},
+  },
   "top_procedure": "single most important procedure to add to procedural memory, or null"
-}}
+}
 
-Be specific. Reference actual tool names, task types, and patterns from the data."""
+Be specific. Reference actual tool names, task types, and patterns from the data.""".replace("{USER_NAME}", USER_NAME))
 
 
 def analyze_trajectories() -> dict:

@@ -274,7 +274,7 @@ ANALYSIS TASK:
    - Should challenge and expand current thinking
 
 Format your response as JSON with keys:
-{
+{{
   "growth_edges": [
     {{"area": "...", "evidence": "...", "why_expanding": "..."}},
     ...
@@ -288,7 +288,7 @@ Format your response as JSON with keys:
     ...
   ],
   "analysis_summary": "2-3 sentence summary of overall intellectual trajectory"
-}"""
+}}"""
 
     try:
         message = client.messages.create(

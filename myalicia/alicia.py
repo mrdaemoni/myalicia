@@ -23,14 +23,14 @@ from telegram.ext import Application, MessageHandler, CommandHandler, MessageRea
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 ANTHROPIC_API_KEY  = os.getenv("ANTHROPIC_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID   = int(os.getenv("TELEGRAM_CHAT_ID"))
 OBSIDIAN_VAULT     = str(config.vault.inner_path)
 VAULT_ROOT         = str(config.vault.root)
-LOG_FILE           = os.path.expanduser("~/alicia/logs/interactions.jsonl")
+LOG_FILE           = str(LOGS_DIR / "interactions.jsonl")
 
 MODEL_SONNET = "claude-sonnet-4-20250514"
 MODEL_OPUS   = "claude-opus-4-20250514"
@@ -1804,7 +1804,7 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         # Download voice file
         voice = await update.message.voice.get_file()
-        ogg_path = os.path.join(os.path.expanduser("~/alicia/logs"), "voice_input.ogg")
+        ogg_path = os.path.join(str(LOGS_DIR), "voice_input.ogg")
         await voice.download_to_drive(ogg_path)
 
         # Transcribe
@@ -4344,7 +4344,7 @@ async def cmd_capture(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # at which point the buttons stop responding (handled gracefully).
 
 from collections import OrderedDict as _OrderedDict
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 _DRAWING_CTX: "_OrderedDict[str, dict]" = _OrderedDict()
@@ -5107,14 +5107,14 @@ async def cmd_briefingnow(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     Calls compile_analytical_briefing() in a background thread — same function
     the Thursday 10:03 Cowork task invokes. Writes the full briefing to
-    ~/alicia/memory/analytical_briefing.md (overwrites) and pings back with a
+    ~/.alicia/memory/analytical_briefing.md (overwrites) and pings back with a
     preview when done. Concurrency-guarded via agent_triggers.
     """
     loop = asyncio.get_event_loop()
 
     def _fmt(briefing: str, duration: float) -> str:
         if not briefing:
-            return "⚠️ Briefing returned empty. Check ~/alicia/logs/stderr.log."
+            return "⚠️ Briefing returned empty. Check ~/.alicia/logs/stderr.log."
         tail = ("\n…(truncated — full file at `memory/analytical_briefing.md`)"
                 if len(briefing) > 2500 else "")
         return (f"📝 *Briefing complete* ({int(duration)}s)\n\n"
@@ -5302,7 +5302,7 @@ async def _send_drive_connection(update: Update, topic: str = ""):
     vault_ctx, _ = get_vault_context(topic or "interesting connection")
 
     hot_topics = ""
-    ht_path = os.path.expanduser("~/alicia/memory/hot_topics.md")
+    ht_path = str(MEMORY_DIR / "hot_topics.md")
     if os.path.exists(ht_path):
         try:
             with open(ht_path) as f:
@@ -5340,7 +5340,7 @@ async def _run_pipecat_unpack_extraction(update: Update, transcript: str, topic:
     try:
         vault_ctx, _ = get_vault_context(transcript[:500])
         hot_topics = ""
-        ht_path = os.path.expanduser("~/alicia/memory/hot_topics.md")
+        ht_path = str(MEMORY_DIR / "hot_topics.md")
         if os.path.exists(ht_path):
             try:
                 with open(ht_path) as f:
@@ -5383,7 +5383,7 @@ async def _run_unpack_probe(update: Update):
 
     # Load hot topics
     hot_topics = ""
-    ht_path = os.path.expanduser("~/alicia/memory/hot_topics.md")
+    ht_path = str(MEMORY_DIR / "hot_topics.md")
     if os.path.exists(ht_path):
         try:
             with open(ht_path) as f:
@@ -5429,7 +5429,7 @@ async def _run_unpack_extraction(update: Update):
     vault_ctx, _ = get_vault_context(transcript[:500])
 
     hot_topics = ""
-    ht_path = os.path.expanduser("~/alicia/memory/hot_topics.md")
+    ht_path = str(MEMORY_DIR / "hot_topics.md")
     if os.path.exists(ht_path):
         try:
             with open(ht_path) as f:
@@ -6485,7 +6485,7 @@ def run_scheduler(bot_app: Application):
                     f"Task: `{name}`\n"
                     f"Error: `{type(e).__name__}: {str(e)[:200]}`\n"
                     f"Time: {datetime.now().strftime('%H:%M')}\n\n"
-                    f"_Check logs: tail -f ~/alicia/logs/stderr.log_"
+                    f"_Check logs: tail -f ~/.alicia/logs/stderr.log_"
                 )
             except Exception:
                 pass  # Don't let alert failure crash the scheduler
@@ -6662,7 +6662,7 @@ def run_scheduler(bot_app: Application):
             vault_ctx, _ = get_vault_context(transcript[:500])
 
             hot_topics = ""
-            ht_path = os.path.expanduser("~/alicia/memory/hot_topics.md")
+            ht_path = str(MEMORY_DIR / "hot_topics.md")
             if os.path.exists(ht_path):
                 try:
                     with open(ht_path) as f:
@@ -7027,7 +7027,7 @@ def run_scheduler(bot_app: Application):
                 return
             vault_ctx, _ = get_vault_context(" ".join(themes))
             hot_topics = ""
-            ht_path = os.path.expanduser("~/alicia/memory/hot_topics.md")
+            ht_path = str(MEMORY_DIR / "hot_topics.md")
             if os.path.exists(ht_path):
                 try:
                     with open(ht_path) as f:

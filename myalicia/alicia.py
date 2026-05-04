@@ -7536,7 +7536,7 @@ async def send_startup_message(app: Application):
         checks.append("❌ Semantic index unavailable")
 
     # Memory
-    mem_ok = os.path.exists(os.path.expanduser("~/alicia/memory/MEMORY.md"))
+    mem_ok = os.path.exists(str(MEMORY_DIR / "MEMORY.md"))
     checks.append(f"{'✅' if mem_ok else '❌'} Memory system")
 
     # Skill modules — verify critical imports loaded

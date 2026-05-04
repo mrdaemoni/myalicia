@@ -47,6 +47,14 @@ DEFAULTS_PATH = PACKAGE_ROOT / "defaults.yaml"
 USER_CONFIG_DIR = Path(os.environ.get("ALICIA_HOME", str(Path.home() / ".alicia")))
 USER_CONFIG_PATH = USER_CONFIG_DIR / "config.yaml"
 
+# Per-instance paths derived from USER_CONFIG_DIR. Module-level constants
+# so any module can import them as backward-compat replacements for the
+# legacy hardcoded ~/alicia/ paths.
+ALICIA_HOME = USER_CONFIG_DIR
+LOGS_DIR = ALICIA_HOME / "logs"
+MEMORY_DIR = ALICIA_HOME / "memory"
+ENV_FILE = ALICIA_HOME / ".env"
+
 
 # -- Typed config sections ---------------------------------------------------
 

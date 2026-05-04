@@ -1,6 +1,6 @@
-f"""
+"""
 Module 2: Temporal Analysis
-Maps when {USER_NAME} thinks deepest and what patterns emerge over time.
+Maps when the user thinks deepest and what patterns emerge over time.
 
 This module analyzes engagement metrics across time-of-day and day-of-week dimensions
 to identify patterns in cognitive depth, communication preferences, and temporal rhythms.

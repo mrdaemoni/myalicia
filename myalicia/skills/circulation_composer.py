@@ -770,8 +770,8 @@ def decide_for_slot(
 
 
 def record_reaction(decision_id: str, reaction: str) -> None:
-    f"""
-    Called when {USER_NAME} reacts to a circulation-driven message (thumbs-up,
+    """
+    Called when the user reacts to a circulation-driven message (thumbs-up,
     emoji, reply). Reactions are stored on the log entry for future weight
     adjustment. Non-fatal on any error.
     """

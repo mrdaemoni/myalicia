@@ -1,10 +1,10 @@
-f"""
+"""
 Alicia's Autonomy Expansion (Phase 6E)
 
 Manages three autonomous capabilities:
 1. Season transitions — detects emergence season changes and generates transition notes
 2. Weekly published reflections — synthesizes weekly patterns and generates self-reflection
-3. Disagreement mechanism — identifies where {USER_NAME} contradicts vault synthesis or stated values
+3. Disagreement mechanism — identifies where the user contradicts vault synthesis or stated values
 
 This module operates alongside inner_life.py, providing higher-level autonomy patterns.
 """
@@ -304,8 +304,8 @@ tags: [alicia-reflection, weekly]
 
 
 def detect_disagreement_opportunities() -> list[dict]:
-    f"""
-    Identify areas where {USER_NAME}'s behavior contradicts vault synthesis or stated values.
+    """
+    Identify areas where the user's behavior contradicts vault synthesis or stated values.
 
     Scans recent vault synthesis notes and memory patterns for contradictions.
     Returns genuine disagreements, not mere contrarianism.

@@ -622,8 +622,8 @@ FOLLOWTHROUGH_LOG = os.path.join(MEMORY_DIR, "curiosity_followthrough.jsonl")
 
 
 def record_curiosity_asked(question: str, q_type: str, target: str):
-    f"""
-    Record that a curiosity question was sent to {USER_NAME}.
+    """
+    Record that a curiosity question was sent to the user.
     Called when proactive_messages formats and sends a curiosity question.
     """
     try:

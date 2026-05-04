@@ -1,5 +1,5 @@
-f"""
-Voice signature tracking module for {USER_NAME}.
+"""
+Voice signature tracking module for the user.
 
 Builds a rolling 30-day profile of voice patterns to steer conversation responses.
 Thread-safe logging of voice metadata with computed analytics.
@@ -264,16 +264,16 @@ def get_voice_signature() -> dict[str, Any]:
 
 
 def get_voice_steering_hint() -> str:
-    f"""
+    """
     Generate natural language hint for system prompt based on voice signature.
 
     Returns:
         String hint for conversation steering, or empty string if insufficient data.
 
     Examples:
-        "{USER_NAME} tends to speak deliberately (avg 85 wpm). Give him space — don't fill pauses."
-        "{USER_NAME}'s been speaking faster lately (trend: more_excited). Match his energy."
-        "Most of {USER_NAME}'s voice messages are extended (>60s). He thinks in long arcs."
+        "the user tends to speak deliberately (avg 85 wpm). Give him space — don't fill pauses."
+        "the user's been speaking faster lately (trend: more_excited). Match his energy."
+        "Most of the user's voice messages are extended (>60s). He thinks in long arcs."
     """
     sig = get_voice_signature()
 

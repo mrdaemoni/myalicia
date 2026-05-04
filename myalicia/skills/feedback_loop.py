@@ -333,10 +333,10 @@ def get_emergence_context() -> str:
 
 
 def daimon_pre_send_check(message: str) -> dict:
-    f"""
+    """
     Daimon archetype: check a proactive message before sending.
 
-    Detects comfort bias — messages that keep {USER_NAME} in familiar territory
+    Detects comfort bias — messages that keep the user in familiar territory
     instead of pushing toward growth edges.
 
     Args:

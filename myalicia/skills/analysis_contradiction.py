@@ -1,6 +1,6 @@
-f"""
+"""
 Module 1: Contradiction Mining for Autonomous Analysis
-Purpose: Find productive tensions between ideas in {USER_NAME}'s Obsidian vault.
+Purpose: Find productive tensions between ideas in the user's Obsidian vault.
 
 This module identifies genuine intellectual conflicts across knowledge clusters
 and scores them for novelty, severity, and relevance to current interests.

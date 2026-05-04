@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-f"""
+"""
 Unpack Mode — Deep extraction from voice monologues
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Activated via /unpack or "let me unpack something". Designed for
-post-podcast, post-sauna, or driving moments when {USER_NAME} wants to
+post-podcast, post-sauna, or driving moments when the user wants to
 think aloud and have Alicia extract the gold.
 
 State machine:
@@ -17,7 +17,7 @@ LISTENING:
 PROBING:
   - Sonnet analyzes full transcript + vault context
   - Generates 2-3 targeted clarifying questions as voice notes
-  - {USER_NAME} responds, feeding back into the transcript
+  - the user responds, feeding back into the transcript
   - Up to 3 probe rounds (or until "that's it" / /done)
 
 EXTRACTING:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-f"""
+"""
 Alicia — Unified Intent Resolver (Thin Harness upgrade, v2)
 
 LLM-based routing for BOTH context modules AND specialist tools. A single
@@ -15,7 +15,7 @@ Why unified? Two benefits:
      (e.g. "Beatrice 30%, Ariadne 22%, Muse 18%...") and treats tone-aware
      thinking-together replies as preferred over tool calls.
   2. Slash commands (/walk, /drive, /search_vault) bypass this resolver
-     entirely — they're the explicit escape hatch when {USER_NAME} wants a
+     entirely — they're the explicit escape hatch when the user wants a
      specific action.
 
 Fallback: if Haiku times out, returns bad JSON, or is unreachable, we fall

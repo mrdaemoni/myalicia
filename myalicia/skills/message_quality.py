@@ -1,9 +1,9 @@
-f"""
+"""
 Message Quality Assessment Module
 
 Implements:
-  - Resonance-Driven Synthesis Targeting (Idea 6): Tracks and prioritizes notes {USER_NAME} frequently revisits
-  - Would {USER_NAME} Care? Quality Gate (Idea 8): Scores proactive messages for relevance and timing
+  - Resonance-Driven Synthesis Targeting (Idea 6): Tracks and prioritizes notes the user frequently revisits
+  - Would the user Care? Quality Gate (Idea 8): Scores proactive messages for relevance and timing
 
 All scoring is heuristic-based using keyword matching and simple math—no ML or embeddings.
 Thread-safe file access with logging for debugging and metrics.
@@ -49,15 +49,15 @@ QUALITY_LOG_PATH = MEMORY_DIR / "quality_log.txt"
 
 
 def get_resonance_priorities() -> list[dict]:
-    f"""
-    Read resonance.md to identify notes {USER_NAME} frequently asks to hear aloud.
+    """
+    Read resonance.md to identify notes the user frequently asks to hear aloud.
 
     Counts frequency of each note title and applies weighting:
     - 3+ reads: 2x weight
     - Referenced in conversation: 3x weight
 
     Returns:
-        List of dicts with {{"title": str, "count": int, "last_read": str}}
+        List of dicts with {"title": str, "count": int, "last_read": str}
         sorted by count descending.
     """
     try:

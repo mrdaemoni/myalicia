@@ -647,20 +647,20 @@ def _compose_mood_checkin_message(mood: Dict[str, Any]) -> Optional[str]:
 
 
 def get_mood_of_the_week(days: int = 7) -> Dict[str, Any]:
-    f"""Phase 19.0 — Compute {USER_NAME}'s emotional weather over the last N days.
+    """Phase 19.0 — Compute the user's emotional weather over the last N days.
 
     Returns a structured summary the dashboard + /effectiveness can render:
 
-        {{
+        {
           "total_classifications": int,
           "dominant_label": str,            # most-common emotion label
           "dominant_share": float,          # 0.0–1.0
-          "distribution": {{label: count}},   # full tally
+          "distribution": {label: count},   # full tally
           "trend": str,                     # 'improving' | 'stable' | 'declining' | 'unknown'
           "trend_explanation": str,         # one short sentence
           "summary_line": str,              # one-line headline ready for header pill
           "days": int,                      # window
-        }}
+        }
 
     Empty/uncertain returns sensible defaults; never raises. Trend is
     computed by splitting the window in halves and comparing the

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-f"""
+"""
 Alicia — Paired Person Diarization
 
-Weekly synthesis that generates structured profiles of both {USER_NAME}
+Weekly synthesis that generates structured profiles of both the user
 and Alicia, tracking intellectual evolution, calibration quality,
 and the alignment between them.
 
@@ -542,7 +542,7 @@ def _parse_profiles(response_text: str) -> tuple:
 
 
 def get_latest_profiles() -> dict:
-    f"""Return the most recent {USER_NAME} and Alicia profiles, or None."""
+    """Return the most recent the user and Alicia profiles, or None."""
     if not os.path.exists(PROFILES_DIR):
         return None
 

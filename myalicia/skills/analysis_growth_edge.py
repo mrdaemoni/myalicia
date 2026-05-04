@@ -1,8 +1,8 @@
-f"""
+"""
 Module 3: Growth Edge Detection for Alicia's Autonomous Analysis System
 
 Purpose:
-    Identify where {USER_NAME}'s thinking is actively evolving vs stagnating.
+    Identify where the user's thinking is actively evolving vs stagnating.
     Detect growth edges, dormant threads, and frontier opportunities.
 
 Entry point:

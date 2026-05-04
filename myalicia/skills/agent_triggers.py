@@ -86,7 +86,7 @@ def trigger(
     format_started: Callable[[], str] | None = None,
     label: str | None = None,
 ) -> tuple[bool, str]:
-    f"""Launch fn(*fn_args) in a background thread and ping Telegram when done.
+    """Launch fn(*fn_args) in a background thread and ping Telegram when done.
 
     Args:
         name:          Unique per-kind key ("synthesis", "research",
@@ -108,7 +108,7 @@ def trigger(
 
     Returns:
         (started, ack_text)
-        started=True — background thread launched; ack_text tells {USER_NAME}
+        started=True — background thread launched; ack_text tells the user
                        it's running.
         started=False — already a run with this name; ack_text says
                        "already running, ETA Xs elapsed."

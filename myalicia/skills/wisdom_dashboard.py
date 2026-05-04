@@ -290,7 +290,7 @@ def _render_drawings_section(now_utc: datetime, *, days: int = 7,
 def _render_most_responded_section(
     *, n: int = 3, conversation_id: Optional[str] = None,
 ) -> str:
-    f"""Top-n syntheses with the most captured {USER_NAME} responses.
+    """Top-n syntheses with the most captured the user responses.
 
     Phase 16.6 — `conversation_id` filters captures to one conversation.
     None preserves whole-vault behavior."""

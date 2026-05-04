@@ -129,11 +129,11 @@ def _find_latest_scout_report(max_age_days: int = 14) -> Optional[str]:
 
 
 def _summarize_recent_authors(days: int = 7, max_authors: int = 8) -> Optional[str]:
-    f"""
+    """
     Summarize Author profiles added/modified in the last `days` days.
 
     The Cowork daily-outward-research task (Mon-Fri 15:34) writes new Author
-    profiles to ~/Documents/{USER_HANDLE}-alicia/Authors/. There is no single
+    profiles to ~/Documents/user-alicia/Authors/. There is no single
     "report" file for this task, so we derive a summary from the folder's
     recent contents — each profile's filename (the author's name) plus the
     first 200 chars of its body (the bio/core-concepts hook).

@@ -1,7 +1,7 @@
-f"""
+"""
 Alicia's Temporal Pattern Engine
 
-Analyzes timestamps across all data sources to learn {USER_NAME}'s rhythms:
+Analyzes timestamps across all data sources to learn the user's rhythms:
 when he engages most deeply, what days work for what, and how to adapt
 message timing to his actual patterns rather than hardcoded schedules.
 """
@@ -127,16 +127,16 @@ def analyze_engagement_by_day(days: int = 30) -> dict:
 
 
 def analyze_voice_patterns(days: int = 30) -> dict:
-    f"""
-    Analyze when {USER_NAME} uses voice vs text, and voice emotional patterns.
+    """
+    Analyze when the user uses voice vs text, and voice emotional patterns.
 
     Returns:
-        dict: {{
-            "voice_hours": {{hour: count}},
-            "avg_wpm_by_hour": {{hour: float}},
-            "emotional_tags": {{tag: count}},
+        dict: {
+            "voice_hours": {hour: count},
+            "avg_wpm_by_hour": {hour: float},
+            "emotional_tags": {tag: count},
             "peak_voice_hour": int,
-        }}
+        }
     """
     voice_hours = defaultdict(int)
     wpm_by_hour = defaultdict(list)
@@ -385,11 +385,11 @@ def run_temporal_update() -> dict:
 
 
 def get_temporal_context() -> str:
-    f"""
+    """
     Build temporal context string for system prompt injection.
 
     Returns:
-        str: Natural language summary of {USER_NAME}'s engagement patterns.
+        str: Natural language summary of the user's engagement patterns.
     """
     try:
         if not os.path.exists(TEMPORAL_STATE):

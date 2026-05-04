@@ -1,5 +1,5 @@
-f"""
-Cross-session threading module for {USER_NAME}-Alicia system.
+"""
+Cross-session threading module for the user-Alicia system.
 
 Enables continuity across /unpack, /call, /walk, and /drive sessions by tracking
 thematic threads and suggesting connections to related prior discussions.

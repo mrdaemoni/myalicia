@@ -390,7 +390,7 @@ def record_drive_response(connection_text: str):
 
 
 def accumulate_drive(text: str, is_voice: bool = True):
-    f"""Accumulate {USER_NAME}'s responses during drive mode."""
+    """Accumulate the user's responses during drive mode."""
     global _last_activity_at, _full_transcript
 
     _last_activity_at = time.time()
@@ -455,10 +455,10 @@ def _save_drive_transcript() -> str:
 
 
 def build_drive_extraction_prompt() -> dict:
-    f"""
+    """
     Build prompt for extracting validated ideas from drive session.
 
-    After drive ends, extract ideas that 'landed' — {USER_NAME} confirmed them verbally.
+    After drive ends, extract ideas that 'landed' — the user confirmed them verbally.
     List as bullet points.
 
     Returns dict with system prompt and messages for API call.

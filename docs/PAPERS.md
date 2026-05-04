@@ -12,7 +12,7 @@ These are the core concepts the entire system is built around.
 
 **Source:** [humorphism.com](https://humorphism.com)
 
-**What it is:** A design philosophy that says technology should take the shape of the human, not the other way around. Rather than asking "how do we build a chatbot everyone learns to talk to," humorphism asks "how do we design a relationship that learns the person it's with?"
+**What it is:** A design philosophy that seeks to replace the user interface built for operating tools with a *human interface* built for collaborating with AI teammates.
 
 **How myalicia uses it:** The entire three-loop architecture (Listen, Notice, Know) is humorphism made buildable. The "thin harness, fat skills" pattern operationalizes the principle that the system should stay out of the way so the human's personality can emerge. Every surface, every feedback mechanism, every memory update is designed to deepen one relationship, not serve everyone equally.
 

@@ -376,36 +376,6 @@ async def _send_dashboard(message, text: str, *, name: str,
     return sent
 
 
-# ── Auth decorator (§5.4) ─────────────────────────────────────────────────────
-# All Telegram handlers must reject updates from any chat other than
-# TELEGRAM_CHAT_ID. Historically this was inlined as
-#   `if update.effective_chat.id != TELEGRAM_CHAT_ID: return`
-# at the top of every cmd_*. That pattern broke for MessageReactionHandler,
-# where `update.effective_chat` can be None and the real chat id lives at
-# `update.message_reaction.chat.id`. `chat_guard` normalises both shapes and
-# becomes the sanctioned auth mechanism for every new handler going forward.
-def chat_guard(fn):
-    """Drop updates not originating from TELEGRAM_CHAT_ID.
-
-    Works for both regular Update objects (where `effective_chat` is set)
-    and MessageReactionUpdated objects (where only `message_reaction.chat`
-    is set). Safe to stack above any async Telegram handler.
-    """
-    @functools.wraps(fn)
-    async def inner(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
-        chat_id = None
-        try:
-            if getattr(update, "effective_chat", None) is not None:
-                chat_id = update.effective_chat.id
-            elif getattr(update, "message_reaction", None) is not None:
-                chat_id = update.message_reaction.chat.id
-        except Exception as e:
-            log.debug(f"chat_guard: failed to resolve chat_id: {e}")
-            return
-        if chat_id != TELEGRAM_CHAT_ID:
-            return
-        return await fn(update, context, *args, **kwargs)
-    return inner
 
 
 # ── Security ──────────────────────────────────────────────────────────────────
@@ -413,8 +383,10 @@ def chat_guard(fn):
 # and visual helpers live there now.
 from myalicia.core.security import (
     SECURITY_KEYWORDS,
+    chat_guard,
     classify_security_level,
     get_context_size,
+    log_interaction,
     security_emoji,
 )
 

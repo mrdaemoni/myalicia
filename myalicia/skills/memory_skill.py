@@ -15,16 +15,16 @@ from dotenv import load_dotenv
 
 from myalicia.skills.safe_io import atomic_write_text, locked_file
 from myalicia.skills.bridge_protocol import write_bridge_text
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
-MEMORY_DIR     = os.path.expanduser("~/alicia/memory")
-ALICIA_MD      = os.path.expanduser("~/alicia/ALICIA.md")
+MEMORY_DIR     = str(MEMORY_DIR)
+ALICIA_MD      = str(ALICIA_HOME / "ALICIA.md")
 VAULT          = str(config.vault.inner_path)
 VAULT_ROOT     = str(config.vault.root)
 QUOTES_FOLDER  = str(config.vault.root / "Quotes")

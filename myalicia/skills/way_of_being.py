@@ -18,11 +18,11 @@ from pathlib import Path
 from typing import Optional
 
 from myalicia.skills.bridge_protocol import get_latest_report
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 
 # Configuration
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 SELF_AWARENESS_PATH = os.path.join(MEMORY_DIR, "self_awareness.md")
 DEPTH_SIGNALS_PATH = os.path.join(MEMORY_DIR, "depth_signals.jsonl")
 CHALLENGE_LOG_PATH = os.path.join(MEMORY_DIR, "challenge_log.json")
@@ -31,7 +31,7 @@ BRIDGE_DIR = os.path.join(VAULT_ROOT, "Alicia/Bridge")
 SYNTHESIS_RESULTS_PATH = os.path.join(MEMORY_DIR, "synthesis_results.tsv")
 OVERNIGHT_STATE_PATH = os.path.join(MEMORY_DIR, "overnight_state.json")
 SESSION_THREADS_PATH = os.path.join(MEMORY_DIR, "session_threads.json")
-LOG_DIR = os.path.expanduser("~/alicia/logs")
+LOG_DIR = str(LOGS_DIR)
 
 DAIMON_COOLDOWN_HOURS = 24
 CHALLENGE_COOLDOWN_DAYS = 7

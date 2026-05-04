@@ -45,7 +45,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -53,7 +53,7 @@ log = logging.getLogger("alicia.meta_synthesis")
 
 VAULT_ROOT = Path(str(config.vault.root))
 SYNTHESIS_DIR = VAULT_ROOT / "Alicia" / "Wisdom" / "Synthesis"
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 META_LOG_PATH = os.path.join(MEMORY_DIR, "meta_synthesis_log.jsonl")
 
 # Tunables

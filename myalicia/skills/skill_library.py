@@ -25,11 +25,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from myalicia.skills.safe_io import atomic_write_json
+from myalicia.config import ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger(__name__)
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 LIBRARY_INDEX = os.path.join(MEMORY_DIR, "skill_library.json")
 IMPROVE_LOG = os.path.join(MEMORY_DIR, "improve_log.md")
 

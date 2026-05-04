@@ -14,11 +14,11 @@ from datetime import datetime
 from urllib.parse import quote
 from anthropic import Anthropic
 from dotenv import load_dotenv
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"), max_retries=5)
 

@@ -25,11 +25,11 @@ import os
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger("alicia.season_dashboard")
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 ARCHETYPE_LOG_PATH = os.path.join(MEMORY_DIR, "archetype_log.jsonl")
 
 

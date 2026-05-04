@@ -27,7 +27,7 @@ import json
 from datetime import datetime, timedelta
 from pathlib import Path
 from enum import Enum
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -35,11 +35,11 @@ log = logging.getLogger(__name__)
 
 # ── Constants ────────────────────────────────────────────────────────────────
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 VAULT_ROOT = str(config.vault.root)
 OBSIDIAN_VAULT = os.path.join(VAULT_ROOT, "Alicia")
 INBOX_DIR = os.path.join(OBSIDIAN_VAULT, "Inbox")
-LOG_DIR = os.path.expanduser("~/alicia/logs")
+LOG_DIR = str(LOGS_DIR)
 
 # Timeout for drive mode (5 minutes)
 DRIVE_TIMEOUT = 300

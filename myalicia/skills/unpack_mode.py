@@ -34,7 +34,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -42,7 +42,7 @@ log = logging.getLogger(__name__)
 
 # ── Constants ────────────────────────────────────────────────────────────────
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 VAULT_ROOT = str(config.vault.root)
 OBSIDIAN_VAULT = os.path.join(VAULT_ROOT, "Alicia")
 INBOX_DIR = os.path.join(OBSIDIAN_VAULT, "Inbox")
@@ -394,7 +394,7 @@ def save_vault_note(note_content: str) -> str:
 
 def save_transcript_log() -> str:
     """Save the raw transcript to logs for reference."""
-    log_dir = os.path.expanduser("~/alicia/logs")
+    log_dir = str(LOGS_DIR)
     os.makedirs(log_dir, exist_ok=True)
     now = datetime.now()
     filename = f"unpack-{now.strftime('%Y-%m-%d-%H%M')}.txt"

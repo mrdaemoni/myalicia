@@ -20,7 +20,7 @@ from datetime import datetime
 from collections import Counter, defaultdict
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 
 VAULT_ROOT = str(config.vault.root)
 SYNTHESIS_DIR = os.path.join(VAULT_ROOT, "Alicia", "Wisdom", "Synthesis")
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 GRAPH_REPORT_FILE = os.path.join(MEMORY_DIR, "graph_health.md")
 LINK_SUGGESTIONS_FILE = os.path.join(MEMORY_DIR, "link_suggestions.json")
 

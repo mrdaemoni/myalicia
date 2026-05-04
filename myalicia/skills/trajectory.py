@@ -23,11 +23,11 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 log = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"), max_retries=5)
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 TRAJECTORIES_DIR = os.path.join(MEMORY_DIR, "trajectories")
 TRAJECTORY_ANALYSIS_LOG = os.path.join(MEMORY_DIR, "trajectory_analysis.md")
 PROCEDURES_FILE = os.path.join(MEMORY_DIR, "procedures.md")

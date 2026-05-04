@@ -48,13 +48,13 @@ import os
 import re
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 log = logging.getLogger("alicia.multi_channel")
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 DECISIONS_LOG_PATH = os.path.join(MEMORY_DIR, "multi_channel_decisions.jsonl")
 
 # Tunables (Phase 15.1 recalibration)

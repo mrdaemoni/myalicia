@@ -48,11 +48,11 @@ import logging
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger(__name__)
 
-MEMORY_DIR = Path(os.path.expanduser("~/alicia/memory"))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 REPLY_INDEX = MEMORY_DIR / "reply_index.jsonl"
 
 # Emoji → (success: bool | None, user_depth: int 1–5)

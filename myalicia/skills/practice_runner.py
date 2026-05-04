@@ -56,7 +56,7 @@ from pathlib import Path
 from typing import Optional
 
 from myalicia.skills.safe_io import atomic_write_text, atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -65,9 +65,7 @@ log = logging.getLogger("alicia.practice")
 # ── Config ──────────────────────────────────────────────────────────────────
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(os.environ.get(
-    "ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory")
-))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 PRACTICES_DIR = VAULT_ROOT / "Alicia" / "Practices"
 LIVED_DIR = VAULT_ROOT / "Alicia" / "Wisdom" / "Lived"
 CHECK_IN_LOG_FILE = MEMORY_DIR / "practice_check_ins.json"

@@ -22,13 +22,13 @@ import logging
 from datetime import datetime, timezone, timedelta
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 logger = logging.getLogger("alicia")
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 VAULT_ROOT = str(config.vault.root)
 AGENDA_PATH = os.path.join(MEMORY_DIR, "research_agenda.json")
 RESEARCH_LOG = os.path.join(MEMORY_DIR, "research_log.jsonl")

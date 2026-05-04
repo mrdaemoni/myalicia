@@ -50,7 +50,7 @@ if __package__ in (None, "") and __name__ == "__main__":
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from myalicia.skills.safe_io import atomic_write_json, locked_file
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger(__name__)
 
@@ -87,7 +87,7 @@ CANONICAL_SOURCE_DIRS: tuple[Path, ...] = (
 LIVED_UNUSED_DAYS = 90
 
 MEMORY_DIR = Path(
-    os.environ.get("ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory"))
+    str(MEMORY_DIR)
 )
 SURFACING_QUEUE_FILE = MEMORY_DIR / "synthesis_surfacing_queue.json"
 

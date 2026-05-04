@@ -39,14 +39,14 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 log = logging.getLogger("alicia.thread_puller")
 
 PROFILES_DIR = str(config.vault.self_path / "Profiles")
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 THREAD_PULLS_PATH = os.path.join(MEMORY_DIR, "thread_pulls.jsonl")
 
 # Don't pull the same thread again within this window (days).

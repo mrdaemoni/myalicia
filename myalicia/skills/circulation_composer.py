@@ -44,7 +44,7 @@ from pathlib import Path
 from typing import Optional
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -53,9 +53,7 @@ log = logging.getLogger("alicia.circulation")
 # ── Config ──────────────────────────────────────────────────────────────────
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(os.environ.get(
-    "ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory")
-))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 CONTRADICTIONS_PATH = VAULT_ROOT / "Alicia" / "Self" / "Contradictions.md"
 LINEAGES_DIR = VAULT_ROOT / "Alicia" / "Wisdom" / "Lineages"
 CIRCULATION_LOG_FILE = MEMORY_DIR / "circulation_log.json"

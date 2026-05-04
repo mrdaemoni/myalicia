@@ -40,13 +40,13 @@ import logging
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 log = logging.getLogger("alicia.dimension_research")
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 DIMENSION_LOG_PATH = os.path.join(MEMORY_DIR, "dimension_questions_log.jsonl")
 
 # Phase 12.4 — gap escalation. Scan history lets us detect when the same

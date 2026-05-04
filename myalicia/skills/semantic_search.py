@@ -13,15 +13,15 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 VAULT_ROOT   = str(config.vault.root)
-CHROMA_DIR   = os.path.expanduser("~/alicia/chromadb")
-INDEX_LOG    = os.path.expanduser("~/alicia/memory/index_log.json")
+CHROMA_DIR   = str(ALICIA_HOME / "chromadb")
+INDEX_LOG    = str(MEMORY_DIR / "index_log.json")
 
 # Folders to index (all relevant knowledge folders)
 INDEX_FOLDERS = [

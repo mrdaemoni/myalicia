@@ -31,7 +31,7 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -44,9 +44,9 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 MODEL_SONNET = "claude-sonnet-4-20250514"
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 VAULT_ROOT = str(config.vault.root)
-LOG_DIR = os.path.expanduser("~/alicia/logs")
+LOG_DIR = str(LOGS_DIR)
 
 # Pipecat availability check
 _pipecat_available = None

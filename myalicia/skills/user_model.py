@@ -46,7 +46,7 @@ import shutil
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -57,9 +57,7 @@ log = logging.getLogger("alicia.user_model")
 
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(os.environ.get(
-    "ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory")
-))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 
 # Baselines live in the vault — they're a Tier-3 record of the user's arc.
 BASELINES_DIR = VAULT_ROOT / "Alicia" / "Self" / "Baselines"

@@ -21,24 +21,24 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 log = logging.getLogger("alicia.proactive")
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"), max_retries=5)
 
 VAULT_ROOT = str(config.vault.root)
 SYNTHESIS_DIR = os.path.join(VAULT_ROOT, "Alicia", "Wisdom", "Synthesis")
 HANDOFF_PATH = os.path.join(VAULT_ROOT, "Alicia", "Bridge", "HANDOFF.md")
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 RESULTS_TSV = os.path.join(VAULT_ROOT, "Alicia", "Bridge", "synthesis_results.tsv")
 AUTHORS_DIR = os.path.join(VAULT_ROOT, "Authors")
-ANALYSIS_INSIGHTS_PATH = os.path.expanduser("~/alicia/memory/analysis_insights.md")
-ANALYTICAL_BRIEFING_PATH = os.path.expanduser("~/alicia/memory/analytical_briefing.md")
+ANALYSIS_INSIGHTS_PATH = str(MEMORY_DIR / "analysis_insights.md")
+ANALYTICAL_BRIEFING_PATH = str(MEMORY_DIR / "analytical_briefing.md")
 
 MODEL_SONNET = "claude-sonnet-4-20250514"
 
@@ -106,7 +106,7 @@ def _load_template_weights(param_name: str, defaults: dict) -> dict:
 # When the user responds within the tracking window, we log which message type
 # produced the deepest engagement. This teaches Alicia what works.
 
-PROMPT_TRACKING_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "prompt_effectiveness.tsv")
+PROMPT_TRACKING_FILE = os.path.join(str(MEMORY_DIR), "prompt_effectiveness.tsv")
 _LAST_PROACTIVE = {
     "type": None,       # "morning" | "midday" | "evening" | "know_hector" | "synthesis_review"
     "topic": None,      # brief topic description
@@ -188,7 +188,7 @@ def record_prompted_response(user_text: str, insight_score: int = 0):
 # We track the message_id of every proactive message Alicia sends,
 # so when a reaction comes in, we can map it back to the message type.
 
-REACTION_LOG_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "reaction_log.tsv")
+REACTION_LOG_FILE = os.path.join(str(MEMORY_DIR), "reaction_log.tsv")
 
 # Maps emoji reactions to engagement depth signals
 REACTION_DEPTH = {
@@ -306,7 +306,7 @@ def handle_reaction(message_id: int, emoji: str) -> dict | None:
 # Throttled by: daily cap, minimum gap between impulses, and adaptive
 # quieting on low-engagement days.
 
-IMPULSE_STATE_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "impulse_state.json")
+IMPULSE_STATE_FILE = os.path.join(str(MEMORY_DIR), "impulse_state.json")
 
 _DEFAULT_IMPULSE_STATE = {
     "today": None,           # Date string, resets daily
@@ -717,7 +717,7 @@ def _surprise_contradiction_spark() -> str | None:
 # voice vs text ratio, timing, energy. This becomes context for all proactive
 # messages — "You were quiet today" vs "Three voice notes before noon."
 
-RHYTHM_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "daily_rhythm.json")
+RHYTHM_FILE = os.path.join(str(MEMORY_DIR), "daily_rhythm.json")
 
 _DEFAULT_RHYTHM = {
     "date": None,
@@ -1498,7 +1498,7 @@ Return ONLY the question, nothing else."""
 
 # ── Synthesis Quality Feedback ────────────────────────────────────────────────
 
-SYNTHESIS_FEEDBACK_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "synthesis_feedback.tsv")
+SYNTHESIS_FEEDBACK_FILE = os.path.join(str(MEMORY_DIR), "synthesis_feedback.tsv")
 
 def _synthesis_review() -> str:
     """
@@ -1574,7 +1574,7 @@ Start with 🔬. Use Telegram markdown. Be direct — not cheesy, not academic."
 # ── Podcast Follow-Up Loop ────────────────────────────────────────────────────
 
 PODCAST_DIR = os.path.join(VAULT_ROOT, "Wisdom", "Podcasts")
-PODCAST_FOLLOWUP_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "podcast_followups.json")
+PODCAST_FOLLOWUP_FILE = os.path.join(str(MEMORY_DIR), "podcast_followups.json")
 
 def _podcast_followup() -> str:
     """
@@ -1950,7 +1950,7 @@ If no real connection exists, say so honestly. Use Telegram markdown. Start with
 
 # ── Spaced Repetition for Deep Insights ──────────────────────────────────────
 
-SPACED_REP_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "spaced_repetition.json")
+SPACED_REP_FILE = os.path.join(str(MEMORY_DIR), "spaced_repetition.json")
 
 def _get_spaced_repetition_insight() -> str:
     """
@@ -2324,7 +2324,7 @@ Use Telegram markdown. Start with 🌙. No headers."""
         return "🌙 Something in today's shape worth naming tomorrow. What was the energy doing between lunch and now?"
 
 
-CATEGORY_WEIGHTS_FILE = os.path.join(os.path.expanduser("~/alicia/memory"), "category_weights.json")
+CATEGORY_WEIGHTS_FILE = os.path.join(str(MEMORY_DIR), "category_weights.json")
 
 def _get_adaptive_category() -> str:
     """

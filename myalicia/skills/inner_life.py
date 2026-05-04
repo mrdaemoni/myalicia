@@ -13,7 +13,7 @@ from pathlib import Path
 import anthropic
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -32,9 +32,9 @@ DAIMON_LOG_PATH = os.path.join(MYSELF_DIR, "daimon-log.md")
 CHALLENGES_PATH = os.path.join(MYSELF_DIR, "challenges.md")
 BOND_CHRONICLE_PATH = os.path.join(MYSELF_DIR, "bond-chronicle.md")
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 EMERGENCE_STATE_PATH = os.path.join(MEMORY_DIR, "emergence_state.json")
-LOG_DIR = os.path.expanduser("~/alicia/logs")
+LOG_DIR = str(LOGS_DIR)
 
 # Alicia's birthday — the first deploy
 ALICIA_EPOCH = "2026-01-15"

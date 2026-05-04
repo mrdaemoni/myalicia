@@ -29,11 +29,11 @@ from urllib.parse import quote
 
 from anthropic import Anthropic
 from dotenv import load_dotenv
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"), max_retries=5)
 
 log = logging.getLogger("alicia.vault_ingest")
@@ -46,7 +46,7 @@ WISDOM_DIR = os.path.join(VAULT_ROOT, "Wisdom")
 SYNTHESIS_DIR = os.path.join(WISDOM_DIR, "Synthesis")
 ALICIA_DIR = os.path.join(VAULT_ROOT, "Alicia")
 ALICIA_WISDOM_DIR = os.path.join(WISDOM_DIR, "Alicia")
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 
 INDEX_FILE = os.path.join(WISDOM_DIR, "index.md")
 LOG_FILE = os.path.join(WISDOM_DIR, "log.md")

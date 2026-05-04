@@ -15,14 +15,14 @@ from pathlib import Path
 
 from myalicia.skills.safe_io import atomic_write_json
 from myalicia.skills.bridge_protocol import get_latest_report
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 logger = logging.getLogger("alicia")
 
 # Paths
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 REACTION_LOG = os.path.join(MEMORY_DIR, "reaction_log.tsv")
 PROMPT_TRACKING = os.path.join(MEMORY_DIR, "prompt_effectiveness.tsv")
 ANALYSIS_INSIGHTS = os.path.join(MEMORY_DIR, "analysis_insights.md")

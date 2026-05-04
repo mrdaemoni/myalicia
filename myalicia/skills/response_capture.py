@@ -52,16 +52,14 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger("alicia.response_capture")
 
 # ── Config ──────────────────────────────────────────────────────────────────
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(os.environ.get(
-    "ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory")
-))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 RESPONSES_DIR = VAULT_ROOT / "writing" / "Responses"
 CIRCULATION_LOG_FILE = MEMORY_DIR / "circulation_log.json"
 

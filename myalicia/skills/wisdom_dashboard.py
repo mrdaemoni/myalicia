@@ -28,16 +28,14 @@ from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 log = logging.getLogger("alicia.wisdom_dashboard")
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(os.environ.get(
-    "ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory")
-))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 CIRCULATION_LOG_FILE = MEMORY_DIR / "circulation_log.json"
 SURFACING_QUEUE_FILE = MEMORY_DIR / "synthesis_surfacing_queue.json"
 CONTRADICTIONS_PATH = VAULT_ROOT / "Alicia" / "Self" / "Contradictions.md"

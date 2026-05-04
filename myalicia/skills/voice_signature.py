@@ -11,14 +11,14 @@ import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 logger = logging.getLogger(__name__)
 
 # Module-level constants
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 VOICE_LOG_FILE = os.path.join(MEMORY_DIR, "voice_metadata_log.jsonl")
 VOICE_SIGNATURE_FILE = os.path.join(MEMORY_DIR, "voice_signature.json")
 

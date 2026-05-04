@@ -36,16 +36,14 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 log = logging.getLogger("alicia.effectiveness_dashboard")
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(os.environ.get(
-    "ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory")
-))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 REACTION_LOG = MEMORY_DIR / "reaction_log.tsv"
 ARCHETYPE_EFFECTIVENESS = MEMORY_DIR / "archetype_effectiveness.json"
 VOICE_METADATA_LOG = MEMORY_DIR / "voice_metadata_log.jsonl"

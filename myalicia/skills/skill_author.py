@@ -39,7 +39,7 @@ if __name__ == "__main__" and __package__ in (None, ""):
         sys.path.insert(0, _root)
 
 import dotenv
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -56,7 +56,7 @@ SKILL_AUTHOR_LOG = MEMORY_DIR / "skill_author_log.jsonl"
 MIN_INTERVAL_SECONDS = 6 * 60 * 60  # 6 hours
 MAX_PENDING_STUBS = 5
 
-dotenv.load_dotenv(os.path.expanduser("~/alicia/.env"))
+dotenv.load_dotenv(str(ENV_FILE))
 
 
 def _slugify(text: str) -> str:

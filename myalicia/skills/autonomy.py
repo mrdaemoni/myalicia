@@ -19,12 +19,12 @@ import anthropic
 from dotenv import load_dotenv
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 # Load environment
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 # Configure logging
 logger = logging.getLogger("alicia")
@@ -32,7 +32,7 @@ logger = logging.getLogger("alicia")
 # Constants
 VAULT_ROOT = str(config.vault.root)
 VAULT_ALICIA = os.path.join(VAULT_ROOT, "Alicia")
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 MYSELF_DIR = os.path.join(VAULT_ALICIA, "Myself")
 SEASON_TRANSITIONS_DIR = os.path.join(MYSELF_DIR, "season-transitions")
 REFLECTIONS_DIR = os.path.join(MYSELF_DIR, "reflections")

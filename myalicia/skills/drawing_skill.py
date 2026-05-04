@@ -46,7 +46,7 @@ from typing import Callable, Optional
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -56,7 +56,7 @@ log = logging.getLogger(__name__)
 # Paths + constants
 # ─────────────────────────────────────────────────────────────────────────────
 
-ALICIA_ROOT = Path(os.path.expanduser("~/alicia"))
+ALICIA_ROOT = ALICIA_HOME
 DRAWINGS_DIR = ALICIA_ROOT / "memory" / "drawings"
 DRAWING_LOG = ALICIA_ROOT / "memory" / "drawing_log.jsonl"
 DRAWINGS_DIR.mkdir(parents=True, exist_ok=True)

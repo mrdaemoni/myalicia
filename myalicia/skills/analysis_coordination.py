@@ -23,11 +23,11 @@ from myalicia.skills.safe_io import atomic_write_json
 from myalicia.skills.bridge_protocol import list_bridge_reports
 from glob import glob
 from pathlib import Path
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 logger = logging.getLogger(__name__)
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 BRIDGE_DIR = str(config.vault.bridge_path)
 
 # Ensure memory directory exists

@@ -59,11 +59,11 @@ from statistics import median
 from typing import Any, Dict, List, Optional
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 logger = logging.getLogger(__name__)
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 VOICE_LOG_PATH = os.path.join(MEMORY_DIR, "voice_metadata_log.jsonl")
 CALIBRATION_PATH = os.path.join(MEMORY_DIR, "calibrated_prosody_thresholds.json")
 

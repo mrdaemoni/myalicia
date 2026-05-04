@@ -53,9 +53,7 @@ from typing import Optional
 log = logging.getLogger("alicia.web_dashboard")
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(os.environ.get(
-    "ALICIA_MEMORY_DIR", os.path.expanduser("~/alicia/memory")
-))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 SKILLS_DIR = Path(__file__).parent
 PIPELINE_AUDIT_PATH = Path(__file__).parent.parent / "PIPELINE_AUDIT.md"
 
@@ -66,7 +64,7 @@ PIPELINE_AUDIT_PATH = Path(__file__).parent.parent / "PIPELINE_AUDIT.md"
 # Paths are relative to vault root (no leading slash) and URL-encoded.
 
 import urllib.parse as _url
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 

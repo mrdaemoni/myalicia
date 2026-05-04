@@ -22,11 +22,11 @@ import json
 import logging
 from anthropic import Anthropic
 from dotenv import load_dotenv
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 
 log = logging.getLogger(__name__)
 
@@ -708,7 +708,7 @@ _TYPE_PATTERNS = {
 }
 
 # Resonance tracking file
-RESONANCE_FILE = os.path.expanduser("~/alicia/memory/resonance.md")
+RESONANCE_FILE = str(MEMORY_DIR / "resonance.md")
 
 
 # A "readable" vault note needs this many speakable chars AFTER frontmatter,

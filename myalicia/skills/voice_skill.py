@@ -21,7 +21,7 @@ import asyncio
 import wave
 import uuid
 from pathlib import Path
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger(__name__)
 
@@ -97,7 +97,7 @@ def _resolve_ffmpeg() -> str:
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "medium")  # base|small|medium|large-v3
-VOICE_DIR = os.path.expanduser("~/alicia/voice_cache")
+VOICE_DIR = str(ALICIA_HOME / "voice_cache")
 os.makedirs(VOICE_DIR, exist_ok=True)
 
 # ── Gemini TTS Configuration ────────────────────────────────────────────────

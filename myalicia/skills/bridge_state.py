@@ -28,11 +28,11 @@ from typing import Any
 from myalicia.skills.bridge_protocol import (
     BRIDGE_DIR, bridge_path, write_bridge_json, read_bridge_json,
 )
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger(__name__)
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 SNAPSHOT_FILENAME = "alicia-state.json"
 # Exposed for legacy callers; prefer bridge_protocol going forward.
 SNAPSHOT_PATH = bridge_path(SNAPSHOT_FILENAME)

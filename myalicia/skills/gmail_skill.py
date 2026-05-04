@@ -14,9 +14,9 @@ from email.mime.multipart import MIMEMultipart
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME
 
-TOKEN_FILE = os.path.expanduser("~/alicia/config/token.json")
+TOKEN_FILE = str(ALICIA_HOME / "config" / "token.json")
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",
     "https://www.googleapis.com/auth/gmail.send",

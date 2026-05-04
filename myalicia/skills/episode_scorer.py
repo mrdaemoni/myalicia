@@ -22,11 +22,12 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from myalicia.skills.safe_io import atomic_write_json
+from myalicia.config import ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+load_dotenv(str(ENV_FILE))
 log = logging.getLogger(__name__)
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 EPISODES_DIR = os.path.join(MEMORY_DIR, "episodes")
 SCORES_INDEX = os.path.join(MEMORY_DIR, "episode_scores.json")
 

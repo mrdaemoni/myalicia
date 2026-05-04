@@ -54,11 +54,11 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 
 log = logging.getLogger(__name__)
 
-MEMORY_DIR = Path(os.path.expanduser("~/alicia/memory"))
+MEMORY_DIR = Path(str(MEMORY_DIR))
 SIGNAL_FILE = MEMORY_DIR / "daily_signal.json"
 SIGNAL_ARCHIVE = MEMORY_DIR / "daily_signal_archive.jsonl"
 

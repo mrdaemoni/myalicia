@@ -14,20 +14,20 @@ from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 
 from myalicia.skills.safe_io import atomic_write_json
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 logger = logging.getLogger("alicia")
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 PROMPT_TRACKING = os.path.join(MEMORY_DIR, "prompt_effectiveness.tsv")
 REACTION_LOG = os.path.join(MEMORY_DIR, "reaction_log.tsv")
 VOICE_META_LOG = os.path.join(MEMORY_DIR, "voice_metadata_log.jsonl")
 SESSION_THREADS = os.path.join(MEMORY_DIR, "session_threads.json")
 DAILY_RHYTHM = os.path.join(MEMORY_DIR, "daily_rhythm.json")
 TEMPORAL_STATE = os.path.join(MEMORY_DIR, "temporal_state.json")
-LOG_FILE = os.path.expanduser("~/alicia/logs/interactions.jsonl")
+LOG_FILE = str(LOGS_DIR / "interactions.jsonl")
 
 # Day names for readability
 DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]

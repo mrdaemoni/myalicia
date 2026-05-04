@@ -57,13 +57,13 @@ import time
 from datetime import datetime, timezone
 from threading import Lock
 from typing import Any, Dict, List, Optional
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
 logger = logging.getLogger(__name__)
 
-MEMORY_DIR = os.path.expanduser("~/alicia/memory")
+MEMORY_DIR = str(MEMORY_DIR)
 EMOTION_LOG_PATH = os.path.join(MEMORY_DIR, "emotion_log.jsonl")
 
 DEFAULT_MODEL = os.environ.get(

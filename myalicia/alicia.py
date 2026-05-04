@@ -7506,34 +7506,8 @@ _FORCE_REPLY_BY_PROMPT = {v: k for k, v in FORCE_REPLY_PROMPTS.items()}
 # Curated Telegram menu — Alicia's signature commands first, then the
 # next most-used. /skills still surfaces the full ~40-command catalog.
 # Order is preserved as the menu order in Telegram clients.
-ALICIA_MENU_COMMANDS = [
-    ("walk",          "Stream-of-consciousness walk mode"),
-    ("done",          "Finish the active walk / drive / unpack session"),
-    ("draw",          "Render a drawing from her current archetype weather"),
-    ("archetypes",    "Show today's archetype weather and distribution"),
-    ("call",          "Start a live voice conversation"),
-    ("unpack",        "Deep extraction from a voice monologue"),
-    ("drive",         "5-min rapid synthesis with vault connections"),
-    ("note",          "Capture a quick note into the vault"),
-    ("semanticsearch","Search the vault by meaning"),
-    ("memory",        "Show what Alicia remembers about you"),
-    ("noticings",     "Themes Alicia has been quietly tracking"),
-    ("retro",         "Sunday self-portrait — what she noticed this week"),
-    ("conversation",  "Switch / list / create conversation routings"),
-    ("dailyquote",    "Pull a quote from the vault"),
-    ("briefingnow",   "Run the morning briefing on demand"),
-    ("status",        "System health and pipeline status"),
-    ("skills",        "Full catalog of every command Alicia has"),
-]
-
-async def set_alicia_menu_commands(app: Application):
-    """Push the curated menu to Telegram. Idempotent — safe to call on every boot."""
-    try:
-        commands = [BotCommand(name, desc) for name, desc in ALICIA_MENU_COMMANDS]
-        await app.bot.set_my_commands(commands)
-        log.info(f"Telegram menu set: {len(commands)} commands")
-    except Exception as e:
-        log.warning(f"set_my_commands failed: {e}")
+# ALICIA_MENU_COMMANDS + set_alicia_menu_commands extracted to core/main.py
+from myalicia.core.main import ALICIA_MENU_COMMANDS, set_alicia_menu_commands
 
 async def send_startup_message(app: Application):
     ensure_memory_structure()

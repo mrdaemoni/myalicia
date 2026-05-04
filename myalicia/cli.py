@@ -136,23 +136,46 @@ def cmd_init(args: argparse.Namespace) -> int:
 # ── run ───────────────────────────────────────────────────────────────────
 
 def cmd_run(args: argparse.Namespace) -> int:
-    """Start the agent."""
+    """Start the agent — boots Telegram polling + the three relationship loops."""
     from myalicia.config import config
+
+    # Pre-flight checks
+    import os
+    if not os.environ.get(config.models.api_key_env):
+        print(f"ERROR: {config.models.api_key_env} not set in the environment.")
+        print(f"Get a key at https://console.anthropic.com and:")
+        print(f"  export {config.models.api_key_env}='sk-ant-...'")
+        return 1
+
+    if config.surfaces.telegram.enabled and not os.environ.get(
+        config.surfaces.telegram.bot_token_env
+    ):
+        print(f"ERROR: Telegram is enabled but {config.surfaces.telegram.bot_token_env} not set.")
+        print(f"Get a token from @BotFather and:")
+        print(f"  export {config.surfaces.telegram.bot_token_env}='...'")
+        return 1
+
     print(f"Starting myalicia for {config.user.name}...")
     print(f"  Vault:     {config.vault.root}")
     print(f"  Archetype: {config.archetype.name}")
+    print(f"  Listen:    {config.models.listen}")
+    print(f"  Notice:    {config.models.notice}")
+    print(f"  Know:      {config.models.know}")
     print()
-    print("Note: this v0.1.0 ships the package and skill modules. The full")
-    print("runtime entry point lives in myalicia/alicia.py (368KB, the legacy")
-    print("monolith). Splitting it into core/loops, core/scheduler, etc. is")
-    print("planned for v0.2. For now, you can:")
-    print()
-    print("  1. Read myalicia/alicia.py to see how skills compose")
-    print("  2. Import individual skills directly:")
-    print("     from myalicia.skills.reflexion import reflect_on_task")
-    print("  3. Build your own thin harness around the skills")
-    print()
-    print("See ARCHITECTURE.md for the bigger picture.")
+
+    # Boot the runtime. As of v0.1.x the entry point is still the legacy
+    # alicia.py main(); as core/ extraction completes (see REFACTORING.md)
+    # this will move to myalicia.core.main.
+    try:
+        from myalicia.alicia import main as legacy_main
+    except ImportError as e:
+        print(f"ERROR: failed to import the runtime: {e}")
+        print()
+        print("If you see a 'No module named X' error, install the matching extra:")
+        print("  pip install -e '.[all]'")
+        return 1
+
+    legacy_main()
     return 0
 
 

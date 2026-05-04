@@ -704,12 +704,8 @@ def _append_history(role: str, content: str) -> None:
         conversation_history.append({"role": role, "content": content})
 
 # ── Email intent ──────────────────────────────────────────────────────────────
-
-EMAIL_PHRASES = ["send an email", "send email", "email to", "write an email",
-                 "shoot an email", "drop an email", "send a message to"]
-
-def detect_email_intent(text):
-    return any(p in text.lower() for p in EMAIL_PHRASES)
+# Extracted to core/intents.py.
+from myalicia.core.intents import EMAIL_PHRASES, detect_email_intent
 
 # ── Core message handler ──────────────────────────────────────────────────────
 

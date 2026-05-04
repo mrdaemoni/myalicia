@@ -38,12 +38,28 @@ Awareness compounds because three different cadences of reflection are constantl
 
 ## Quickstart
 
+**With pipx** (recommended — handles the venv for you):
+
 ```bash
-pip install myalicia
+brew install pipx       # macOS; or apt/dnf install pipx on Linux
+pipx install myalicia
 myalicia init
 ```
 
-(For v0.1.0, releases land on PyPI via the auto-publish workflow on every version tag — see [PUBLISHING.md](PUBLISHING.md). If you want the absolute latest from `main` instead of the latest release, `pip install git+https://github.com/mrdaemoni/myalicia.git` works.)
+**With pip + venv** (if you want to hack on the code):
+
+```bash
+git clone https://github.com/mrdaemoni/myalicia.git
+cd myalicia
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+myalicia init
+```
+
+The venv step is required on macOS Homebrew Python and most modern Linux distros (PEP 668 blocks system-wide pip installs). pipx avoids this by creating a dedicated venv per package.
+
+See [docs/QUICKSTART.md](docs/QUICKSTART.md) for the full walkthrough and [docs/FAQ.md](docs/FAQ.md) for setup questions.
 
 The `init` flow is more than configuration — it's a guided introduction to relationship-shaped AI. Each setup step is paired with a one-screen explanation of which loop it activates and why. By the time the install completes, you understand the architecture, not just have it running.
 

@@ -4,13 +4,26 @@ Get from zero to a running myalicia in about 15 minutes.
 
 ## Install
 
-`myalicia` is not yet on PyPI for v0.1.0. Install from source:
+**The easy path — pipx (recommended for end users):**
+
+```bash
+brew install pipx           # macOS; on Linux use your package manager
+pipx install myalicia
+```
+
+pipx handles the virtual environment for you — `myalicia` works from any directory after install.
+
+**Developer path — clone + venv (recommended if you want to hack on the code):**
 
 ```bash
 git clone https://github.com/mrdaemoni/myalicia.git
 cd myalicia
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -e .
 ```
+
+The venv step is required on macOS Homebrew Python and most modern Linux distros (PEP 668 blocks system-wide pip installs). To use myalicia later, `cd ~/Desktop/myalicia && source .venv/bin/activate` to re-activate.
 
 For optional integrations (voice, Gmail, vector search, PDF):
 
@@ -20,7 +33,7 @@ pip install -e '.[voice,gmail,search,pdf]'
 pip install -e '.[all]'
 ```
 
-Once v0.2 lands, `pip install myalicia` will work directly.
+(With pipx: `pipx install 'myalicia[all]'`.)
 
 ## Get an Anthropic API key
 

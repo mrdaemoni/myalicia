@@ -38,16 +38,12 @@ Awareness compounds because three different cadences of reflection are constantl
 
 ## Quickstart
 
-`myalicia` is not yet on PyPI. For v0.1.0, install from source:
-
 ```bash
-git clone https://github.com/mrdaemoni/myalicia.git
-cd myalicia
-pip install -e .
+pip install myalicia
 myalicia init
 ```
 
-(After v0.2 lands the runtime, `pip install myalicia` will work directly. For now, source-install + the legacy `myalicia/alicia.py` runtime is the supported path.)
+(For v0.1.0, releases land on PyPI via the auto-publish workflow on every version tag — see [PUBLISHING.md](PUBLISHING.md). If you want the absolute latest from `main` instead of the latest release, `pip install git+https://github.com/mrdaemoni/myalicia.git` works.)
 
 The `init` flow is more than configuration — it's a guided introduction to relationship-shaped AI. Each setup step is paired with a one-screen explanation of which loop it activates and why. By the time the install completes, you understand the architecture, not just have it running.
 

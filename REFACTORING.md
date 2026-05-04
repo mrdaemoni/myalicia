@@ -1,8 +1,8 @@
 # Refactoring plan: splitting `alicia.py`
 
-`myalicia/alicia.py` is the legacy monolith carried over from the original private codebase — 7,951 lines, sanitized but still single-file. Splitting it into the `myalicia/core/` package is the major outstanding refactor for v0.2.0.
+`myalicia/alicia.py` started as 7,951 lines (the legacy monolith from the original private codebase). As of v0.1.x it's down to roughly 7,700 lines and the smallest, most-self-contained pieces have moved into `myalicia/core/`. The remaining work — chiefly `handle_message`, the voice handlers, the Telegram commands, the scheduler, and `main` — is the bulk of v0.2.
 
-This doc describes the planned split, the extraction order, and the rationale. It exists so contributors can pick up a focused chunk of the work without needing to hold the whole picture in their head.
+This doc describes the planned split, the extraction order, the rationale, and what's already shipped. Contributors can pick up a focused chunk without needing to hold the whole picture in their head.
 
 ## The end state
 
@@ -40,9 +40,17 @@ These are small, self-contained, and don't depend on other alicia.py logic:
 
 After Phase 1, the public package surface gets two clean modules and `alicia.py` shrinks slightly.
 
-### Phase 2 — system prompt
+### Phase 2 — small leaves around the edges
 
-3. **`core.system_prompt`** — `build_system_prompt` and its helpers (alicia.py:528–826). It's large but pure: text in, text out. Make sure all hardcoded archetype paths route through `config.archetype.path`.
+These are individually small but together meaningfully shrink `alicia.py`. All landed across v0.1.0 and v0.1.1:
+
+3. **`core.telegram_safety`** ✅ — `safe_reply_md`, `safe_send_md` + `_strip_markdown` helper (Phase 2b, v0.1.1). Markdown-safe Telegram send wrappers.
+4. **`core.intents`** ✅ — `detect_email_intent` + `EMAIL_PHRASES` (Phase 2d, v0.1.1). Lightweight pre-LLM intent classifiers; the planned home for future calendar/task/search intents.
+5. **`core.security` extensions** ✅ — `chat_guard`, `log_interaction` joined the existing module (Phase 2c, v0.1.1). Both now config-driven (no `TELEGRAM_CHAT_ID` or `LOG_FILE` globals); `chat_guard` reads from `config.surfaces.telegram.allowed_chat_ids`.
+
+### Phase 2.5 — system prompt (queued)
+
+6. **`core.system_prompt`** — `build_system_prompt` and its helpers (alicia.py:528–826). It's large but pure: text in, text out. Blocked on extracting `build_session_context` (a private helper called by `build_system_prompt`) first. Make sure all hardcoded archetype paths route through `config.archetype.path`.
 
 ### Phase 3 — the pipeline
 

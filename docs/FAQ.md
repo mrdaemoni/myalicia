@@ -23,7 +23,7 @@ The `init` flow takes about 5 minutes and walks you through configuration while 
 
 ### Why isn't `pip install myalicia` working?
 
-myalicia v0.1.0 is not yet on PyPI. The package skeleton, all 80 skill modules, the configuration layer, and the docs are public, but the legacy 7,951-line `alicia.py` runtime is still being split into the proper `core/` modules per [REFACTORING.md](../REFACTORING.md). Until v0.2 lands the runtime split, source-install is the supported path. Once we're on PyPI, `pip install myalicia` will be the one-liner.
+Yes. As of v0.1.4, `myalicia` is on PyPI and `pipx install myalicia` works for everyone. The incremental `core/` split (taking the legacy `alicia.py` runtime apart into focused modules) is ongoing — see [REFACTORING.md](../REFACTORING.md) for what's shipped and what's queued. Each release ships automatically when a version tag is pushed.
 
 ### How long does setup take?
 

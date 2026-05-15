@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] — 2026-05-14
+
+A privacy and identity hardening pass. The shipped wheel up through v0.1.4 contained leftover references that narrowed who the maintainer is (first name in lowercase identifiers, employer-internal product names, device model, named-thinker defaults, gendered pronouns). v0.1.5 ships the cleaned tree as the canonical install path; older versions are yanked.
+
+### Changed
+
+- **Identifier rename**: `hector` → `user` across 14 tracked files (functions, dict keys, file-name conventions, prompt strings, test fixtures).
+- **Surface rename**: `Cowork` → `Desktop` across 7 tracked files. The architectural pattern (a longer-running synthesis surface paired with a conversational surface) is unchanged; only the label is generic now.
+- **Web dashboard security**: server binds to `127.0.0.1` by default. Set `DASHBOARD_HOST=0.0.0.0` to opt into broader binding. The `POST /api/capture` endpoint now requires a loopback client OR a matching `X-Dashboard-Token` header (token in `DASHBOARD_TOKEN`).
+- **`run_scheduler` docstring**: clarifies that the wall-clock times are starter defaults staggered to spread API load, not personal cadence — customize them in your config.
+
+### Removed
+
+- **Hardcoded thinker fingerprints**: named-author defaults (`_AUTHOR_ALIASES` in `tool_router`, source-folder lists in `semantic_search` / `vault_ingest` / `vault_intelligence`, knowledge-cluster labels in 4 modules, prompt-template anchor lists) replaced with empty defaults or neutral placeholders. The pattern is unchanged — your live MEMORY.md and synthesis notes are the source of truth for which authors your instance "thinks with."
+- **`tests/TEST_REPORT.md`**: stale test report that leaked device, employer-internal product, Python version, venv path, and proxy infrastructure.
+- **Employer-specific keywords**: `amazon` / `rsu` removed from `user_model.py` work-classifier keywords.
+- **Gendered pronouns**: `his wife / his daughter / him` etc. replaced with `their / them` in `dimension_research.py`, `memory_skill.py`, `proactive_messages.py`.
+
+### Fixed
+
+- **`alicia.py`** was missing `from myalicia.config import ENV_FILE, LOGS_DIR, MEMORY_DIR, ALICIA_HOME, config` — would have raised `NameError` on import for anyone using the package as installed.
+- **`web_dashboard.py`** was missing the same imports.
+- **`proactive_messages.py`** was shadowing `MEMORY_DIR` (a `Path`) with `str(MEMORY_DIR)`, then trying to use the `/` operator on it later in the file.
+
+### CI
+
+- **Personal-data scan** now reads its regression patterns from the `PERSONAL_DATA_PATTERNS` GitHub secret instead of inlining them in the workflow file. The patterns no longer ship inside the public repo. The scan auto-skips on forks where the secret isn't set.
+
 ## [0.1.2] — 2026-05-04
 
 A polish release covering Phase 2e–2g extractions, the cross-skill path sweep, install-friction fixes, and a small clarifying tweak to the Papers page.

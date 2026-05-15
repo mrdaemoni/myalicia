@@ -36,7 +36,7 @@ See PHILOSOPHY.md for the full framing. See README.md for setup.
 See ACKNOWLEDGMENTS.md for the people whose work this builds on.
 """
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 __author__ = "myalicia contributors"
 __license__ = "MIT"
 

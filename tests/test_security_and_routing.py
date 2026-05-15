@@ -229,7 +229,7 @@ class TestCredentialRedaction:
 
     def test_telegram_token_redacted(self):
         """Telegram bot tokens must also be redacted."""
-        fake_token = "8184397005:AAF8nAdfW1Gdc9UZPKrl46AjJxyuiMM3Woo"
+        fake_token = "1234567890:AAH_THIS_IS_A_FAKE_FIXTURE_FOR_TESTS_xxxxx"
         reply = f"Bot token: {fake_token}"
 
         for env_var_value in [fake_token]:

@@ -331,12 +331,12 @@ TOOLS = [
             "Those are memory-storage phrases — route them to the `remember` tool, NOT "
             "here. 'remember' is never a read-aloud verb.\n\n"
             "Smart retrieval: the note_name supports many natural patterns:\n"
-            "- By title: 'S3E01', 'Antifragile', 'quality-before-objects'\n"
-            "- By author: 'something by Pirsig', 'a Taleb note'\n"
-            "- By theme: 'something about quality', 'a note on mastery'\n"
-            "- By type: 'a quote about resilience', 'a synthesis note'\n"
+            "- By title: 'S3E01', 'the antifragility note', 'a-specific-slug'\n"
+            "- By author: 'something by <Author>', 'a <Author> note'\n"
+            "- By theme: 'something about <theme>', 'a note on <theme>'\n"
+            "- By type: 'a quote about <theme>', 'a synthesis note'\n"
             "- By recency: 'latest synthesis', 'newest note'\n"
-            "- By idea: 'the one about gumption', 'that antifragile page'\n"
+            "- By idea: 'the one about <idea-fragment>', 'that <topic> page'\n"
             "Pass the user's natural language — the resolver handles the rest."
         ),
         "input_schema": {
@@ -344,7 +344,7 @@ TOOLS = [
             "properties": {
                 "note_name": {
                     "type": "string",
-                    "description": "The user's natural description of what to read. Pass their exact words — the smart resolver handles title matching, author lookup, semantic search, theme filtering, and recency. Examples: 'latest synthesis', 'something by Pirsig about quality', 'a quote on resilience', 'S3E01', 'the gumption note'. NEVER guess — use the user's actual words."
+                    "description": "The user's natural description of what to read. Pass their exact words — the smart resolver handles title matching, author lookup, semantic search, theme filtering, and recency. Examples: 'latest synthesis', 'something by <Author> about <theme>', 'a quote on resilience', 'S3E01', 'the note about <topic>'. NEVER guess — use the user's actual words."
                 },
                 "style": {
                     "type": "string",
@@ -597,7 +597,7 @@ TOOLS = [
             f"Ask {USER_NAME} a clarifying question before acting. Use this when the request "
             "is ambiguous and you could interpret it multiple ways. Present 2-4 concise "
             f"options for {USER_NAME} to choose from. Examples of when to use:\n"
-            "- 'Tell me about quality' → Do you mean (1) Pirsig's Quality, (2) vault notes about craftsmanship, (3) the quality theme cluster?\n"
+            "- 'Tell me about <topic>' → Do you mean (1) a specific author's take, (2) vault notes on the theme, (3) the matching theme cluster?\n"
             "- 'Read me something' → without specifying what\n"
             "- 'What do you think about X' when X could be personal opinion vs vault lookup\n"
             "Do NOT use for clear, specific requests. Only clarify when genuinely ambiguous."
@@ -669,30 +669,14 @@ _RECENCY_PATTERNS = [
     (r"(?:latest|last|newest|most recent)\s+(?:page|book)", os.path.join(VAULT_ROOT, "Books")),
 ]
 
-# Known author names → vault folders/substrings for filtering
-# This gets augmented at runtime by scanning the Authors/ folder
-_AUTHOR_ALIASES = {
-    "pirsig": "Robert Pirsig",
-    "taleb": "Nassim Nicholas Taleb",
-    "vervaeke": "John Vervaeke",
-    "mcgilchrist": "Iain McGilchrist",
-    "frankl": "Viktor Frankl",
-    "peterson": "Jordan Peterson",
-    "seneca": "Seneca",
-    "epictetus": "Epictetus",
-    "marcus aurelius": "Marcus Aurelius",
-    "marcus": "Marcus Aurelius",
-    "aurelius": "Marcus Aurelius",
-    "nietzsche": "Friedrich Nietzsche",
-    "dostoevsky": "Fyodor Dostoevsky",
-    "dostoyevsky": "Fyodor Dostoevsky",
-    "jung": "Carl Jung",
-    "heidegger": "Martin Heidegger",
-    "kierkegaard": "Søren Kierkegaard",
-    "camus": "Albert Camus",
-    "watts": "Alan Watts",
-    "campbell": "Joseph Campbell",
-}
+# Author surname/short-name → canonical "First Last" form, for filtering and
+# attribution. Empty by default — populated at runtime by scanning your vault's
+# Authors/ folder (see _augment_author_aliases below). You can also seed your
+# own personal aliases in config.yaml under `tool_router.author_aliases:`.
+#
+# Example seed entry:
+#   "kierkegaard": "Søren Kierkegaard"
+_AUTHOR_ALIASES: dict[str, str] = {}
 
 # Type patterns → folder filters for semantic search
 _TYPE_PATTERNS = {
@@ -713,7 +697,7 @@ RESONANCE_FILE = str(MEMORY_DIR / "resonance.md")
 
 # A "readable" vault note needs this many speakable chars AFTER frontmatter,
 # wikilinks, tags, and other markdown scaffolding are stripped. Files below
-# the threshold are stubs (e.g. /Authors/Lila.md = "#book by [[Robert M. Pirsig]]",
+# the threshold are stubs (e.g. /Authors/<book>.md = "#book by [[<Author>]]",
 # 30 bytes → ~19 post-strip chars) and reading them aloud produces a 2-second
 # voice note. The threshold is a floor, not a perfect indicator — the
 # resolver skips sub-threshold hits and falls through to the next strategy,
@@ -749,18 +733,18 @@ def _resolve_note_for_reading(query: str) -> tuple:
     Smart resolver for read_vault_note. Chains 5 strategies:
     1. Recency patterns ("latest synthesis", "newest quote")
     2. Direct name matching via vault_resolver (exact/fuzzy)
-    3. Author-based search ("something by Pirsig")
+    3. Author-based search ("something by <Author>")
     4. Type-filtered semantic search ("a quote about resilience")
     5. Pure semantic search (any natural language query)
 
     Returns (path, title) or (None, None).
 
-    Stub filter (2026-04-18): every strategy's candidate path is now
-    checked against _is_substantial before being returned. Stub files
-    (author-index pointers like /Authors/Lila.md) are skipped so they
-    can't produce 2-second voice notes that read the stub text and
-    nothing else. If a strategy's top hit is a stub, the resolver
-    falls through to the next strategy rather than returning the stub.
+    Stub filter: every strategy's candidate path is checked against
+    _is_substantial before being returned. Stub files (author-index
+    pointers like /Authors/<title>.md) are skipped so they can't produce
+    2-second voice notes that read the stub text and nothing else. If a
+    strategy's top hit is a stub, the resolver falls through to the
+    next strategy rather than returning the stub.
     """
     query_lower = query.lower().strip()
 
@@ -823,10 +807,10 @@ def _resolve_note_for_reading(query: str) -> tuple:
 
     # ── Fallback: Accept lower-confidence name matches ───────────────────
     #
-    # <earlier development>: tightened after 'something by Pirsig' → 'How to criticize
-    # something you disagree with' misfire. The old fallback accepted ANY
-    # fuzzy match, so the filler word 'something' in a no-real-content query
-    # produced a confident-sounding wrong pick. Two guards now:
+    # <earlier development>: tightened after 'something by <Author>' → 'How to
+    # criticize something you disagree with' misfire. The old fallback accepted
+    # ANY fuzzy match, so the filler word 'something' in a no-real-content
+    # query produced a confident-sounding wrong pick. Two guards now:
     #   1. Minimum score ≥ 0.55 (was: any score).
     #   2. The matched title must share at least one NON-FILLER word with
     #      the query. A match on 'something' alone is not an attribution.
@@ -862,7 +846,7 @@ def _resolve_note_for_reading(query: str) -> tuple:
 def _detect_author(query: str) -> str:
     """
     Detect if the query references an author.
-    Checks for patterns like "by Pirsig", "a Taleb note", "Pirsig on quality".
+    Checks for patterns like "by <Author>", "a <Author> note", "<Author> on <topic>".
     Returns canonical author name or None.
     """
     # Pattern: "by <author>" or "from <author>"
@@ -909,14 +893,14 @@ def _search_by_author(author: str, topic: str = "") -> tuple:
     Find a note by a specific author, optionally filtered by topic.
     Searches semantically within author-related folders.
 
-    Attribution policy (2026-04-18 fix for 'Pirsig → Robert Hughes' misfire):
-    the SURNAME is treated as a hard attribution filter. Given names alone
-    ("Robert", "John") collide with too many authors, so hits without the
-    surname somewhere in path/title/folder are dropped. Bonuses are additive:
-    +0.3 for the surname, +0.1 for each additional name part. If no hit
-    carries the surname, the search returns None and the caller falls
-    through to strategies 4-5 (type-filtered + pure semantic) which can
-    still surface the author's content on content-similarity alone.
+    Attribution policy: the SURNAME is treated as a hard attribution filter.
+    Given names alone ("Robert", "John") collide with too many authors, so
+    hits without the surname somewhere in path/title/folder are dropped.
+    Bonuses are additive: +0.3 for the surname, +0.1 for each additional
+    name part. If no hit carries the surname, the search returns None and
+    the caller falls through to strategies 4-5 (type-filtered + pure
+    semantic) which can still surface the author's content on content-
+    similarity alone.
     """
     from myalicia.skills.semantic_search import semantic_search
 
@@ -935,8 +919,8 @@ def _search_by_author(author: str, topic: str = "") -> tuple:
     if not author_words:
         return None
     # Surname = the last word of the canonical name. This is the
-    # distinguishing token for multi-part names ("Robert Pirsig" → "pirsig").
-    # For single-word authors ("Seneca") the surname IS the whole name.
+    # distinguishing token for multi-part names ("First Last" → "last").
+    # For single-word names the surname IS the whole name.
     surname = author_words[-1]
     extra_name_parts = author_words[:-1]
 

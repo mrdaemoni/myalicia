@@ -12,7 +12,7 @@ Architecture:
   - Sonnet remains the brain — Alicia stays Alicia
   - Conversation transcript saved to memory + vault after hangup
 
-Dependencies (Mac Mini):
+Dependencies (a desktop/server machine):
   pip install "pipecat-ai[daily,anthropic,google,silero]"
   # DAILY_API_KEY in .env (free at https://dashboard.daily.co)
 
@@ -442,7 +442,7 @@ Rules:
 # ── Fallback Info ────────────────────────────────────────────────────────────
 
 def get_setup_instructions() -> str:
-    """Return instructions for setting up Pipecat on the Mac Mini."""
+    """Return instructions for setting up Pipecat on the a desktop/server machine."""
     return """To enable real-time voice calls:
 
 1. Install Pipecat:

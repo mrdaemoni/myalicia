@@ -21,6 +21,8 @@ import anthropic
 from telegram import Update, BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, MessageHandler, CommandHandler, MessageReactionHandler, CallbackQueryHandler, filters, ContextTypes
 
+from myalicia.config import config, ALICIA_HOME, LOGS_DIR, MEMORY_DIR, ENV_FILE
+
 # ── Setup ─────────────────────────────────────────────────────────────────────
 
 load_dotenv(str(ENV_FILE))
@@ -134,10 +136,10 @@ from myalicia.skills.multichannel_dashboard import render_multichannel_dashboard
 from myalicia.skills.loops_dashboard import render_loops_dashboard
 from myalicia.skills.user_model import (
     render_becoming_dashboard,
-    init_baseline as init_hector_baseline,
-    get_active_baseline as get_active_hector_baseline,
-    append_learning as append_hector_learning,
-    DIMENSIONS as HECTOR_DIMENSIONS,
+    init_baseline as init_user_baseline,
+    get_active_baseline as get_active_user_baseline,
+    append_learning as append_user_learning,
+    DIMENSIONS as USER_DIMENSIONS,
 )
 from myalicia.skills.reflexion import should_reflect, reflect_on_task, get_relevant_reflections
 from myalicia.skills.metacognition import assess_confidence, should_use_opus
@@ -214,7 +216,7 @@ from myalicia.skills.overnight_synthesis import (
     should_run_overnight,
 )
 from myalicia.skills.message_quality import (
-    would_hector_care, record_proactive_timestamp,
+    would_user_care, record_proactive_timestamp,
     get_resonance_priorities, build_resonance_biased_context,
 )
 from myalicia.skills.way_of_being import (
@@ -542,8 +544,8 @@ def build_system_prompt(user_message="", reflections="", curiosity_context="", n
             log.warning(f"autonomy context (get_autonomy_context) failed: {e}")
 
     # This Week's Calibration: diarization-loop closure (H1)
-    # Reads latest Self/Profiles/*-hector.md "Open Threads" + *-delta.md content,
-    # injecting what Cowork's Sunday synthesis learned back into Telegram's
+    # Reads latest Self/Profiles/*-user.md "Open Threads" + *-delta.md content,
+    # injecting what Desktop's Sunday synthesis learned back into Telegram's
     # running context. Without this block, weekly profiles were write-only.
     if load_all or "profiles" in modules:
         try:
@@ -2802,7 +2804,7 @@ async def cmd_drive(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ── Bridge / Diarize / Scout / Handoff (§2.3 H5, §6.3) ────────────────────────
-# These four commands close the gap between Telegram Alicia and Cowork-side
+# These four commands close the gap between Telegram Alicia and Desktop-side
 # Alicia. They use bridge_protocol for every read so the path + atomicity +
 # schema story is uniform.
 
@@ -2853,20 +2855,20 @@ async def cmd_bridge(update: Update, context: ContextTypes.DEFAULT_TYPE):
 @chat_guard
 async def cmd_diarize(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """On-demand paired diarization — usually Sunday 20:00 auto, but
-    callable any time via /diarize. Writes YYYY-WNN-hector.md + -alicia.md
+    callable any time via /diarize. Writes YYYY-WNN-user.md + -alicia.md
     under Alicia/Self/Profiles/."""
     await safe_reply_md(update.message, "🪞 *Running paired diarization…*\nUsually 20-40s.")
     try:
         result = await asyncio.get_event_loop().run_in_executor(None, run_paired_diarization)
         # run_paired_diarization returns a dict (or raises). Tolerate both shapes.
         if isinstance(result, dict):
-            hector = result.get("hector_path", "?")
+            user = result.get("user_path", "?")
             alicia_p = result.get("alicia_path", "?")
             week_id = result.get("week_id", "?")
             delta = result.get("delta_path", "")
             msg = (
                 f"✅ *Diarization complete — {week_id}*\n"
-                f"• {USER_NAME}: `{os.path.basename(hector)}`\n"
+                f"• {USER_NAME}: `{os.path.basename(user)}`\n"
                 f"• Alicia: `{os.path.basename(alicia_p)}`"
             )
             if delta:
@@ -2920,29 +2922,29 @@ async def cmd_scout(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 @chat_guard
 async def cmd_handoff(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Read the latest Cowork handoff note as text + voice.
+    """Read the latest Desktop handoff note as text + voice.
 
-    Bridges from Cowork-side work back into Telegram Alicia's context.
+    Bridges from Desktop-side work back into Telegram Alicia's context.
     HANDOFF.md lives at the top of the bridge dir; sessions live under
-    cowork-sessions/. We prefer the most recent cowork-session entry,
+    desktop-sessions/. We prefer the most recent desktop-session entry,
     falling back to HANDOFF.md if none.
     """
     try:
         from myalicia.skills.bridge_protocol import (
             BRIDGE_DIR, read_bridge_text, list_bridge_reports,
         )
-        cowork_dir = BRIDGE_DIR / "cowork-sessions"
+        desktop_dir = BRIDGE_DIR / "desktop-sessions"
         latest_session = None
-        if cowork_dir.exists():
+        if desktop_dir.exists():
             candidates = sorted(
-                [p for p in cowork_dir.iterdir() if p.is_file() and p.suffix == ".md"],
+                [p for p in desktop_dir.iterdir() if p.is_file() and p.suffix == ".md"],
                 key=lambda p: p.stat().st_mtime, reverse=True,
             )
             latest_session = candidates[0] if candidates else None
 
         if latest_session is not None:
             text = latest_session.read_text(encoding="utf-8", errors="replace")
-            label = f"cowork-sessions/{latest_session.name}"
+            label = f"desktop-sessions/{latest_session.name}"
         else:
             text = read_bridge_text("HANDOFF.md", default="")
             label = "HANDOFF.md"
@@ -3085,18 +3087,18 @@ async def cmd_archetypes(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"⚠️ Archetype stats error: {e}")
 
 
-# ── Cowork scheduled-task visibility + on-demand triggers ────────────────────
-# /tasks lists every Cowork scheduled task grouped by cadence so the user can
-# see the whole fleet from Telegram. Run state (last/next) is owned by Cowork
+# ── Desktop scheduled-task visibility + on-demand triggers ────────────────────
+# /tasks lists every Desktop scheduled task grouped by cadence so the user can
+# see the whole fleet from Telegram. Run state (last/next) is owned by Desktop
 # and not accessible from alicia.py without an MCP client, so this command
-# surfaces what's schedulable; see Cowork UI for live run times.
+# surfaces what's schedulable; see Desktop UI for live run times.
 #
 # /briefingnow triggers compile_analytical_briefing() directly (pure Python).
 # Agent-based tasks (scout, synthesis, outward-research) need a separate
 # Claude Code process, so those aren't exposed as on-demand here — use the
-# Cowork task list to trigger them manually.
+# Desktop task list to trigger them manually.
 
-COWORK_SCHEDULED_DIR = os.path.expanduser("~/Documents/Claude/Scheduled")
+DESKTOP_SCHEDULED_DIR = os.path.expanduser("~/Documents/Claude/Scheduled")
 
 
 def _extract_scheduled_task_name(job) -> str:
@@ -3185,17 +3187,17 @@ def _describe_python_jobs() -> list[dict]:
     return jobs
 
 
-def _read_cowork_task_descriptions() -> list[tuple[str, str]]:
-    """Scan the Cowork Scheduled/ dir and return [(task_id, description)].
+def _read_desktop_task_descriptions() -> list[tuple[str, str]]:
+    """Scan the Desktop Scheduled/ dir and return [(task_id, description)].
 
     Description is pulled from the first frontmatter block's `description:`
     field. Tasks without a SKILL.md are skipped silently.
     """
     results: list[tuple[str, str]] = []
-    if not os.path.isdir(COWORK_SCHEDULED_DIR):
+    if not os.path.isdir(DESKTOP_SCHEDULED_DIR):
         return results
-    for name in sorted(os.listdir(COWORK_SCHEDULED_DIR)):
-        path = os.path.join(COWORK_SCHEDULED_DIR, name, "SKILL.md")
+    for name in sorted(os.listdir(DESKTOP_SCHEDULED_DIR)):
+        path = os.path.join(DESKTOP_SCHEDULED_DIR, name, "SKILL.md")
         if not os.path.isfile(path):
             continue
         try:
@@ -3396,7 +3398,7 @@ async def cmd_becoming(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if sub == "init":
             # Manual baseline capture
             try:
-                p = init_hector_baseline()
+                p = init_user_baseline()
                 await msg.reply_text(
                     f"📈 Baseline captured → `{p.name}`",
                     parse_mode="Markdown",
@@ -3410,14 +3412,14 @@ async def cmd_becoming(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if len(args) < 3:
                 await msg.reply_text(
                     "Usage: `/becoming learn <dimension> <claim>`\n\n"
-                    f"Dimensions: {', '.join(HECTOR_DIMENSIONS)}",
+                    f"Dimensions: {', '.join(USER_DIMENSIONS)}",
                     parse_mode="Markdown",
                 )
                 return
             dim = args[1].lower()
             claim = " ".join(args[2:]).strip()
             try:
-                entry = append_hector_learning(
+                entry = append_user_learning(
                     claim, dim, confidence=0.8, source="telegram:/becoming",
                 )
                 await msg.reply_text(
@@ -3428,7 +3430,7 @@ async def cmd_becoming(update: Update, context: ContextTypes.DEFAULT_TYPE):
             except ValueError as ve:
                 await msg.reply_text(
                     f"⚠️ {ve}\n\nDimensions: "
-                    f"{', '.join(HECTOR_DIMENSIONS)}"
+                    f"{', '.join(USER_DIMENSIONS)}"
                 )
             except Exception as e:
                 await msg.reply_text(f"⚠️ Learn error: {e}")
@@ -3451,7 +3453,7 @@ async def cmd_becoming(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await _send_dashboard(msg, text, name="becoming")
 
         # Hint when no baseline exists yet — invite the one-time init
-        if get_active_hector_baseline() is None:
+        if get_active_user_baseline() is None:
             await msg.reply_text(
                 "_Run `/becoming init` once to capture the current memory "
                 "state as the reference frame. Then `/becoming` will show "
@@ -4987,23 +4989,23 @@ async def handle_why_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 @chat_guard
 async def cmd_tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """List all scheduled tasks — Cowork agents AND Alicia's Python scheduler.
+    """List all scheduled tasks — Desktop agents AND Alicia's Python scheduler.
 
     Two sections:
-      1. Cowork scheduled tasks — agent workflows (daily/weekly/monthly)
+      1. Desktop scheduled tasks — agent workflows (daily/weekly/monthly)
          parsed from ~/Documents/Claude/Scheduled/{taskId}/SKILL.md.
       2. Alicia Python scheduler — in-process schedule.every(...) jobs,
          grouped by cadence, introspected live from schedule.jobs.
 
     This closes the visibility gap between the two schedulers that run the
-    brain. See the Cowork UI for live run history; Python jobs show their
+    brain. See the Desktop UI for live run history; Python jobs show their
     next-run time inline.
     """
     try:
         lines: list[str] = []
 
-        # ── Section 1: Cowork agent tasks ─────────────────────────────────
-        entries = _read_cowork_task_descriptions()
+        # ── Section 1: Desktop agent tasks ─────────────────────────────────
+        entries = _read_desktop_task_descriptions()
         if entries:
             buckets: dict[str, list[tuple[str, str]]] = {
                 "daily": [], "weekly": [], "monthly": [], "other": [],
@@ -5018,7 +5020,7 @@ async def cmd_tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 else:
                     buckets["other"].append((tid, desc))
 
-            lines.append(f"☁️ *Cowork Agent Tasks* ({len(entries)})")
+            lines.append(f"☁️ *Desktop Agent Tasks* ({len(entries)})")
             lines.append("")
             cadence_labels = {
                 "daily": "🌅 *Daily*",
@@ -5036,7 +5038,7 @@ async def cmd_tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     lines.append(f"  • `{tid}` — {short}" if short else f"  • `{tid}`")
                 lines.append("")
         else:
-            lines.append("☁️ *Cowork Agent Tasks* — none found")
+            lines.append("☁️ *Desktop Agent Tasks* — none found")
             lines.append("")
 
         # ── Section 2: Alicia Python scheduler ────────────────────────────
@@ -5094,7 +5096,7 @@ async def cmd_tasks(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     lines.append(f"  • `{j['display']}` — {j['name']}")
                 lines.append("")
 
-        lines.append("_See Cowork UI for Cowork run history. Python jobs run in-process._")
+        lines.append("_See Desktop UI for Desktop run history. Python jobs run in-process._")
         await safe_reply_md(update.message, "\n".join(lines))
     except Exception as e:
         log.warning(f"cmd_tasks failed: {e}")
@@ -5106,7 +5108,7 @@ async def cmd_briefingnow(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Compile the analytical briefing on-demand via the agent-trigger harness.
 
     Calls compile_analytical_briefing() in a background thread — same function
-    the Thursday 10:03 Cowork task invokes. Writes the full briefing to
+    the Thursday 10:03 Desktop task invokes. Writes the full briefing to
     ~/.alicia/memory/analytical_briefing.md (overwrites) and pings back with a
     preview when done. Concurrency-guarded via agent_triggers.
     """
@@ -5519,6 +5521,16 @@ async def _run_unpack_extraction(update: Update):
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 
 def run_scheduler(bot_app: Application):
+    """Register every recurring task.
+
+    NOTE on the wall-clock times below: they are starter defaults — picked
+    to spread API load across the day and to roughly align with morning
+    /  midday / evening rhythms. They are NOT meant to fingerprint a
+    particular user's schedule. To match your own rhythm, override
+    individual times in your `config.yaml` (the schedule.* keys) or fork
+    this function. Many of the :05 / :15 / :30 offsets exist purely to
+    stagger concurrent API calls; don't collapse them all to :00.
+    """
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
@@ -6145,7 +6157,7 @@ def run_scheduler(bot_app: Application):
             msg = await safe_send_md(bot_app.bot, TELEGRAM_CHAT_ID, message, disable_web_page_preview=True)
             # Track which type was sent for prompt-response pairing
             day_of_week = datetime.now().weekday()
-            msg_type = "know_hector" if day_of_week in (1, 3, 5) else "evening"
+            msg_type = "know_user" if day_of_week in (1, 3, 5) else "evening"
             record_proactive_sent(msg_type, message[:80])
             try: signal_record_proactive_slot("evening", msg_type)
             except Exception: pass
@@ -6426,7 +6438,7 @@ def run_scheduler(bot_app: Application):
                 return
 
             # Quality gate: would the user care?
-            care_score = would_hector_care(message)
+            care_score = would_user_care(message)
             if care_score < 0.3:
                 log.info(f"Impulse gated by quality check (score {care_score:.2f}): {message[:60]}")
                 return
@@ -6638,9 +6650,9 @@ def run_scheduler(bot_app: Application):
     # ── Surprise moments (every 2 hours — adaptive, throttled) ───────────
     schedule.every(2).hours.do(lambda: loop.run_until_complete(safe_run("surprise_moment", send_surprise_moment)))
 
-    # ── Bridge state snapshot (H2: Cowork-readable alicia-state.json) ──────
+    # ── Bridge state snapshot (H2: Desktop-readable alicia-state.json) ──────
     # Cheap: ~50ms of local reads. Writes Alicia/Bridge/alicia-state.json so
-    # Cowork's scheduled synthesis tasks can consume Alicia's current season,
+    # Desktop's scheduled synthesis tasks can consume Alicia's current season,
     # emergence score, archetype weights, hot threads, and mood signal as
     # context. Closes the "two Alicias sharing a brain" loop.
     async def send_bridge_snapshot():
@@ -6985,7 +6997,7 @@ def run_scheduler(bot_app: Application):
                     )
                     followup = response.content[0].text
                     # Apply quality gate
-                    score = would_hector_care(followup)
+                    score = would_user_care(followup)
                     if score < 0.3:
                         log.info(f"Afterglow gated (score {score:.2f}): {followup[:60]}")
                         mark_afterglow_delivered(entry["id"])
@@ -7120,7 +7132,7 @@ def run_scheduler(bot_app: Application):
                 log.info("Challenge moment: nothing strong enough this week")
                 return
 
-            care_score = would_hector_care(challenge)
+            care_score = would_user_care(challenge)
             if care_score < 0.4:
                 log.info(f"Challenge gated by quality (score {care_score:.2f})")
                 return
@@ -7168,7 +7180,7 @@ def run_scheduler(bot_app: Application):
                 msg = f"🌱 *Season transition:* {old} → {new}\n\n_{SEASONS_DESC.get(new, 'A new season begins.')}_\n\nEmergence score: {score}"
                 await safe_send_md(bot_app.bot, TELEGRAM_CHAT_ID, msg)
                 log.info(f"Emergence season transition: {old} → {new}")
-            # H2: update bridge snapshot on every emergence pulse, so Cowork
+            # H2: update bridge snapshot on every emergence pulse, so Desktop
             # sees fresh archetype weights + season within the hour rather
             # than waiting up to 10 minutes for the next scheduled snapshot.
             try:
@@ -7564,7 +7576,7 @@ async def send_startup_message(app: Application):
         ("voice_signature", "record_voice_metadata"),
         ("session_threads", "save_session_thread"),
         ("overnight_synthesis", "extract_day_themes"),
-        ("message_quality", "would_hector_care"),
+        ("message_quality", "would_user_care"),
         ("way_of_being", "run_self_reflection"),
         ("inner_life", "run_emergence_pulse"),
         ("feedback_loop", "build_learned_context"),
@@ -7737,7 +7749,7 @@ def main():
         ("draw",           cmd_draw),
         ("drawstats",      cmd_drawstats),
         ("drawings",       cmd_drawstats),
-        # Cowork scheduled-task surface (§D3)
+        # Desktop scheduled-task surface (§D3)
         ("tasks",          cmd_tasks),
         ("briefingnow",    cmd_briefingnow),
         # Agent-trigger harness (on-demand heavy tasks)

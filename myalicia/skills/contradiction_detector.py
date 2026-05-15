@@ -787,7 +787,7 @@ def _lineage_slug_from_file(lineage_md: Path) -> Optional[str]:
     m = _LINEAGE_TAG_RE.search(text)
     if m:
         return m.group(1).lower()
-    # Fallback: derive from filename (e.g. Pirsig-line.md → pirsig)
+    # Fallback: derive from filename (e.g. <Author>-line.md → <author>)
     name = lineage_md.stem.lower().replace("-line", "").replace("_line", "")
     return name or None
 
@@ -803,8 +803,8 @@ def detect_lineage_unused(
     synthesis notes, and return a list of lineages whose tag hasn't appeared
     in a synthesis modified within `days`. Each result dict:
 
-        {"lineage": "Pirsig-line", "slug": "pirsig", "last_seen": ISO | None,
-         "path": "/.../Pirsig-line.md"}
+        {"lineage": "<Author>-line", "slug": "<author>", "last_seen": ISO | None,
+         "path": "/.../<Author>-line.md"}
     """
     sd = synthesis_dir or SYNTHESIS_DIR
     if not LINEAGES_DIR.exists():

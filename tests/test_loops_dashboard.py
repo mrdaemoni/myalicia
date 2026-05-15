@@ -652,7 +652,7 @@ def _():
 
         # Two meta_synthesis-sourced learnings + one manual
         hm.append_learning(
-            claim=f"{USER_NAME} returns to McGilchrist often",
+            claim=f"{USER_NAME} returns to Gamma often",
             dimension="knowledge", confidence=0.85,
             source="meta_synthesis:On Quality",
         )
@@ -688,8 +688,8 @@ def _():
         out = render_loops_dashboard()
         cross = out.split("Cross-loop signals")[1]
         # Two meta-sourced learnings should show
-        assert "2 13.9 meta→hector" in cross, (
-            f"expected '2 13.9 meta→hector' in cross-loop: {cross!r}"
+        assert "2 13.9 meta→user" in cross, (
+            f"expected '2 13.9 meta→user' in cross-loop: {cross!r}"
         )
 
 

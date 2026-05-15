@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 Manual trigger script — runs every scheduled task function and reports results.
-Run from Mac Mini: cd ~/alicia && source venv/bin/activate && python alicia/tests/trigger_all.py
+
+Usage:
+    cd /path/to/myalicia && source .venv/bin/activate && python tests/trigger_all.py
 
 This does NOT send Telegram messages — it just calls the underlying functions
 to verify they execute without errors.
@@ -20,7 +22,9 @@ os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.getcwd())
 
 from dotenv import load_dotenv
-load_dotenv(os.path.expanduser("~/alicia/.env"))
+# Honor ALICIA_HOME if set; otherwise fall back to the canonical ~/.alicia/.env.
+_alicia_home = os.environ.get("ALICIA_HOME") or os.path.expanduser("~/.alicia")
+load_dotenv(os.path.join(_alicia_home, ".env"))
 
 # ── Test framework ──────────────────────────────────────────────────────────
 
@@ -148,10 +152,10 @@ def _():
     assert isinstance(result, dict), f"Expected dict, got {type(result)}"
     return f"questions_generated: {result.get('questions_generated', '?')}, gaps: {result.get('gaps_detected', '?')}"
 
-@task_test("detect_novelty('What is Nishida Kitaro absolute nothingness?')")
+@task_test("detect_novelty('What is Theta Kitaro absolute nothingness?')")
 def _():
     from myalicia.skills.curiosity_engine import detect_novelty
-    result = detect_novelty("What is Nishida Kitaro absolute nothingness?")
+    result = detect_novelty("What is Theta Kitaro absolute nothingness?")
     assert isinstance(result, dict), f"Expected dict, got {type(result)}"
     return f"is_novel: {result.get('is_novel')}, score: {result.get('curiosity_score', '?')}"
 

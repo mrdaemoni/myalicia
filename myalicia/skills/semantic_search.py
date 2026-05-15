@@ -2,7 +2,7 @@
 """
 Alicia — Semantic Search (Step 2)
 Embeds all vault notes locally using sentence-transformers
-Stores vectors in chromadb (runs entirely on Mac Mini)
+Stores vectors in chromadb (runs entirely on a desktop/server machine)
 Provides semantic search: find notes by meaning, not just keywords
 """
 
@@ -23,16 +23,16 @@ VAULT_ROOT   = str(config.vault.root)
 CHROMA_DIR   = str(ALICIA_HOME / "chromadb")
 INDEX_LOG    = str(MEMORY_DIR / "index_log.json")
 
-# Folders to index (all relevant knowledge folders)
+# Folders to index (all relevant knowledge folders). This is a starter list —
+# adapt it to your vault's shape by overriding `semantic_search.index_folders`
+# in your config.yaml. Folders that don't exist in your vault are silently
+# skipped, so a generous default is harmless.
 INDEX_FOLDERS = [
     "Quotes",
     "Short reads",
     "Books",
     "Authors",
-    "John Vervaeke",
     "Stoic",
-    "meaning crisis",
-    "my writings",
     "Questions",
     "Wisdom",
     "Self",
@@ -48,7 +48,7 @@ INDEX_FOLDERS = [
     "Inbox",
 ]
 
-# Whether to also index root-level .md files (concept notes like Aretê.md, Gumption.md)
+# Whether to also index root-level .md files (concept notes at the vault root)
 INDEX_ROOT_NOTES = True
 
 # Lazy-loaded globals
@@ -112,7 +112,7 @@ def _get_all_vault_files() -> list:
             for f in filenames:
                 if f.endswith(".md"):
                     files.append(os.path.join(root, f))
-    # Root-level concept notes (Aretê.md, Gumption.md, etc.)
+    # Root-level concept notes (any .md sitting at the vault root)
     if INDEX_ROOT_NOTES and os.path.exists(VAULT_ROOT):
         for f in os.listdir(VAULT_ROOT):
             fp = os.path.join(VAULT_ROOT, f)

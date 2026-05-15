@@ -82,7 +82,7 @@ Set true when: multi-step reasoning needed, conflicting sources,
 novel synthesis required, or confidence < 2.
 
 uncertainty_note: A phrase Alicia can naturally include in her response.
-Example: "I'm drawing mostly from Pirsig here — the vault has less on Nishida's take"
+Example: "I'm drawing mostly from <Author A> here — the vault has less on <Author B>'s take"
 Set null if confidence >= 4 (no need to flag certainty).""".replace("{USER_NAME}", USER_NAME))
 
 

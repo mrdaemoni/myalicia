@@ -45,9 +45,9 @@ NOVELTY_LOG = os.path.join(MEMORY_DIR, "novelty_detections.tsv")
 
 MODEL_SONNET = "claude-sonnet-4-20250514"
 
-# The 8 knowledge clusters
-CLUSTERS = ["Quality", "Mastery", "Environment", "Measurement",
-            "Relationships", "Compounding", "Technology", "Depth"]
+# Starter knowledge clusters — replace with your own themes.
+CLUSTERS = ["Cluster A", "Cluster B", "Cluster C", "Cluster D",
+            "Cluster E", "Cluster F", "Cluster G", "Cluster H"]
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -76,7 +76,7 @@ def detect_novelty(message: str) -> dict:
     potential_names = re.findall(r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b', message)
     novel_names = [n for n in potential_names
                    if n.lower() not in known_entities
-                   and n.lower() not in {'hector', 'alicia', 'monday', 'tuesday',
+                   and n.lower() not in {'user', 'alicia', 'monday', 'tuesday',
                                           'wednesday', 'thursday', 'friday',
                                           'saturday', 'sunday'}
                    and len(n) > 3]

@@ -221,7 +221,7 @@ def _keyword_overlap(text1: str, text2: str) -> float:
     return intersection / union if union > 0 else 0.0
 
 
-def would_hector_care(message_text: str) -> float:
+def would_user_care(message_text: str) -> float:
     """
     Score a proposed proactive message on relevance and timing (0.0-1.0).
 
@@ -324,7 +324,7 @@ def would_hector_care(message_text: str) -> float:
 
     # Cap at 1.0
     final_score = min(1.0, score)
-    logger.debug(f"Final would_hector_care score: {final_score}")
+    logger.debug(f"Final would_user_care score: {final_score}")
     return final_score
 
 

@@ -135,7 +135,7 @@ def write_bridge_json(
         validate: When True, run the schema-validation hook (logs on
             failure; never raises). Pass False for ad-hoc scratch files.
         index: When True, append a line to `_INDEX.jsonl` (H6 of the
-            review — Cowork can `tail` this to see new reports).
+            review — Desktop can `tail` this to see new reports).
 
     Returns the absolute path that was written.
     """
@@ -270,7 +270,7 @@ def _append_index(filename: str, *, kind: str) -> None:
     """
     Append one JSON line to `_INDEX.jsonl` describing the write.
 
-    Consumers (Cowork's bridge-watcher skill, future `/bridge summary`,
+    Consumers (Desktop's bridge-watcher skill, future `/bridge summary`,
     the observability file) can `tail` this cheaply without rescanning
     the directory.
     """

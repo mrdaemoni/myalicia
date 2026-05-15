@@ -9,7 +9,7 @@ weights, last voice interaction, mood signal, hot threads, last score-5
 reaction.
 
 Purpose — close the "two Alicias sharing a brain" loop: Telegram writes
-the snapshot; Cowork-side scheduled synthesis tasks read it and inject
+the snapshot; Desktop-side scheduled synthesis tasks read it and inject
 it as context ("the user is in First Light season; weight wonder over
 challenge"). The narrative about symmetrical bridge becomes literally
 true instead of aspirational.
@@ -113,7 +113,7 @@ def _mood_signal(emergence: dict) -> str:
         log.debug(f"trajectory mood inference skipped: {e}")
 
     # Season-based fallback — First Light feels exploratory, later seasons
-    # consolidate. This is just a soft default; Cowork can override.
+    # consolidate. This is just a soft default; Desktop can override.
     season = (emergence.get("season") or "").lower()
     if "first" in season or "dawn" in season:
         return "exploratory"
@@ -206,7 +206,7 @@ def write_alicia_state_snapshot() -> dict:
         snapshot = build_snapshot()
         # Routes through bridge_protocol so the write is atomic, schema-
         # validated (if bridge_schema is available), and logged in the
-        # bridge _INDEX.jsonl for Cowork-side consumers.
+        # bridge _INDEX.jsonl for Desktop-side consumers.
         write_bridge_json(SNAPSHOT_FILENAME, snapshot)
         log.info(
             f"Bridge snapshot written: season={snapshot.get('season')!r} "
@@ -222,7 +222,7 @@ def write_alicia_state_snapshot() -> dict:
 
 def read_alicia_state_snapshot() -> dict:
     """Read the most recently written snapshot. Returns {} if missing.
-    Exposed so Cowork-side code (or a /bridge-state command) can consume it
+    Exposed so Desktop-side code (or a /bridge-state command) can consume it
     symmetrically without re-implementing the path."""
     return read_bridge_json(SNAPSHOT_FILENAME, default={})
 

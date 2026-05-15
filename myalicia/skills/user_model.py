@@ -106,7 +106,6 @@ DIMENSIONS: tuple[str, ...] = (
 # caused false positives like:
 #   "production" matched "product"  (work)
 #   "executive review" matched "execute"  (no current keyword, but same class)
-#   "amazon prime" matched "amazon"  (acceptable — both ARE work)
 #   "fasting protocol" matched "fast"  (now: only matches "fasting" because
 #       we explicitly added it; "fast car" no longer false-positives body)
 #
@@ -122,14 +121,14 @@ _DIMENSION_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
                        "walked", "walking")),
     ("wealth",        ("money", "wealth", "spending", "budget", "saving",
                        "invest", "investing", "salary", "income",
-                       "expense", "stock", "401k", "retirement", "rsu")),
+                       "expense", "stock", "401k", "retirement")),
     ("relationships", ("wife", "husband", "spouse", "partner", "kid",
                        "kids", "child", "children", "son", "daughter",
                        "father", "mother", "family", "friend", "friends",
                        "marriage", "parenting", "love", "intimacy")),
-    ("work",          ("amazon", "manager", "design team", "ux",
-                       "career", "promotion", "1:1", "sprint",
-                       "stakeholder", "leadership")),
+    ("work",          ("manager", "team", "career", "promotion",
+                       "1:1", "sprint", "stakeholder", "leadership",
+                       "coworker", "colleague", "boss")),
     ("voice",         ("writing", "essay", "voice note", "podcast",
                        "speak", "publish", "draft", "post", "share",
                        "newsletter", "talk", "voice")),
@@ -144,8 +143,8 @@ _DIMENSION_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
                        "contradict~", "tension", "growth edge",
                        "struggl~")),
     ("knowledge",     ("read", "book", "learn", "synthesi~", "concept",
-                       "idea", "thinker", "philosopher", "pirsig",
-                       "mcgilchrist", "vervaeke", "waitzkin", "stoic")),
+                       "idea", "thinker", "philosopher", "author",
+                       "study", "research")),
     # identity = default fallback (values, self-image, becoming)
 )
 

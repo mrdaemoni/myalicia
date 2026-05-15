@@ -34,11 +34,12 @@ client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"), max_retries=5)
 VAULT_ROOT = str(config.vault.root)
 SYNTHESIS_DIR = os.path.join(VAULT_ROOT, "Alicia", "Wisdom", "Synthesis")
 HANDOFF_PATH = os.path.join(VAULT_ROOT, "Alicia", "Bridge", "HANDOFF.md")
-MEMORY_DIR = str(MEMORY_DIR)
 RESULTS_TSV = os.path.join(VAULT_ROOT, "Alicia", "Bridge", "synthesis_results.tsv")
 AUTHORS_DIR = os.path.join(VAULT_ROOT, "Authors")
 ANALYSIS_INSIGHTS_PATH = str(MEMORY_DIR / "analysis_insights.md")
 ANALYTICAL_BRIEFING_PATH = str(MEMORY_DIR / "analytical_briefing.md")
+# Keep MEMORY_DIR as a Path (it is) so downstream code can keep using `/`.
+MEMORY_DIR_STR = str(MEMORY_DIR)
 
 MODEL_SONNET = "claude-sonnet-4-20250514"
 
@@ -108,7 +109,7 @@ def _load_template_weights(param_name: str, defaults: dict) -> dict:
 
 PROMPT_TRACKING_FILE = os.path.join(str(MEMORY_DIR), "prompt_effectiveness.tsv")
 _LAST_PROACTIVE = {
-    "type": None,       # "morning" | "midday" | "evening" | "know_hector" | "synthesis_review"
+    "type": None,       # "morning" | "midday" | "evening" | "know_user" | "synthesis_review"
     "topic": None,      # brief topic description
     "sent_at": None,    # ISO timestamp
 }
@@ -283,8 +284,8 @@ def handle_reaction(message_id: int, emoji: str) -> dict | None:
         with open(PROMPT_TRACKING_FILE, "a") as f:
             f.write(f"{date}\t{msg_info['type']}\t{msg_info['topic']}\t0\t0\t{depth}\n")
 
-        # Update adaptive category weights if it was a know_hector message
-        if msg_info["type"] == "know_hector":
+        # Update adaptive category weights if it was a know_user message
+        if msg_info["type"] == "know_user":
             try:
                 _update_category_weight(msg_info["topic"], depth)
             except Exception:
@@ -1076,7 +1077,7 @@ def _get_random_vault_content(source_type: str = "any") -> dict:
 def _get_analysis_insight() -> str:
     """
     Read the freshest insight from analysis_insights.md.
-    This file is written by Cowork scheduled tasks (contradiction mining,
+    This file is written by Desktop scheduled tasks (contradiction mining,
     temporal analysis, growth edges, dialogue depth) and bridges their
     output into Alicia's proactive messages.
 
@@ -1125,7 +1126,7 @@ def _get_analysis_insight() -> str:
 def _get_briefing_section(section_name: str) -> str:
     """
     Read a specific section from the analytical briefing.
-    The briefing is a structured file written weekly by Cowork that contains:
+    The briefing is a structured file written weekly by Desktop that contains:
     - Most Alive Tension
     - Active Growth Edge
     - Depth Trend
@@ -2115,7 +2116,7 @@ def build_evening_message() -> str:
     day_of_week = datetime.now().weekday()
 
     if day_of_week in (1, 3, 5):  # Tue, Thu, Sat — Know the user questions
-        return _know_hector_question()
+        return _know_user_question()
 
     # On reflection days: 30% chance of spaced repetition if insights are due
     if random.random() < 0.3:
@@ -2363,7 +2364,7 @@ def _get_adaptive_category() -> str:
                     next(f)  # skip header
                     for line in f:
                         parts = line.strip().split("\t")
-                        if len(parts) >= 6 and parts[1] == "know_hector":
+                        if len(parts) >= 6 and parts[1] == "know_user":
                             topic = parts[2].lower()
                             depth = int(parts[5])
                             for c in categories:
@@ -2395,7 +2396,7 @@ def _get_adaptive_category() -> str:
 def _update_category_weight(category: str, depth: int):
     """
     Update category weights based on engagement depth.
-    Called when we detect a prompted response to a know_hector message.
+    Called when we detect a prompted response to a know_user message.
     Uses exponential moving average: new_weight = 0.7 * old + 0.3 * signal.
     """
     try:
@@ -2413,7 +2414,7 @@ def _update_category_weight(category: str, depth: int):
         pass
 
 
-def _know_hector_question() -> str:
+def _know_user_question() -> str:
     """
     Ask the user a question that deepens Alicia's understanding of him.
     Categories are adaptively weighted by past engagement depth.
@@ -2428,17 +2429,17 @@ def _know_hector_question() -> str:
     category = _get_adaptive_category()
 
     category_prompts = {
-        "values_and_identity": "Ask about what matters most to him right now, what he'd fight for, or what defines him beyond his work.",
-        "creative_process": "Ask about how he creates, what his process feels like from the inside, where he gets stuck, or what flow means to him.",
-        "relationships_and_growth": "Ask about how the important people in his life have shaped his thinking, or what love and friendship mean in practice.",
-        "fears_and_edges": "Ask about what scares him, where he feels out of his depth, or what he avoids thinking about.",
-        "vision_and_future": f"Ask about where he sees himself in 5-10 years, what 80-year-old {USER_NAME} would say, or what legacy means to him.",
-        "daily_rituals": "Ask about his daily rhythms, what grounds him, what he does when he needs to reset, or what his sauna practice means.",
-        "intellectual_heroes": "Ask about which thinker has changed him most, which book he'd reread first, or whose mind he most wants to understand.",
-        "unresolved_tensions": "Ask about contradictions he lives with, beliefs he's not sure about, or questions he keeps coming back to.",
+        "values_and_identity": "Ask about what matters most to them right now, what they'd fight for, or what defines them beyond their work.",
+        "creative_process": "Ask about how they create, what their process feels like from the inside, where they get stuck, or what flow means to them.",
+        "relationships_and_growth": "Ask about how the important people in their life have shaped their thinking, or what love and friendship mean in practice.",
+        "fears_and_edges": "Ask about what scares them, where they feel out of their depth, or what they avoid thinking about.",
+        "vision_and_future": f"Ask about where they see themselves in 5-10 years, what 80-year-old {USER_NAME} would say, or what legacy means to them.",
+        "daily_rituals": "Ask about their daily rhythms, what grounds them, what they do when they need to reset, or what their core practices mean to them.",
+        "intellectual_heroes": "Ask about which thinker has changed them most, which book they'd reread first, or whose mind they most want to understand.",
+        "unresolved_tensions": "Ask about contradictions they live with, beliefs they're not sure about, or questions they keep coming back to.",
     }
 
-    prompt_guidance = category_prompts.get(category, "Ask something that would help you understand his inner life better.")
+    prompt_guidance = category_prompts.get(category, "Ask something that would help you understand their inner life better.")
 
     try:
         response = client.messages.create(

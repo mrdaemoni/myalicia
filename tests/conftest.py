@@ -28,16 +28,19 @@ os.environ.setdefault("TELEGRAM_BOT_TOKEN", "fake-telegram-token")
 os.environ.setdefault("TELEGRAM_CHAT_ID", "12345")
 os.environ.setdefault("OPENAI_API_KEY", "sk-test-fake-openai-key")
 
-# ── Remove SOCKS proxy vars that crash httpx in Anthropic client ────────────
-# The VM sets ALL_PROXY=socks5h://... which requires 'socksio' package.
-# Since tests mock the client anyway, we just remove the proxy.
+# ── Remove proxy env vars that confuse httpx in Anthropic client ────────────
+# Some CI / container environments set proxy variables that the Anthropic
+# client tries to honor and crashes on (e.g. SOCKS without the right extra).
+# Tests mock the client anyway, so we just strip the proxies.
 for _proxy_key in ["ALL_PROXY", "all_proxy", "GRPC_PROXY", "grpc_proxy",
                     "FTP_PROXY", "ftp_proxy", "RSYNC_PROXY"]:
     os.environ.pop(_proxy_key, None)
 
 # ── Pre-create directories that skills expect ─────────────────────────────────
-os.makedirs(os.path.expanduser("~/alicia/memory"), exist_ok=True)
-os.makedirs(os.path.expanduser("~/alicia/logs"), exist_ok=True)
+# Honor ALICIA_HOME if set; otherwise fall back to the canonical ~/.alicia.
+_alicia_home = os.environ.get("ALICIA_HOME") or os.path.expanduser("~/.alicia")
+os.makedirs(os.path.join(_alicia_home, "memory"), exist_ok=True)
+os.makedirs(os.path.join(_alicia_home, "logs"), exist_ok=True)
 
 
 # ── Temp directories for isolated testing ─────────────────────────────────────
@@ -74,10 +77,10 @@ def tmp_vault(tmp_path):
         "# Compounding & Layers\n\nKnowledge compounds when layers connect.\n\n#theme/compounding\n"
     )
     (vault / "Books" / "Zen and the Art_of_Motorcycle_Maintenance.md").write_text(
-        "# Zen and the Art of Motorcycle Maintenance\n\nPirsig explores quality.\n"
+        "# Alpha's Book\n\nAlpha explores quality.\n"
     )
-    (vault / "Quotes" / "Pirsig_on_Quality.md").write_text(
-        "# Pirsig on Quality\n\n> Quality is not a thing. It is an event.\n— Robert Pirsig\n"
+    (vault / "Quotes" / "Alpha_on_Quality.md").write_text(
+        "# Alpha on Quality\n\n> Quality is not a thing. It is an event.\n— Robert Alpha\n"
     )
     (vault / "Alicia" / "Wisdom" / "Synthesis" / "Mastery_does_not_transcend_boredom.md").write_text(
         "# Mastery does not transcend boredom\n\nSynthesis note content.\n"

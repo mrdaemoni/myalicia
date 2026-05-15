@@ -18,7 +18,7 @@ Metaphor framing — three sections + skills + timeline:
     Mind            — her own arc (poetic season, emergence, archetype EMA)
     Nervous system  — what she observes (loops, dormancy, smart deciders)
 
-  HECTOR            — who you are
+  USER            — who you are
     Mind            — /becoming arc (10 dimensions, baseline → delta)
     Voice           — captures, drafts, most-responded ideas
     Body            — practices in motion
@@ -50,10 +50,12 @@ import time as _time
 from pathlib import Path
 from typing import Optional
 
+from myalicia.config import config, MEMORY_DIR as _MEMORY_DIR
+
 log = logging.getLogger("alicia.web_dashboard")
 
 VAULT_ROOT = Path(str(config.vault.root))
-MEMORY_DIR = Path(str(MEMORY_DIR))
+MEMORY_DIR = Path(str(_MEMORY_DIR))
 SKILLS_DIR = Path(__file__).parent
 PIPELINE_AUDIT_PATH = Path(__file__).parent.parent / "PIPELINE_AUDIT.md"
 
@@ -120,25 +122,25 @@ def _alicia_birth_story_path() -> str:
     return "Wisdom/Alicia/The Birth of Alicia — A Story of Emergence.md"
 
 
-def _latest_hector_profile_path() -> Optional[str]:
+def _latest_user_profile_path() -> Optional[str]:
     """Vault-relative path to the most recent the user profile (who Alicia
     thinks the user is right now), or None if no profile yet."""
     profiles_dir = VAULT_ROOT / "Alicia" / "Self" / "Profiles"
     if not profiles_dir.is_dir():
         return None
     try:
-        hector_files = sorted(
-            (f for f in profiles_dir.glob("*-hector.md")),
+        user_files = sorted(
+            (f for f in profiles_dir.glob("*-user.md")),
             reverse=True,
         )
-        if not hector_files:
+        if not user_files:
             return None
-        return str(hector_files[0].relative_to(VAULT_ROOT))
+        return str(user_files[0].relative_to(VAULT_ROOT))
     except Exception:
         return None
 
 
-def _latest_hector_baseline_path() -> Optional[str]:
+def _latest_user_baseline_path() -> Optional[str]:
     """Vault-relative path to the most recent /becoming baseline."""
     baselines_dir = VAULT_ROOT / "Alicia" / "Self" / "Baselines"
     if not baselines_dir.is_dir():
@@ -162,7 +164,7 @@ def _extract_prompt_from_capture(capture_path: Path) -> Optional[str]:
       *In response to (synthesis_referenced or "—"):*
       > <quoted prompt text spanning N lines>
 
-      <hector's response body>
+      <user's response body>
 
     The blockquote starts with '> ' on each line. Strip the markers and
     join. Returns None when no prompt block is found (unprompted captures
@@ -608,10 +610,10 @@ def compute_full_state() -> dict:
             "mind": _alicia_mind(),
             "nervous_system": _alicia_nervous_system(),
         },
-        "hector": {
-            "mind": _hector_mind(),
-            "voice": _hector_voice(),
-            "body": _hector_body(),
+        "user": {
+            "mind": _user_mind(),
+            "voice": _user_voice(),
+            "body": _user_body(),
         },
         "relationship": {
             "conversation": _relationship_conversation(),
@@ -843,10 +845,10 @@ def _alicia_nervous_system() -> dict:
     return out
 
 
-# ── HECTOR sections ──────────────────────────────────────────────────────
+# ── USER sections ──────────────────────────────────────────────────────
 
 
-def _hector_mind() -> dict:
+def _user_mind() -> dict:
     """The 10-dimension /becoming arc."""
     out: dict = {}
     try:
@@ -859,7 +861,7 @@ def _hector_mind() -> dict:
         out["baseline"] = baseline.name if baseline else None
         out["days_since_baseline"] = _safe(days_since_baseline) or 0
         # Phase 15.0g — vault link to the active baseline file
-        baseline_path = _latest_hector_baseline_path()
+        baseline_path = _latest_user_baseline_path()
         out["baseline_vault_uri"] = vault_uri(baseline_path) if baseline_path else None
         out["dimensions"] = list(DIMENSIONS)
         all_learnings = _safe(get_learnings) or []
@@ -874,7 +876,7 @@ def _hector_mind() -> dict:
     except Exception:
         out["dimensions"] = []
     # Phase 15.0g — link to the the user profile (who Alicia thinks the user is)
-    profile_path = _latest_hector_profile_path()
+    profile_path = _latest_user_profile_path()
     if profile_path:
         out["who_alicia_thinks_you_are"] = {
             "label": Path(profile_path).stem,
@@ -883,7 +885,7 @@ def _hector_mind() -> dict:
     return out
 
 
-def _hector_voice() -> dict:
+def _user_voice() -> dict:
     """the user's recent captures, drafts, most-responded ideas."""
     out: dict = {}
     try:
@@ -935,7 +937,7 @@ def _hector_voice() -> dict:
     return out
 
 
-def _hector_body() -> dict:
+def _user_body() -> dict:
     """Active practices + days running."""
     out: dict = {}
     try:
@@ -1202,7 +1204,7 @@ def compute_network_info(port: int = 8765) -> dict:
     """Return all the URLs the user can use to reach the dashboard.
 
     Includes:
-      - localhost (Mac mini itself)
+      - localhost (a desktop/server machine itself)
       - LAN IP (other devices on home Wi-Fi)
       - Tailscale IP (if installed — for outside-home access)
       - hostname.local (Bonjour, if available)
@@ -1512,14 +1514,50 @@ class _DashboardHandler(BaseHTTPRequestHandler):
             log.warning(f"dashboard handler error: {e}")
             self._send_text(f"error: {e}", code=500)
 
+    def _authorized(self) -> bool:
+        """Token gate for mutating endpoints.
+
+        Behavior:
+          • If DASHBOARD_TOKEN is unset AND the server is bound to a loopback
+            address (127.0.0.1, ::1), allow — same-machine only.
+          • Otherwise require the request to carry the matching token in
+            either the X-Dashboard-Token header or `?token=...` query string.
+
+        This stops drive-by writes from anything on the LAN when the
+        dashboard is bound to 0.0.0.0, and also stops random local
+        processes that don't know the token from POSTing if the
+        operator chose to require a token even on loopback.
+        """
+        expected = os.environ.get("DASHBOARD_TOKEN", "").strip()
+        client_host = (self.client_address[0] if self.client_address else "")
+        is_loopback = client_host in ("127.0.0.1", "::1", "localhost")
+        if not expected:
+            return is_loopback
+        # Constant-time-ish check via hmac.compare_digest
+        import hmac
+        provided = self.headers.get("X-Dashboard-Token", "")
+        if not provided and "?" in self.path:
+            from urllib.parse import urlparse, parse_qs
+            qs = parse_qs(urlparse(self.path).query)
+            provided = (qs.get("token") or [""])[0]
+        return hmac.compare_digest(provided, expected)
+
     def do_POST(self):
         """Phase 15.0i — POST /api/capture writes an unprompted capture
         to writing/Captures/ via response_capture.capture_unprompted.
 
         Request body: {"text": "<the capture body>"}
         Response: {"ok": true, "path": "<written file>"} or {"ok": false, "error": "..."}.
+
+        Auth: see _authorized() — loopback-only by default; token-gated
+        when bound to a non-loopback host.
         """
         path = self.path.split("?", 1)[0].rstrip("/")
+        if not self._authorized():
+            self._send_json(
+                {"ok": False, "error": "unauthorized"}, code=401,
+            )
+            return
         try:
             length = int(self.headers.get("Content-Length", 0) or 0)
             body_raw = self.rfile.read(length) if length > 0 else b""
@@ -1613,30 +1651,45 @@ class _DashboardHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
-def _run_server(port: int) -> None:
+def _run_server(port: int, host: str = "127.0.0.1") -> None:
     """Blocking server loop — meant to run in a daemon thread.
 
     Phase 15.2b — uses ThreadingHTTPServer so SSE connections (which
     block their thread for as long as they're open) don't prevent
     other requests from being served.
+
+    Defaults to 127.0.0.1 so the dashboard is not exposed to the local
+    network. Set DASHBOARD_HOST=0.0.0.0 to opt in to broader binding —
+    in which case you MUST also set DASHBOARD_TOKEN to require auth on
+    mutating endpoints (see _DashboardHandler.do_POST).
     """
     try:
-        server = ThreadingHTTPServer(("0.0.0.0", port), _DashboardHandler)
+        server = ThreadingHTTPServer((host, port), _DashboardHandler)
         # Daemonize per-request threads so a Ctrl-C tears them all down
         server.daemon_threads = True
-        log.info(f"web dashboard listening on http://0.0.0.0:{port}")
+        log.info(f"web dashboard listening on http://{host}:{port}")
         server.serve_forever()
     except OSError as e:
-        log.warning(f"web dashboard couldn't bind to :{port}: {e}")
+        log.warning(f"web dashboard couldn't bind to {host}:{port}: {e}")
     except Exception as e:
         log.error(f"web dashboard server crashed: {e}")
 
 
-def start_web_dashboard(port: int = 8765) -> None:
+def start_web_dashboard(port: int = 8765, host: Optional[str] = None) -> None:
     """Launch the dashboard in a background daemon thread.
 
     Idempotent: if a server is already running on this port, no-op.
+
+    `host` defaults to the DASHBOARD_HOST env var, then to 127.0.0.1.
+    127.0.0.1 keeps the dashboard reachable only from the same machine.
     """
+    if host is None:
+        host = os.environ.get("DASHBOARD_HOST", "127.0.0.1")
+    if host == "0.0.0.0" and not os.environ.get("DASHBOARD_TOKEN"):
+        log.warning(
+            "DASHBOARD_HOST=0.0.0.0 without DASHBOARD_TOKEN — mutating "
+            "endpoints will refuse all requests until a token is set."
+        )
     # Cheap port-in-use check before spawning
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -1648,7 +1701,7 @@ def start_web_dashboard(port: int = 8765) -> None:
         log.info(f"web dashboard already running on :{port}")
         return
     t = threading.Thread(
-        target=_run_server, args=(port,),
+        target=_run_server, args=(port, host),
         name="alicia-web-dashboard", daemon=True,
     )
     t.start()
@@ -2123,17 +2176,17 @@ _HTML_PAGE = r"""<!DOCTYPE html>
       <div class="card">
         <div class="meta">Mind · /becoming arc</div>
         <h3>Who you're becoming</h3>
-        <div id="hector-mind"></div>
+        <div id="user-mind"></div>
       </div>
       <div class="card">
         <div class="meta">Voice · captures + responses</div>
         <h3>What you've been writing</h3>
-        <div id="hector-voice"></div>
+        <div id="user-voice"></div>
       </div>
       <div class="card">
         <div class="meta">Body · practices in motion</div>
         <h3>What you're practicing</h3>
-        <div id="hector-body"></div>
+        <div id="user-body"></div>
       </div>
     </div>
 
@@ -2280,8 +2333,8 @@ _HTML_PAGE = r"""<!DOCTYPE html>
       loopHtml += `<div style="margin-top:8px;color:var(--fg-faint);font-size:11px">smart deciders 24h:<br>voice ${v_voice.fired || 0}/${(v_voice.fired || 0) + (v_voice.skipped || 0)} · drawing ${v_drawing.fired || 0}/${(v_drawing.fired || 0) + (v_drawing.skipped || 0)} · 🎼 ${sd.coherent_moments || 0}</div>`;
       document.getElementById('alicia-nervous').innerHTML = loopHtml;
     }
-    function renderHector(state) {
-      const h = state.hector || {};
+    function renderUser(state) {
+      const h = state.user || {};
       // Mind
       const m = h.mind || {};
       const counts = m.dimension_counts_recent_14d || {};
@@ -2311,7 +2364,7 @@ _HTML_PAGE = r"""<!DOCTYPE html>
       if (profileLink) {
         mindHtml += `<div style="margin-top:12px;padding-top:8px;border-top:1px solid var(--line);font-size:12px">📝 Who Alicia thinks you are: ${profileLink}</div>`;
       }
-      document.getElementById('hector-mind').innerHTML = mindHtml;
+      document.getElementById('user-mind').innerHTML = mindHtml;
       // Voice — captures clickable to vault, synthesis refs clickable too
       const v = h.voice || {};
       const captures = (v.recent_captures || [])
@@ -2351,13 +2404,13 @@ _HTML_PAGE = r"""<!DOCTYPE html>
       if (mostResp) {
         voiceHtml += `<div style="margin-top:14px;color:var(--fg-faint);font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Most responded</div><div style="margin-top:4px">${mostResp}</div>`;
       }
-      document.getElementById('hector-voice').innerHTML = voiceHtml;
+      document.getElementById('user-voice').innerHTML = voiceHtml;
       // Body
       const b = h.body || {};
       const practices = (b.practices || [])
         .map(p => row(`${p.archetype} · ${p.slug}`, `day ${p.days_running}`))
         .join('');
-      document.getElementById('hector-body').innerHTML =
+      document.getElementById('user-body').innerHTML =
         practices || '<p class="quote">no active practices</p>';
     }
     function renderRelationship(state) {
@@ -2667,7 +2720,7 @@ _HTML_PAGE = r"""<!DOCTYPE html>
       renderToday(state);
       renderNoticings(state);
       renderAlicia(state);
-      renderHector(state);
+      renderUser(state);
       renderRelationship(state);
       renderSkills(state);
       renderTimeline(state);

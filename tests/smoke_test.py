@@ -2,11 +2,11 @@
 """
 Alicia Live Smoke Test — zero dependencies
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Run directly on the Mac Mini. No pytest, no pip install needed.
+Run directly against a live install. No pytest, no pip install needed.
 
 Usage:
-    cd ~/alicia
-    source venv/bin/activate
+    cd /path/to/myalicia
+    source .venv/bin/activate
     python tests/smoke_test.py
 """
 import os
@@ -64,14 +64,16 @@ def _():
 def _():
     assert os.path.isdir(os.path.join(PROJECT_ROOT, "skills"))
 
+_ALICIA_HOME = os.environ.get("ALICIA_HOME") or os.path.expanduser("~/.alicia")
+
 @test("memory/ directory exists")
 def _():
-    mem = os.path.expanduser("~/alicia/memory")
+    mem = os.path.join(_ALICIA_HOME, "memory")
     assert os.path.isdir(mem), f"Not found: {mem}"
 
 @test("logs/ directory exists")
 def _():
-    logs = os.path.expanduser("~/alicia/logs")
+    logs = os.path.join(_ALICIA_HOME, "logs")
     assert os.path.isdir(logs), f"Not found: {logs}"
 
 # ── 2. Memory files ────────────────────────────────────────────────────────
@@ -80,7 +82,7 @@ print("\n🧠 Memory Files")
 for mf in ["MEMORY.md", "patterns.md", "insights.md", "preferences.md", "concepts.md"]:
     @test(f"memory/{mf} exists and non-empty")
     def _(filename=mf):
-        path = os.path.expanduser(f"~/alicia/memory/{filename}")
+        path = os.path.join(_ALICIA_HOME, "memory", filename)
         assert os.path.isfile(path), f"Missing: {path}"
         assert os.path.getsize(path) > 0, f"Empty: {path}"
 
@@ -509,8 +511,8 @@ def _():
 @test("_detect_author() recognizes known authors")
 def _():
     from myalicia.skills.tool_router import _detect_author
-    assert _detect_author("something by pirsig") is not None
-    assert _detect_author("a taleb note") is not None
+    assert _detect_author("something by alpha") is not None
+    assert _detect_author("a beta note") is not None
     assert _detect_author("read me marcus aurelius") is not None
 
 @test("_detect_type_filter() recognizes note types")
@@ -545,31 +547,31 @@ def _():
     from myalicia.skills.tool_router import _AUTHOR_ALIASES
     assert len(_AUTHOR_ALIASES) >= 10, f"Only {len(_AUTHOR_ALIASES)} author aliases"
 
-@test("_search_by_author: surname is a hard filter (Pirsig does not match Hughes)")
+@test("_search_by_author: surname is a hard filter (Alpha does not match Charlie)")
 def _():
     """
-    Regression test for the 2026-04-18 'Robert Pirsig → Robert Hughes' misfire.
+    Regression test for the 2026-04-18 'Robert Alpha → Robert Charlie' misfire.
     The author-search stage used to grant its +0.3 bonus on ANY shared token,
-    so a note titled 'Robert Hughes' got boosted by the shared 'robert'
-    and beat actual Pirsig content. The fix requires the surname (last word
+    so a note titled 'Robert Charlie' got boosted by the shared 'robert'
+    and beat actual Alpha content. The fix requires the surname (last word
     of the canonical name) to appear in path/title/folder.
     """
     import importlib
     import myalicia.skills.tool_router as tr
     importlib.reload(tr)
 
-    # Build fake hits: one Hughes note (high base score, shares only 'robert'),
-    # one Pirsig note (lower base score, shares the surname).
+    # Build fake hits: one Charlie note (high base score, shares only 'robert'),
+    # one Alpha note (lower base score, shares the surname).
     fake_hits = [
         {
-            "filepath": "/vault/Authors/Robert Hughes.md",
-            "title": "Robert Hughes",
+            "filepath": "/vault/Authors/Robert Charlie.md",
+            "title": "Robert Charlie",
             "folder": "Authors",
             "score": 0.75,
         },
         {
-            "filepath": "/vault/Books/Lila-by-Pirsig.md",
-            "title": "Lila (Pirsig)",
+            "filepath": "/vault/Books/Alpha-book-by-Alpha.md",
+            "title": "Alpha-book (Alpha)",
             "folder": "Books",
             "score": 0.55,
         },
@@ -589,18 +591,18 @@ def _():
         # the file paths don't exist. This test only exercises the surname
         # filter; the stub-filter behaviour has dedicated tests below.
         tr._is_substantial = lambda p: True
-        result = tr._search_by_author("Robert Pirsig", topic="")
+        result = tr._search_by_author("Robert Alpha", topic="")
         assert result is not None, (
-            "author search should have found Pirsig content (the Lila hit "
+            "author search should have found Alpha content (the Alpha-book hit "
             "carries the surname); instead got None"
         )
         path, title = result
-        assert "pirsig" in title.lower() or "pirsig" in path.lower(), (
+        assert "alpha" in title.lower() or "alpha" in path.lower(), (
             f"author search returned '{title}' (path={path}) — the "
-            f"Hughes hit still beat Pirsig. Surname filter is not working."
+            f"Charlie hit still beat Alpha. Surname filter is not working."
         )
-        assert "hughes" not in title.lower() and "hughes" not in path.lower(), (
-            f"Hughes should have been filtered out (no 'pirsig' in path/title); "
+        assert "charlie" not in title.lower() and "charlie" not in path.lower(), (
+            f"Charlie should have been filtered out (no 'alpha' in path/title); "
             f"got '{title}' (path={path})"
         )
     finally:
@@ -619,8 +621,8 @@ def _():
     try:
         ss.semantic_search = lambda q, n_results=10, folder_filter=None: [
             {
-                "filepath": "/vault/Authors/Robert Hughes.md",
-                "title": "Robert Hughes",
+                "filepath": "/vault/Authors/Robert Charlie.md",
+                "title": "Robert Charlie",
                 "folder": "Authors",
                 "score": 0.8,
             },
@@ -633,9 +635,9 @@ def _():
         ]
         if hasattr(tr, "semantic_search"):
             tr.semantic_search = ss.semantic_search
-        result = tr._search_by_author("Robert Pirsig", topic="")
+        result = tr._search_by_author("Robert Alpha", topic="")
         assert result is None, (
-            f"No hit contained 'pirsig' — _search_by_author should have "
+            f"No hit contained 'alpha' — _search_by_author should have "
             f"returned None, got {result}"
         )
     finally:
@@ -951,13 +953,13 @@ def _():
                 episode_path="/tmp/fake.json",
                 task_type="search_vault",
                 reply_timestamp="2026-04-18T12:00:00",
-                query_excerpt="find Pirsig on quality",
+                query_excerpt="find Alpha on quality",
             )
             got = rs.lookup_reply(12345)
             assert got is not None, "lookup_reply should find the tracked entry"
             assert got["task_type"] == "search_vault"
             assert got["episode_path"] == "/tmp/fake.json"
-            assert got["query_excerpt"] == "find Pirsig on quality"
+            assert got["query_excerpt"] == "find Alpha on quality"
             # Unknown message_id
             assert rs.lookup_reply(99999) is None
         finally:
@@ -1356,7 +1358,7 @@ print("\n🧱 Stub filter + tool-syntax leak (2026-04-18)")
 @test("tool_router: MIN_READABLE_CHARS threshold is set")
 def _():
     from myalicia.skills.tool_router import MIN_READABLE_CHARS
-    # The threshold must be big enough to reject the 30-byte /Authors/Lila.md
+    # The threshold must be big enough to reject the 30-byte /Authors/Alpha-book.md
     # stub (~19 speakable chars after _clean_for_tts) but low enough to keep
     # short-but-real content pages.
     assert 50 <= MIN_READABLE_CHARS <= 500, (
@@ -1367,8 +1369,8 @@ def _():
 def _():
     import tempfile
     from myalicia.skills.tool_router import _is_substantial
-    # Stub: resembles /Authors/Lila.md — title pointer with a wikilink.
-    stub_body = "#book by [[Robert M. Pirsig]]\n"
+    # Stub: resembles /Authors/Alpha-book.md — title pointer with a wikilink.
+    stub_body = "#book by [[Robert M. Alpha]]\n"
     with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as f:
         f.write(stub_body)
         stub_path = f.name
@@ -1376,7 +1378,7 @@ def _():
     real_body = (
         "# On Quality\n\n"
         "Quality is neither mind nor matter but a third entity independent "
-        "of the two. The Metaphysics of Quality, Pirsig argues, is both "
+        "of the two. The Alpha's framework, Alpha argues, is both "
         "more inclusive and more rigorous than the subject-object "
         "metaphysics that has dominated Western thought since the "
         "Enlightenment. What we call reality is a continuous flow of "
@@ -1405,15 +1407,15 @@ def _():
     # Build a stub file + a real file on disk so _is_substantial's real
     # check reflects the fake hits below.
     with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as f:
-        f.write("#book by [[Robert M. Pirsig]]\n")
+        f.write("#book by [[Robert M. Alpha]]\n")
         stub_path = f.name
     real_body = (
-        "# Lila on the Mississippi\n\n"
-        "Phaedrus watched the shoreline slip past. The river, Pirsig wrote, "
+        "# Alpha-book on the Mississippi\n\n"
+        "the narrator watched the shoreline slip past. The river, Alpha wrote, "
         "was a kind of continuous Quality event — neither the bank nor the "
         "boat nor even his own thinking, but the dynamic relation between "
         "them. He held the tiller lightly and let the current do most of "
-        "the work, knowing that the Metaphysics of Quality started here, "
+        "the work, knowing that the Alpha's framework started here, "
         "in attention to what actually was.\n"
     )
     with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as f:
@@ -1423,12 +1425,12 @@ def _():
     original = ss.semantic_search
     try:
         ss.semantic_search = lambda q, n_results=5, folder_filter=None: [
-            {"filepath": stub_path, "title": "Lila", "folder": "Authors", "score": 0.9},
-            {"filepath": real_path, "title": "Lila on the Mississippi", "folder": "Books", "score": 0.6},
+            {"filepath": stub_path, "title": "Alpha-book", "folder": "Authors", "score": 0.9},
+            {"filepath": real_path, "title": "Alpha-book on the Mississippi", "folder": "Books", "score": 0.6},
         ]
         if hasattr(tr, "semantic_search"):
             tr.semantic_search = ss.semantic_search
-        result = tr._semantic_resolve("Pirsig quality")
+        result = tr._semantic_resolve("Alpha quality")
         assert result is not None, (
             "_semantic_resolve should have returned the real content hit "
             "once the stub was skipped; got None"
@@ -1451,15 +1453,15 @@ def _():
     import myalicia.skills.semantic_search as ss
 
     with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as f:
-        f.write("#book by [[Robert M. Pirsig]]\n")
+        f.write("#book by [[Robert M. Alpha]]\n")
         stub_path = f.name
     real_body = (
-        "# Zen and the Art of Motorcycle Maintenance — Chapter 1\n\n"
-        "Phaedrus set out west on his Honda, his son Chris behind him, "
+        "# Alpha's Book — Chapter 1\n\n"
+        "the narrator set out west on a motorcycle with a travelling companion, "
         "with the idea that the mountains and the open road might make a "
         "better framework for thinking about Quality than a classroom "
         "ever could. The first few days were mostly rain and silence, but "
-        "by the time they reached the Dakotas the dialogue had begun.\n"
+        "by the time they reached the plains the dialogue had begun.\n"
     )
     with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as f:
         f.write(real_body)
@@ -1468,14 +1470,14 @@ def _():
     original = ss.semantic_search
     try:
         ss.semantic_search = lambda q, n_results=10, folder_filter=None: [
-            {"filepath": stub_path, "title": "Lila Pirsig stub", "folder": "Authors", "score": 0.9},
-            {"filepath": real_path, "title": "Zen and the Art — Pirsig", "folder": "Books", "score": 0.7},
+            {"filepath": stub_path, "title": "Alpha-book Alpha stub", "folder": "Authors", "score": 0.9},
+            {"filepath": real_path, "title": "Zen and the Art — Alpha", "folder": "Books", "score": 0.7},
         ]
         if hasattr(tr, "semantic_search"):
             tr.semantic_search = ss.semantic_search
-        result = tr._search_by_author("Robert Pirsig", topic="")
+        result = tr._search_by_author("Robert Alpha", topic="")
         assert result is not None, (
-            "both hits carry surname 'pirsig' — _search_by_author must return "
+            "both hits carry surname 'alpha' — _search_by_author must return "
             "the real content page rather than the stub"
         )
         path, title = result
@@ -1551,7 +1553,7 @@ def _():
 
 @test("_resolve_note_for_reading: rejects low-confidence match on filler-word overlap")
 def _():
-    """Regression test for 'something by Pirsig' → 'How to criticize something
+    """Regression test for 'something by Alpha' → 'How to criticize something
     you disagree with' misfire (score=0.45). The fallback used to accept any
     fuzzy match; the word 'something' alone shouldn't earn attribution.
     """
@@ -1592,12 +1594,12 @@ def _():
         # Every other strategy fails
         ss.semantic_search = lambda q, n_results=5, folder_filter=None: []
         tr._search_by_author = lambda author, topic="": None
-        tr._detect_author = lambda q: "Robert Pirsig"  # author is detected
+        tr._detect_author = lambda q: "Robert Alpha"  # author is detected
 
-        path, title = tr._resolve_note_for_reading("something by Pirsig")
+        path, title = tr._resolve_note_for_reading("something by Alpha")
         assert path is None and title is None, (
             f"low-confidence fallback on the word 'something' should have "
-            f"been rejected (no Pirsig-related token overlap), got "
+            f"been rejected (no Alpha-related token overlap), got "
             f"'{title}' (path={path})"
         )
     finally:
@@ -1618,8 +1620,8 @@ def _():
     import myalicia.skills.semantic_search as ss
 
     real_body = (
-        "# Antifragile by Nassim Taleb\n\n"
-        "Taleb's key point is that fragility and antifragility are properties "
+        "# Beta-book by Nassim Beta\n\n"
+        "Beta's key point is that fragility and antifragility are properties "
         "of systems, not statements about them. Systems that gain from "
         "disorder — muscle, immune response, some markets — are antifragile. "
         "The book develops this across a hundred domains, and the rest of "
@@ -1638,7 +1640,7 @@ def _():
             return {
                 "found": True,
                 "path": fake_path,
-                "title": "Antifragile by Nassim Taleb",
+                "title": "Beta-book by Nassim Beta",
                 "score": 0.6,
                 "method": "fuzzy",
             }
@@ -3054,10 +3056,10 @@ def _():
     result = should_run_overnight([])
     assert isinstance(result, bool)
 
-@test("message_quality: would_hector_care returns float")
+@test("message_quality: would_user_care returns float")
 def _():
-    from myalicia.skills.message_quality import would_hector_care
-    result = would_hector_care("test message about quality")
+    from myalicia.skills.message_quality import would_user_care
+    result = would_user_care("test message about quality")
     assert isinstance(result, float) and 0.0 <= result <= 1.0
 
 @test("message_quality: get_resonance_priorities returns list")
@@ -3146,9 +3148,9 @@ def _():
 def _():
     assert "record_voice_metadata" in alicia_src
 
-@test("alicia.py calls would_hector_care")
+@test("alicia.py calls would_user_care")
 def _():
-    assert "would_hector_care" in alicia_src
+    assert "would_user_care" in alicia_src
 
 @test("alicia.py calls queue_afterglow")
 def _():
@@ -4307,7 +4309,7 @@ def _():
     explicit_search = [
         "find me a note on courage",
         "look up quality",
-        "what notes do I have on Pirsig",
+        "what notes do I have on Alpha",
         "show me a note about resilience",
         "is there anything in the vault about compounding",
         "pull up the latest synthesis",
@@ -4685,7 +4687,7 @@ def _():
     filepath = os.path.join(PROJECT_ROOT, "skills", "meta_reflexion.py")
     py_compile.compile(filepath, doraise=True)
 
-# ── 42b. Bridge State (H2: Cowork-readable snapshot) ────────────────────
+# ── 42b. Bridge State (H2: Desktop-readable snapshot) ────────────────────
 print("\n🌉 Bridge State (H2)")
 
 @test("bridge_state: import module")
@@ -6285,7 +6287,7 @@ def _():
 @test("practice_runner: /practice command is wired (Phase 11.11 wiring guardrail)")
 def _():
     """Self-serve practice management from Telegram. Without this command,
-    practices can only be scaffolded via Cowork — the user can't manage them
+    practices can only be scaffolded via Desktop — the user can't manage them
     from his phone."""
     from pathlib import Path
     repo_root = Path(__file__).resolve().parent.parent
@@ -6464,7 +6466,7 @@ def _():
     )
     # Sanity-check classifier behavior at the smoke layer too
     assert hm.classify_dimension("workout this morning") == "body"
-    assert hm.classify_dimension("McGilchrist on hemispheres") == "knowledge"
+    assert hm.classify_dimension("Gamma on hemispheres") == "knowledge"
     assert hm.classify_dimension("blank statement nothing matches") == "identity"
 
     from pathlib import Path
@@ -8156,12 +8158,12 @@ def _():
         assert hasattr(wd, name), f"web_dashboard must export {name}"
     # State contract surfaces all three metaphor sections
     state = wd.compute_full_state()
-    for key in ("alicia", "hector", "relationship", "skills", "timeline"):
+    for key in ("alicia", "user", "relationship", "skills", "timeline"):
         assert key in state, f"compute_full_state missing {key}"
     for sub in ("heart", "body", "mind", "nervous_system"):
         assert sub in state["alicia"], f"alicia.{sub} missing"
     for sub in ("mind", "voice", "body"):
-        assert sub in state["hector"], f"hector.{sub} missing"
+        assert sub in state["user"], f"user.{sub} missing"
     for sub in ("conversation", "distillation", "coherence", "landing"):
         assert sub in state["relationship"], f"relationship.{sub} missing"
 
@@ -8623,13 +8625,13 @@ def _():
     """Phase 13.9 closes the gap between the outer-synthesis loop and the
     the user-model arc. After build_meta_synthesis writes the new file, it
     runs a follow-up Sonnet call that extracts dimension-tagged learnings
-    ABOUT HECTOR (not about the idea) and appends them to user_learnings
+    ABOUT USER (not about the idea) and appends them to user_learnings
     via append_learning. Provenance is encoded as 'meta_synthesis:<parent>'
     so /becoming can show the bridge origin."""
     from pathlib import Path
     import myalicia.skills.meta_synthesis as ms
     for name in (
-        "bridge_meta_to_hector_model",
+        "bridge_meta_to_user_model",
         "_extract_learnings_from_meta",
     ):
         assert hasattr(ms, name), (
@@ -8644,8 +8646,8 @@ def _():
     assert fn_idx > 0, "build_meta_synthesis function not found"
     next_def = src_text.find("\ndef ", fn_idx + 10)
     fn_body = src_text[fn_idx:next_def if next_def > 0 else len(src_text)]
-    assert "bridge_meta_to_hector_model" in fn_body, (
-        "bridge_meta_to_hector_model must be called from build_meta_synthesis "
+    assert "bridge_meta_to_user_model" in fn_body, (
+        "bridge_meta_to_user_model must be called from build_meta_synthesis "
         "(not just imported elsewhere) — otherwise the cross-loop bridge "
         "doesn't fire on scheduled meta-synthesis builds"
     )

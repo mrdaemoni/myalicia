@@ -150,14 +150,14 @@ class TestNoveltyDetection:
     def test_detect_novelty_returns_dict(self):
         """detect_novelty should return a dict with expected keys."""
         from myalicia.skills.curiosity_engine import detect_novelty
-        result = detect_novelty("I've been thinking about Nishida Kitaro and nothingness")
+        result = detect_novelty("I've been thinking about Theta Kitaro and nothingness")
         assert isinstance(result, dict)
         assert "is_novel" in result or "novel_items" in result
 
     def test_format_novelty_prompt_returns_string(self):
         """format_novelty_prompt should return a usable string."""
         from myalicia.skills.curiosity_engine import format_novelty_prompt
-        novelty = {"is_novel": True, "novel_items": ["Nishida Kitaro"], "curiosity_score": 4}
+        novelty = {"is_novel": True, "novel_items": ["Theta Kitaro"], "curiosity_score": 4}
         result = format_novelty_prompt(novelty)
         assert isinstance(result, str)
 

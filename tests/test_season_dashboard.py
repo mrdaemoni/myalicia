@@ -4,7 +4,7 @@ Unit tests for skills/season_dashboard.py.
 
 Sandbox-friendly: each test reroutes MEMORY_DIR + EMERGENCE_STATE_PATH
 + ARCHETYPE_LOG_PATH to a tmp directory so no production state is read
-or written. Same pattern used by test_hector_model.py and the wisdom
+or written. Same pattern used by test_user_model.py and the wisdom
 dashboard tests.
 """
 from __future__ import annotations

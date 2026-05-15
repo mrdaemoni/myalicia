@@ -18,7 +18,7 @@ import anthropic
 
 from myalicia.skills.safe_io import atomic_write_text, locked_file
 from myalicia.skills.bridge_protocol import write_bridge_text
-from myalicia.config import config
+from myalicia.config import config, ALICIA_HOME, MEMORY_DIR
 USER_NAME = config.user.name
 USER_HANDLE = config.user.handle
 
@@ -35,22 +35,25 @@ dotenv.load_dotenv()
 # Constants
 VAULT_ROOT = config.vault.root
 SYNTHESIS_FOLDER = VAULT_ROOT / 'Alicia/Wisdom/Synthesis'
-MEMORY_FOLDER = Path.home() / 'alicia/memory'
+
+MEMORY_FOLDER = MEMORY_DIR
 BRIDGE_FOLDER = VAULT_ROOT / 'Alicia/Bridge'
 INSIGHTS_FILE = MEMORY_FOLDER / 'insights.md'
 HOT_TOPICS_FILE = MEMORY_FOLDER / 'hot_topics.md'
 ANALYSIS_INSIGHTS_FILE = MEMORY_FOLDER / 'analysis_insights.md'
 
-# Knowledge clusters for context
+# Starter knowledge clusters — replace with your own thematic groupings.
+# Each entry is "Theme name (a few keywords/authors that anchor it)".
+# These are passed as prompt context so Sonnet knows what bins to think in.
 KNOWLEDGE_CLUSTERS = [
-    'Quality & Mastery (Pirsig, craftsmanship, gumption)',
-    'Risk & Antifragility (Taleb, convexity, skin in the game)',
-    'Systems Thinking (complexity, emergence, feedback loops)',
-    'Stoic/Classical Wisdom (Marcus Aurelius, Seneca, virtue ethics)',
-    'Meaning & Purpose (Frankl, Campbell, hero\'s journey)',
-    'Learning & Knowledge (metalearning, spaced repetition, Feynman)',
-    'Leadership & Strategy (decision-making, leverage, optionality)',
-    'Creativity & Expression (art, writing, voice, generative process)',
+    'Theme A (anchor concepts and authors)',
+    'Theme B (anchor concepts and authors)',
+    'Theme C (anchor concepts and authors)',
+    'Theme D (anchor concepts and authors)',
+    'Theme E (anchor concepts and authors)',
+    'Theme F (anchor concepts and authors)',
+    'Theme G (anchor concepts and authors)',
+    'Theme H (anchor concepts and authors)',
 ]
 
 SONNET_MODEL = 'claude-sonnet-4-20250514'

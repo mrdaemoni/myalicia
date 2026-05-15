@@ -54,16 +54,16 @@ INGEST_STATE_FILE = os.path.join(MEMORY_DIR, "ingest_state.json")
 
 MODEL_SONNET = "claude-sonnet-4-20250514"
 
-# Source folders to monitor for new content
+# Source folders to monitor for new content. This is a starter list —
+# adapt it to your vault's shape. Folders that don't exist are silently
+# skipped, so a generous default is harmless.
 SOURCE_FOLDERS = {
     "Books":         os.path.join(VAULT_ROOT, "Books"),
     "Quotes":        os.path.join(VAULT_ROOT, "Quotes"),
     "Short reads":   os.path.join(VAULT_ROOT, "Short reads"),
     "Authors":       os.path.join(VAULT_ROOT, "Authors"),
     "Stoic":         os.path.join(VAULT_ROOT, "Stoic"),
-    "John Vervaeke": os.path.join(VAULT_ROOT, "John Vervaeke"),
-    "meaning crisis": os.path.join(VAULT_ROOT, "meaning crisis"),
-    "my writings":   os.path.join(VAULT_ROOT, "my writings"),
+    "Writing":       os.path.join(VAULT_ROOT, "Writing"),
     "Inbox":         os.path.join(VAULT_ROOT, "Alicia", "Inbox"),
 }
 
@@ -84,10 +84,13 @@ INDEX_FOLDERS = {
 # in their own config for personal subfolders.
 EXCLUDED_DIRS = {'.obsidian', '.trash', '.git', '__pycache__', 'templates'}
 
-# The 8 knowledge clusters for context
+# Knowledge clusters used to group related notes. These are starter
+# placeholders — rename them (or replace the list entirely) to match the
+# themes that organize your own thinking. The downstream skills don't
+# care what the labels are; they just route notes by cluster name.
 CLUSTERS = [
-    "Quality", "Self-Mastery", "Environment", "Measurement",
-    "Relationships", "Compounding", "Technology & Humanity", "Depth of Knowing",
+    "Cluster A", "Cluster B", "Cluster C", "Cluster D",
+    "Cluster E", "Cluster F", "Cluster G", "Cluster H",
 ]
 
 

@@ -688,7 +688,7 @@ def _connection_points_section() -> str:
     """Show how many cross-loop signals fired recently — proof the system
     is stitched, not just running parallel rings."""
     counts = {
-        "13.9 meta→hector": 0,
+        "13.9 meta→user": 0,
         "13.11 thread→advance": 0,
         "13.12 voice+drawing": 0,
     }
@@ -696,7 +696,7 @@ def _connection_points_section() -> str:
     try:
         from myalicia.skills.user_model import get_learnings
         recent_learnings = get_learnings(since_days=30)
-        counts["13.9 meta→hector"] = sum(
+        counts["13.9 meta→user"] = sum(
             1 for L in recent_learnings
             if (L.get("source") or "").startswith("meta_synthesis:")
         )
@@ -751,7 +751,7 @@ def compute_loops_state(now: Optional[datetime] = None) -> dict:
           "thread_pull": { ... },
         },
         "cross_loop_signals": {
-          "13.9 meta→hector": int,
+          "13.9 meta→user": int,
           "13.11 thread→advance": int,
           "13.12 voice+drawing": int,
         },
@@ -934,14 +934,14 @@ def _cross_loop_signal_counts() -> dict:
     """Same data the existing _connection_points_section computes,
     exposed as a dict for the state-based contract."""
     counts = {
-        "13.9 meta→hector": 0,
+        "13.9 meta→user": 0,
         "13.11 thread→advance": 0,
         "13.12 voice+drawing": 0,
     }
     try:
         from myalicia.skills.user_model import get_learnings
         recent_learnings = get_learnings(since_days=30)
-        counts["13.9 meta→hector"] = sum(
+        counts["13.9 meta→user"] = sum(
             1 for L in recent_learnings
             if (L.get("source") or "").startswith("meta_synthesis:")
         )

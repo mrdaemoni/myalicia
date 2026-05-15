@@ -31,7 +31,7 @@ MESSAGE_TYPES = [
     "morning",
     "midday",
     "evening",
-    "know_hector",
+    "know_user",
     "surprise",
     "spaced_repetition",
 ]
@@ -192,7 +192,7 @@ RECENT INSIGHTS:
 
 Based on this engagement data:
 1. Which message types does {USER_NAME} respond to most deeply? (Look at both depth scores and reaction counts)
-2. What patterns do you notice? (e.g., "know_hector types get consistent 4+ depth")
+2. What patterns do you notice? (e.g., "know_user types get consistent 4+ depth")
 3. What kind of intellectual interaction does {USER_NAME} respond to most deeply?
 4. What should Alicia do MORE of?
 5. What should Alicia do LESS of?

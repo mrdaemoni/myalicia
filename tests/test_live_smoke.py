@@ -1,11 +1,11 @@
 """
 Live Integration Smoke Tests
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Run ON the Mac Mini where Alicia lives. These test real imports,
-real file paths, real .env loading, and real module wiring.
+Run against a live install. These test real imports, real file paths,
+real .env loading, and real module wiring.
 
 Usage:
-    cd ~/alicia/alicia
+    cd /path/to/myalicia
     python3 -m pytest tests/test_live_smoke.py -v --tb=short
 
 These do NOT make API calls or send Telegram messages.
@@ -18,12 +18,13 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-# ── GATE: only run on the real Mac Mini ─────────────────────────────────────
-IS_MAC_MINI = os.path.exists(os.path.expanduser("~/alicia/alicia/alicia.py"))
+# ── GATE: only run against a live install (opt-in via env var) ──────────────
+# Set ALICIA_LIVE=1 to run these tests; otherwise they skip.
+LIVE = os.environ.get("ALICIA_LIVE") == "1"
 
 pytestmark = pytest.mark.skipif(
-    not IS_MAC_MINI,
-    reason="Live smoke tests only run on Mac Mini with real .env"
+    not LIVE,
+    reason="Live smoke tests only run when ALICIA_LIVE=1 (real .env, real install)"
 )
 
 

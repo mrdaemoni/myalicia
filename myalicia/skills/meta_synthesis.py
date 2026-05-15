@@ -440,22 +440,21 @@ def _attach_frontmatter(
 
 _BRIDGE_SYSTEM = (
     "You are Alicia, reading a meta-synthesis you just composed about "
-    f"{USER_NAME}. Your job: extract 1-3 specific facts ABOUT HECTOR (not "
+    f"{USER_NAME}. Your job: extract 1-3 specific facts ABOUT USER (not "
     "about the idea) that this meta-synthesis revealed. These facts "
     f"feed his ongoing {USER_NAME}-model — an append-only log of who he's "
     "becoming.\n\n"
     "FORMAT — reply with EXACTLY one JSON line:\n"
     "{\"learnings\": [{\"dimension\": \"<one of: identity, knowledge, "
     "practice, relationships, work, voice, body, wealth, creative, "
-    "shadow>\", \"claim\": \"<one specific sentence ABOUT HECTOR>\", "
+    "shadow>\", \"claim\": \"<one specific sentence ABOUT USER>\", "
     "\"confidence\": <0.5-0.95 float>}]}\n\n"
     "RULES:\n"
     f"- Each claim must be about {USER_NAME} specifically, not a general "
-    f"principle. '{USER_NAME} returns to McGilchrist when he wants to think "
-    "about hemispheric balance' YES. 'McGilchrist describes hemispheric "
-    "balance' NO.\n"
+    f"principle. '{USER_NAME} returns to <Author> when they want to think "
+    "about <topic>' YES. '<Author> describes <topic>' NO.\n"
     "- Bias toward fewer, more specific learnings. Empty list "
-    "(\"learnings\": []) is valid when nothing about HECTOR (vs. the "
+    "(\"learnings\": []) is valid when nothing about USER (vs. the "
     "idea itself) is revealed.\n"
     "- Confidence reflects how much the meta-synthesis text supports "
     "the claim. 0.6 = inferred. 0.85 = stated."
@@ -532,7 +531,7 @@ def _extract_learnings_from_meta(body: str, parent_title: str) -> list[dict]:
         return []
 
 
-def bridge_meta_to_hector_model(
+def bridge_meta_to_user_model(
     *, body: str, parent_title: str, child_title: str,
 ) -> int:
     """Bridge the new meta-synthesis to the the user-model.
@@ -553,7 +552,7 @@ def bridge_meta_to_hector_model(
             DIMENSIONS as HM_DIMENSIONS,
         )
     except Exception as e:
-        log.debug(f"bridge_meta_to_hector_model: user_model import failed: {e}")
+        log.debug(f"bridge_meta_to_user_model: user_model import failed: {e}")
         return 0
 
     learnings = _extract_learnings_from_meta(body, parent_title)
@@ -678,7 +677,7 @@ def build_meta_synthesis(parent_title: str) -> Optional[Path]:
     # user_learnings.jsonl with source="meta_synthesis:<parent>" so the
     # provenance is traceable in /becoming.
     try:
-        n_bridged = bridge_meta_to_hector_model(
+        n_bridged = bridge_meta_to_user_model(
             body=body,
             parent_title=parent_title,
             child_title=child_title,

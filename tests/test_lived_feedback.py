@@ -225,7 +225,7 @@ def test_find_syntheses_citing_matches_by_basename() -> None:
         "# The body teaches what the mind can only point to\n\n"
         "## The Claim Across Sources\n\n"
         "**Lived note** — [[Public-facing attempts]]\n\n"
-        "**Waitzkin** — [[Books/X/1]]\n\n"
+        "**Delta** — [[Books/X/1]]\n\n"
         "## The Synthesis\n\nThings happen.\n",
         encoding="utf-8",
     )

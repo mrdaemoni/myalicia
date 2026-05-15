@@ -59,18 +59,18 @@ MIDDAY_PROBABILITY = 0.30
 # ── Open Threads parser ────────────────────────────────────────────────────
 
 
-def _latest_hector_profile() -> Optional[str]:
-    """Return the path to the most recent *-hector.md profile, or None."""
+def _latest_user_profile() -> Optional[str]:
+    """Return the path to the most recent *-user.md profile, or None."""
     if not os.path.isdir(PROFILES_DIR):
         return None
     files = sorted(
-        glob.glob(os.path.join(PROFILES_DIR, "*-hector.md")), reverse=True
+        glob.glob(os.path.join(PROFILES_DIR, "*-user.md")), reverse=True
     )
     return files[0] if files else None
 
 
 def _extract_open_threads_text(profile_text: str) -> str:
-    """Extract the Open Threads section body from a hector profile.
+    """Extract the Open Threads section body from a user profile.
 
     person_diarization renders Open Threads as either a `**Open Threads**`
     bold paragraph or `## Open Threads` header. Walk forward until the
@@ -487,9 +487,9 @@ def build_thread_pull_message() -> Optional[str]:
     appends to thread_pulls.jsonl so the same thread isn't picked again
     within PULL_COOLDOWN_DAYS.
     """
-    profile_path = _latest_hector_profile()
+    profile_path = _latest_user_profile()
     if not profile_path:
-        log.debug("build_thread_pull_message: no hector profile")
+        log.debug("build_thread_pull_message: no user profile")
         return None
     try:
         profile_text = Path(profile_path).read_text(encoding="utf-8")

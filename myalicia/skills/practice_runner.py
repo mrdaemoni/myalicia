@@ -516,7 +516,7 @@ def _render_lived_note(practice: Practice, *, body: str, now: datetime) -> str:
     if captures:
         lines = ["## Captures during this practice\n"]
         lines.append(
-            "_Hector's spontaneous voice during the practice window — "
+            "_User's spontaneous voice during the practice window — "
             "raw material the body learned alongside the log.md attempts._\n"
         )
         for c in captures:

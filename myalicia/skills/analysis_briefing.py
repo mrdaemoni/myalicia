@@ -9,8 +9,8 @@ This module aggregates insights from:
 - analysis_temporal.py: Temporal patterns and growth windows
 - analysis_growth_edge.py: Bleeding-edge explorations
 - analysis_dialogue_depth.py: Conversation depth analysis
-- weekly-architecture-scout (Cowork): New AI/agent architecture signal (sources 5)
-- daily-outward-research (Cowork): New authors/thinkers surfaced (source 6)
+- weekly-architecture-scout (Desktop): New AI/agent architecture signal (sources 5)
+- daily-outward-research (Desktop): New authors/thinkers surfaced (source 6)
 
 Entry point: compile_analytical_briefing() -> str
 """
@@ -88,7 +88,7 @@ def _find_latest_scout_report(max_age_days: int = 14) -> Optional[str]:
     """
     Read the most recent architecture-scout-YYYY-MM-DD.md from the scout folder.
 
-    The Cowork weekly-architecture-scout runs Monday 07:03 and writes a digest
+    The Desktop weekly-architecture-scout runs Monday 07:03 and writes a digest
     to Alicia/architecture-scout/. We want the briefing compiler (Thursday
     10:03) to pick up Monday's fresh signal so morning messages surface new
     framework/paper ideas.
@@ -132,7 +132,7 @@ def _summarize_recent_authors(days: int = 7, max_authors: int = 8) -> Optional[s
     """
     Summarize Author profiles added/modified in the last `days` days.
 
-    The Cowork daily-outward-research task (Mon-Fri 15:34) writes new Author
+    The Desktop daily-outward-research task (Mon-Fri 15:34) writes new Author
     profiles to ~/Documents/user-alicia/Authors/. There is no single
     "report" file for this task, so we derive a summary from the folder's
     recent contents — each profile's filename (the author's name) plus the
@@ -308,9 +308,9 @@ def _prepare_briefing_prompt(
         dialogue_depth_report: Content of latest dialogue-depth-report-*.md
         hot_topics: List of current hot topics
         effectiveness_summary: Summary of prompt effectiveness from last 7 days
-        scout_report: Content of latest architecture-scout-*.md (Cowork weekly task)
+        scout_report: Content of latest architecture-scout-*.md (Desktop weekly task)
         outward_research_summary: Markdown summary of recent Author profiles
-            from daily-outward-research (Cowork)
+            from daily-outward-research (Desktop)
 
     Returns:
         Formatted prompt string
@@ -491,8 +491,8 @@ def compile_analytical_briefing() -> str:
         growth_edge_report = _find_latest_report('growth-edge-report-*.md')
         dialogue_depth_report = _find_latest_report('dialogue-depth-report-*.md')
 
-        # 1b. Read Cowork-side signals: architecture scout + outward research
-        logger.info('Reading Cowork scout + outward-research signals...')
+        # 1b. Read Desktop-side signals: architecture scout + outward research
+        logger.info('Reading Desktop scout + outward-research signals...')
         scout_report = _find_latest_scout_report()
         outward_research_summary = _summarize_recent_authors()
 

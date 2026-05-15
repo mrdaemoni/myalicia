@@ -333,14 +333,14 @@ def _():
         original = ms._extract_learnings_from_meta
         ms._extract_learnings_from_meta = lambda body, parent_title: [
             {"dimension": "knowledge",
-             "claim": f"{USER_NAME} returns to McGilchrist when thinking about hemispheric balance",
+             "claim": f"{USER_NAME} returns to Gamma when thinking about hemispheric balance",
              "confidence": 0.85},
             {"dimension": "voice",
              "claim": f"{USER_NAME} consistently writes about the boundary between intellect and presence",
              "confidence": 0.7},
         ]
         try:
-            n = ms.bridge_meta_to_hector_model(
+            n = ms.bridge_meta_to_user_model(
                 body="Some meta-synthesis body text",
                 parent_title="Parent title",
                 child_title="Child title",
@@ -371,7 +371,7 @@ def _():
         original = ms._extract_learnings_from_meta
         ms._extract_learnings_from_meta = lambda body, parent_title: []
         try:
-            n = ms.bridge_meta_to_hector_model(
+            n = ms.bridge_meta_to_user_model(
                 body="x", parent_title="p", child_title="c",
             )
             assert n == 0
@@ -400,7 +400,7 @@ def _():
             {"dimension": "body", "claim": f"{USER_NAME} walked yesterday", "confidence": 0.8},
         ]
         try:
-            n = ms.bridge_meta_to_hector_model(
+            n = ms.bridge_meta_to_user_model(
                 body="x", parent_title="p", child_title="c",
             )
             assert n == 1, f"unknown dim must be filtered, expected 1: got {n}"
@@ -415,9 +415,9 @@ def _():
 def _():
     with tempfile.TemporaryDirectory() as td:
         _setup_vault(td)
-        from myalicia.skills.meta_synthesis import bridge_meta_to_hector_model
-        assert bridge_meta_to_hector_model(body="", parent_title="p", child_title="c") == 0
-        assert bridge_meta_to_hector_model(body=None, parent_title="p", child_title="c") == 0
+        from myalicia.skills.meta_synthesis import bridge_meta_to_user_model
+        assert bridge_meta_to_user_model(body="", parent_title="p", child_title="c") == 0
+        assert bridge_meta_to_user_model(body=None, parent_title="p", child_title="c") == 0
 
 
 @test("Phase 13.10 get_synthesis_level: plain synthesis returns 0")

@@ -24,16 +24,18 @@ VAULT_ROOT = str(config.vault.root)
 SYNTHESIS_DIR = os.path.join(VAULT_ROOT, "Alicia", "Wisdom", "Synthesis")
 RESULTS_TSV = os.path.join(VAULT_ROOT, "Alicia", "Bridge", "synthesis_results.tsv")
 
-# The 8 knowledge clusters
+# Starter knowledge clusters. Replace with the themes that match your own
+# thinking — the downstream skills only care about the count and the names
+# you pick, not which labels are here.
 CLUSTERS = [
-    "Quality",
-    "Mastery",
-    "Environment",
-    "Measurement",
-    "Relationships",
-    "Compounding",
-    "Technology",
-    "Depth",
+    "Cluster A",
+    "Cluster B",
+    "Cluster C",
+    "Cluster D",
+    "Cluster E",
+    "Cluster F",
+    "Cluster G",
+    "Cluster H",
 ]
 
 # All 28 possible cluster pairs
@@ -43,7 +45,7 @@ for i, c1 in enumerate(CLUSTERS):
         ALL_CLUSTER_PAIRS.add(frozenset([c1, c2]))
 
 # the user's own writing folders (relative to vault root)
-HECTORS_VOICE_MARKERS = [
+USERS_VOICE_MARKERS = [
     "writing/",
     "Writing drafts/",
     f"{USER_NAME}",
@@ -271,7 +273,7 @@ def get_voice_ratio() -> tuple:
             continue
         total += 1
         # Check if any of the user's voice markers appear
-        if any(marker.lower() in content.lower() for marker in HECTORS_VOICE_MARKERS):
+        if any(marker.lower() in content.lower() for marker in USERS_VOICE_MARKERS):
             with_voice += 1
 
     pct = (with_voice / total * 100) if total > 0 else 0

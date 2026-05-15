@@ -170,7 +170,7 @@ def _gather_effectiveness_data() -> dict:
                             {
                                 "date": parts[0],
                                 "prompt": parts[1],
-                                "hector_response": parts[2],
+                                "user_response": parts[2],
                                 "score": parts[3],
                             }
                         )
@@ -249,26 +249,26 @@ def _load_last_week_profiles() -> tuple:
     cutoff = datetime.now() - timedelta(days=7)
     last_week_id = _get_week_identifier(cutoff)
 
-    hector_path = os.path.join(PROFILES_DIR, f"{last_week_id}-hector.md")
+    user_path = os.path.join(PROFILES_DIR, f"{last_week_id}-user.md")
     alicia_path = os.path.join(PROFILES_DIR, f"{last_week_id}-alicia.md")
 
-    hector = _load_file_content(hector_path)
+    user = _load_file_content(user_path)
     alicia = _load_file_content(alicia_path)
 
-    return (hector, alicia)
+    return (user, alicia)
 
 
 def _build_synthesis_prompt(all_data: dict, last_profiles: tuple) -> str:
     """Build the comprehensive Opus prompt for paired diarization."""
 
-    last_hector, last_alicia = last_profiles
+    last_user, last_alicia = last_profiles
     last_week_context = ""
-    if last_hector and last_alicia:
+    if last_user and last_alicia:
         last_week_context = f"""
 ## Last Week's Profiles (for comparison)
 
 ### Last Week — {USER_NAME} Profile
-{last_hector}
+{last_user}
 
 ### Last Week — Alicia Profile
 {last_alicia}
@@ -436,7 +436,7 @@ Respond ONLY with the three markdown sections below. No preamble, no explanation
 def run_paired_diarization() -> dict:
     """
     Weekly paired diarization pass. Generates both profiles.
-    Returns dict with hector_profile, alicia_profile, delta (what changed from last week).
+    Returns dict with user_profile, alicia_profile, delta (what changed from last week).
     Called from Sunday weekly pass in scheduler.
     """
     log.info("Starting paired diarization...")
@@ -470,16 +470,16 @@ def run_paired_diarization() -> dict:
 
     full_response = response.content[0].text
 
-    hector_profile, alicia_profile, delta = _parse_profiles(full_response)
+    user_profile, alicia_profile, delta = _parse_profiles(full_response)
 
     os.makedirs(PROFILES_DIR, exist_ok=True)
 
-    hector_path = os.path.join(PROFILES_DIR, f"{week_id}-hector.md")
+    user_path = os.path.join(PROFILES_DIR, f"{week_id}-user.md")
     alicia_path = os.path.join(PROFILES_DIR, f"{week_id}-alicia.md")
     delta_path = os.path.join(PROFILES_DIR, f"{week_id}-delta.md")
 
-    atomic_write_text(hector_path, hector_profile)
-    log.info(f"Saved {USER_NAME} profile to {hector_path}")
+    atomic_write_text(user_path, user_profile)
+    log.info(f"Saved {USER_NAME} profile to {user_path}")
 
     atomic_write_text(alicia_path, alicia_profile)
     log.info(f"Saved Alicia profile to {alicia_path}")
@@ -491,10 +491,10 @@ def run_paired_diarization() -> dict:
 
     return {
         "week_id": week_id,
-        "hector_profile": hector_profile,
+        "user_profile": user_profile,
         "alicia_profile": alicia_profile,
         "delta": delta,
-        "hector_path": hector_path,
+        "user_path": user_path,
         "alicia_path": alicia_path,
         "delta_path": delta_path,
     }
@@ -503,7 +503,7 @@ def run_paired_diarization() -> dict:
 def _parse_profiles(response_text: str) -> tuple:
     """Parse the three markdown sections from Opus response."""
 
-    sections = {"hector": "", "alicia": "", "delta": ""}
+    sections = {"user": "", "alicia": "", "delta": ""}
 
     lines = response_text.split("\n")
     current_section = None
@@ -513,7 +513,7 @@ def _parse_profiles(response_text: str) -> tuple:
         if line.startswith(f"# {USER_NAME} This Week"):
             if current_section and buffer:
                 sections[current_section] = "\n".join(buffer).strip()
-            current_section = "hector"
+            current_section = "user"
             buffer = []
         elif line.startswith("# Alicia This Week"):
             if current_section and buffer:
@@ -534,11 +534,11 @@ def _parse_profiles(response_text: str) -> tuple:
     week_id = _get_week_identifier()
     timestamp = datetime.now().isoformat()
 
-    hector_full = f"# {USER_NAME} This Week\n**Week:** {week_id}\n**Generated:** {timestamp}\n\n{sections['hector']}"
+    user_full = f"# {USER_NAME} This Week\n**Week:** {week_id}\n**Generated:** {timestamp}\n\n{sections['user']}"
     alicia_full = f"# Alicia This Week\n**Week:** {week_id}\n**Generated:** {timestamp}\n\n{sections['alicia']}"
     delta_full = f"# Delta from Last Week\n{sections['delta']}"
 
-    return (hector_full, alicia_full, delta_full)
+    return (user_full, alicia_full, delta_full)
 
 
 def get_latest_profiles() -> dict:
@@ -552,23 +552,23 @@ def get_latest_profiles() -> dict:
 
     profile_files.sort(reverse=True)
 
-    hector_candidates = [f for f in profile_files if "hector" in f]
+    user_candidates = [f for f in profile_files if "user" in f]
     alicia_candidates = [f for f in profile_files if "alicia" in f]
 
-    if not hector_candidates or not alicia_candidates:
+    if not user_candidates or not alicia_candidates:
         return None
 
     try:
-        hector = _load_file_content(hector_candidates[0])
+        user = _load_file_content(user_candidates[0])
         alicia = _load_file_content(alicia_candidates[0])
 
         return {
-            "hector": hector,
+            "user": user,
             "alicia": alicia,
-            "hector_path": hector_candidates[0],
+            "user_path": user_candidates[0],
             "alicia_path": alicia_candidates[0],
             "timestamp": datetime.fromtimestamp(
-                os.path.getmtime(hector_candidates[0])
+                os.path.getmtime(user_candidates[0])
             ).isoformat(),
         }
     except Exception as e:
@@ -662,7 +662,7 @@ def get_profile_context_for_prompt(max_chars: int = 1800) -> str:
     Build a compact "This Week's Calibration" block for build_system_prompt.
 
     Pulls:
-      - "Open Threads" from the latest hector profile (unresolved questions
+      - "Open Threads" from the latest user profile (unresolved questions
         that span conversations — the continuity hook).
       - The full "Delta from Last Week" file (what changed, calibration arc,
         partnership alignment).
@@ -681,19 +681,19 @@ def get_profile_context_for_prompt(max_chars: int = 1800) -> str:
     if not profile_files:
         return ""
 
-    hector_files = [f for f in profile_files if f.endswith("-hector.md")]
+    user_files = [f for f in profile_files if f.endswith("-user.md")]
     delta_files = [f for f in profile_files if f.endswith("-delta.md")]
 
     parts: list[str] = []
 
-    if hector_files:
+    if user_files:
         try:
-            hector_text = Path(hector_files[0]).read_text()
-            open_threads = _extract_markdown_section(hector_text, "Open Threads")
+            user_text = Path(user_files[0]).read_text()
+            open_threads = _extract_markdown_section(user_text, "Open Threads")
             if open_threads:
                 parts.append(open_threads)
         except Exception as e:
-            log.warning(f"Failed to read hector profile: {e}")
+            log.warning(f"Failed to read user profile: {e}")
 
     if delta_files:
         try:
@@ -726,6 +726,6 @@ if __name__ == "__main__":
 
     result = run_paired_diarization()
     print(f"\nDiarization complete for week {result['week_id']}")
-    print(f"{USER_NAME} profile: {result['hector_path']}")
+    print(f"{USER_NAME} profile: {result['user_path']}")
     print(f"Alicia profile: {result['alicia_path']}")
     print(f"\n--- Delta Summary ---\n{result['delta'][:500]}...")

@@ -221,14 +221,14 @@ def resolve_wikilink(wikilink: str, *, rebuild: bool = False) -> Optional[Path]:
     Resolve a wikilink string to an absolute FILE Path in the vault, or None.
 
     Handles three shapes:
-      1. `Books/Lila/Lila-60`         → VAULT_ROOT / "Books/Lila/Lila-60.md"
-      2. `writing/Flow`               → VAULT_ROOT / "writing/Flow.md"
-      3. `80yrs old the user`           → vault-wide basename lookup
+      1. `Books/<Title>/<Title>-60`   → VAULT_ROOT / "Books/<Title>/<Title>-60.md"
+      2. `writing/<Note>`             → VAULT_ROOT / "writing/<Note>.md"
+      3. `<bare basename>`            → vault-wide basename lookup
 
     Returns None for directory-only references (aggregate book-level refs like
-    `Books/The art of learning by Josh Waitzkin`, which points to a folder of
-    per-page notes rather than a single file). Use classify_wikilink() when
-    you need to distinguish "directory aggregate" from "genuinely broken."
+    `Books/<Title> by <Author>`, which points to a folder of per-page notes
+    rather than a single file). Use classify_wikilink() when you need to
+    distinguish "directory aggregate" from "genuinely broken."
     """
     global _RESOLVER_CACHE
     if rebuild or _RESOLVER_CACHE is None:

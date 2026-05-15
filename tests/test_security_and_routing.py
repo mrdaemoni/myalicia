@@ -95,7 +95,7 @@ class TestSecurityClassification:
     def test_level_1_default(self):
         assert classify_security_level("What is quality?") == 1
         assert classify_security_level("Hello Alicia") == 1
-        assert classify_security_level("Tell me about Pirsig") == 1
+        assert classify_security_level("Tell me about Alpha") == 1
 
     def test_level_2_knowledge_ops(self):
         # L2 covers privacy-sensitive read access. "Research" (a tier-2

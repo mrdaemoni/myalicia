@@ -172,16 +172,16 @@ def pick_thin_dimension(
 # Per-dimension framing hints — what each dimension MEANS in the user's life.
 # Keeps Haiku grounded so the question lands instead of abstracting.
 _DIMENSION_FRAMES = {
-    "identity":      "who he is becoming, the deep self, sense of selfhood",
-    "knowledge":     "what he's reading, learning, integrating intellectually",
-    "practice":      "the daily practices and rituals that shape his life",
-    "relationships": "his wife, family, friendships, the bonds that hold him",
-    "work":          "the user's work output, leadership, professional craft",
-    "voice":         "his writing, essays, public expression, the work he publishes",
+    "identity":      "who they are becoming, the deep self, sense of selfhood",
+    "knowledge":     "what they're reading, learning, integrating intellectually",
+    "practice":      "the daily practices and rituals that shape their life",
+    "relationships": "partner, family, friendships, the bonds that hold them",
+    "work":          "their work output, leadership, professional craft",
+    "voice":         "their writing, essays, public expression, the work they publish",
     "body":          "physical practice, energy, sleep, movement, embodiment",
     "wealth":        "money, security, financial trajectory, abundance",
-    "creative":      "his art, photography, design, generative play",
-    "shadow":        "what he's avoiding, suppressing, or refusing to face",
+    "creative":      "their art, photography, design, generative play",
+    "shadow":        "what they're avoiding, suppressing, or refusing to face",
 }
 
 

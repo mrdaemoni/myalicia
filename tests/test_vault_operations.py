@@ -105,7 +105,7 @@ class TestQuoteSkill:
     def test_get_random_quote_returns_string(self, tmp_vault):
         """get_random_quote should return a string, even with minimal vault."""
         quotes_dir = os.path.join(tmp_vault, "Quotes")
-        # Already has Pirsig_on_Quality.md from fixture
+        # Already has Alpha_on_Quality.md from fixture
 
         with patch("skills.quote_skill.QUOTES_FOLDER", quotes_dir):
             try:

@@ -38,14 +38,13 @@ DAILY_PASS_FOLDERS = [
     os.path.join(VAULT_ROOT, "Short reads"),
 ]
 
-# Source folders for weekly deep pass
+# Source folders for the weekly deep pass. Starter list — adapt to your
+# vault's shape. Folders that don't exist are silently skipped.
 WEEKLY_PASS_FOLDERS = [
     os.path.join(VAULT_ROOT, "Books"),
     os.path.join(VAULT_ROOT, "Authors"),
-    os.path.join(VAULT_ROOT, "John Vervaeke"),
     os.path.join(VAULT_ROOT, "Stoic"),
-    os.path.join(VAULT_ROOT, "meaning crisis"),
-    os.path.join(VAULT_ROOT, "my writings"),
+    os.path.join(VAULT_ROOT, "Writing"),
 ]
 
 # ── Deep link generator ───────────────────────────────────────────────────────
@@ -66,38 +65,43 @@ def make_deep_link_name(filepath: str) -> str:
 
 WISDOM_SCHEMA = f"""
 # The 7 Themes and their tags
+#
+# These are starter themes. Replace the labels, descriptions, and anchor
+# wikilinks with whatever organizes your own vault — the downstream tagging
+# pass only needs a stable set of "#theme/<slug>" identifiers; the human
+# names are just for prompting Sonnet.
 
-1. Quality & Craftsmanship — #theme/quality
-   What belongs: taste, beauty, craft, attention, creativity, excellence, curiosity
-   Anchors: [[Aretê]], [[Good taste]], [[Peace of mind]], [[Gumption]]
+1. Theme A — #theme/a
+   What belongs: <a one-line description of this theme>
+   Anchors: [[<a representative note in your vault>]]
 
-2. Self-Mastery & Stoicism — #theme/mastery
-   What belongs: discipline, ego, resilience, courage, stoic philosophy, self-knowledge, character
-   Anchors: [[Meditations]], [[How to defeat ego]], [[Kaizen]]
+2. Theme B — #theme/b
+   What belongs: <a one-line description of this theme>
+   Anchors: [[<a representative note in your vault>]]
 
-3. Environment as Architecture — #theme/environment
-   What belongs: designing conditions, affordances, context over willpower, who you surround yourself with
-   Anchors: [[Arquitect the environment]], [[affordances]]
+3. Theme C — #theme/c
+   What belongs: <a one-line description of this theme>
+   Anchors: [[<a representative note in your vault>]]
 
-4. Measurement vs. Meaning — #theme/measurement
-   What belongs: purpose over metrics, identity, meaning-making, what truly counts
-   Anchors: [[From Measurement to Meaning]], [[80yrs old {USER_NAME}]]
+4. Theme D — #theme/d
+   What belongs: <a one-line description of this theme>
+   Anchors: [[<a representative note in your vault>]], [[80yrs old {USER_NAME}]]
 
-5. Relationships & Differentiation — #theme/relationships
-   What belongs: love, trust, family, leadership-as-relationship, differentiation, communication
-   Anchors: [[loving someone as they change]], [[Esther Perel]]
+5. Theme E — #theme/e
+   What belongs: <a one-line description of this theme>
+   Anchors: [[<a representative note in your vault>]]
 
-6. Compounding & Layers — #theme/compounding
-   What belongs: small steps, patience, consistency, the long game, accumulation
-   Anchors: [[We are the accumulation of lessons]], [[Kaizen]]
+6. Theme F — #theme/f
+   What belongs: <a one-line description of this theme>
+   Anchors: [[<a representative note in your vault>]]
 
-7. Technology & Humanity — #theme/technology
-   What belongs: AI, tools, innovation, human-machine tension, containment
-   Anchors: [[AI with memory]], [[The Coming Wave]]
+7. Theme G — #theme/g
+   What belongs: <a one-line description of this theme>
+   Anchors: [[<a representative note in your vault>]]
 
 Tag format: Add at bottom of note, separated by ---
-*Wisdom themes:* #theme/quality #theme/mastery
-*Connects to:* [[Aretê]] · [[Meditations]]
+*Wisdom themes:* #theme/a #theme/b
+*Connects to:* [[<anchor note>]] · [[<anchor note>]]
 
 Cross-theme bridges are the most valuable connections. Always look for them.
 """
@@ -323,17 +327,20 @@ def format_daily_report(result: dict) -> str:
 
 # ── Layer 2: Weekly deep pass ─────────────────────────────────────────────────
 
-CLUSTER_GAPS_SYSTEM = ("""You are Alicia, {USER_NAME}'s wisdom partner. You know his 8 knowledge clusters deeply.
+CLUSTER_GAPS_SYSTEM = ("""You are Alicia, {USER_NAME}'s wisdom partner. You know their 8 knowledge clusters deeply.
 
-The clusters are:
-1. Quality & Craftsmanship (Pirsig, Vervaeke, McGilchrist, Rubin)
-2. Self-Mastery & Stoicism (Marcus Aurelius, Seneca, Epictetus, Holiday, Nietzsche)
-3. Environment as Architecture (James Clear, Tony Fadell)
-4. Measurement vs. Meaning (Drucker, Pirsig's abstraction ladder)
-5. Relationships & Differentiation (Esther Perel, Terence Real, Hesse)
-6. Compounding & Layers (Forte, Ahrens, Naval)
-7. Technology & Humanity (Suleyman, Bridle, Rovelli)
-8. Depth of Knowing (Vervaeke's 4 kinds of knowing, Waitzkin, McGilchrist)
+The clusters are configured starter placeholders — replace these labels with
+the themes that organize the user's own thinking. The downstream code only
+cares about the cluster names; the descriptions are prompt context for you.
+
+1. Cluster A (anchor authors / concepts)
+2. Cluster B (anchor authors / concepts)
+3. Cluster C (anchor authors / concepts)
+4. Cluster D (anchor authors / concepts)
+5. Cluster E (anchor authors / concepts)
+6. Cluster F (anchor authors / concepts)
+7. Cluster G (anchor authors / concepts)
+8. Cluster H (anchor authors / concepts)
 
 Given a list of vault notes, identify:
 1. Which clusters are underrepresented this week
@@ -350,10 +357,11 @@ Return JSON:
 }""".replace("{USER_NAME}", USER_NAME))
 
 
-DEEP_CONCEPT_SYSTEM = f"""You are Alicia, {USER_NAME}'s wisdom partner. Create a rich concept note for his Obsidian vault.
+DEEP_CONCEPT_SYSTEM = f"""You are Alicia, {USER_NAME}'s wisdom partner. Create a rich concept note for their Obsidian vault.
 
 {USER_NAME}'s style: metaphorical, layered, bridges philosophy and practice, thinks in systems.
-His deepest anchors: Pirsig (Quality), Vervaeke (Relevance Realization), Stoicism, Esther Perel.
+Their deepest anchors are whatever appears most often in their MEMORY.md
+and synthesis notes — read from the live context, don't hardcode authors.
 
 Rules:
 - Title must be a CLAIM: "curiosity compounds faster than discipline" not "notes on curiosity"
@@ -583,14 +591,10 @@ QUALITY STANDARDS (improvements over S1):
 - Deep Research section must include at least 2 thinkers not in the vault
 - The tension must feel genuinely unresolved — don't soften it
 
-{USER_NAME}'s vault anchors to draw from:
-- Pirsig (Quality, Dynamic/Static, Gumption, Pre-intellectual reality)
-- Vervaeke (4 Kinds of Knowing, Relevance Realization, Participatory Knowing)
-- Stoics (Meditations, Prosoche, Prochieron)
-- Esther Perel (differentiation, fire needs air)
-- McGilchrist (hemispheric attention, the Gestalt)
-- Waitzkin (embodied mastery, investment in loss)
-- His own essays: "From Measurement to Meaning", "Good taste", "Loving someone as they change"
+{USER_NAME}'s vault anchors to draw from come from their live context —
+their MEMORY.md, their synthesis notes, and the authors and concepts most
+referenced in the recent capture pool. Pull those anchors at runtime rather
+than hardcoding them here, so the prompt adapts to whoever's running it.
 
 Write the full episode. This is real content for a real podcast."""
 

@@ -72,7 +72,7 @@ def _():
     from myalicia.skills.web_dashboard import compute_full_state
     state = compute_full_state()
     # Top-level keys
-    for key in ("generated_at", "alicia", "hector", "relationship",
+    for key in ("generated_at", "alicia", "user", "relationship",
                 "skills", "timeline"):
         assert key in state, f"missing top-level key: {key}"
     # Alicia sub-sections (Phase 15.0f added soul)
@@ -80,7 +80,7 @@ def _():
         assert sub in state["alicia"], f"alicia.{sub} missing"
     # the user sub-sections
     for sub in ("mind", "voice", "body"):
-        assert sub in state["hector"], f"hector.{sub} missing"
+        assert sub in state["user"], f"user.{sub} missing"
     # Relationship sub-sections
     for sub in ("conversation", "distillation", "coherence", "landing"):
         assert sub in state["relationship"], f"relationship.{sub} missing"
@@ -184,7 +184,7 @@ def _():
     # Required dashboard sections are wired in HTML
     for marker in ("alicia-heart", "alicia-body", "alicia-soul",
                    "alicia-mind", "alicia-nervous",
-                   "hector-mind", "hector-voice", "hector-body",
+                   "user-mind", "user-voice", "user-body",
                    "rel-conversation", "rel-distillation",
                    "rel-coherence", "rel-landing", "skills", "timeline"):
         assert marker in body, f"HTML missing element id: {marker}"
@@ -202,7 +202,7 @@ def _():
         body = resp.read().decode()
     state = json.loads(body)
     # Same contract as compute_full_state directly
-    for key in ("alicia", "hector", "relationship", "skills", "timeline"):
+    for key in ("alicia", "user", "relationship", "skills", "timeline"):
         assert key in state, f"/api/state.json missing {key}"
 
 
@@ -365,7 +365,7 @@ def _():
         f.write_text(
             "---\ncaptured_at: 2026-04-26\nchannel: text\n---\n\n"
             "*In response to On Quality:*\n"
-            "> What strikes me about Pirsig is\n"
+            "> What strikes me about Alpha is\n"
             "> the way Quality is the precondition\n"
             "> for everything else.\n"
             "\n"
@@ -395,7 +395,7 @@ def _():
         assert _extract_prompt_from_capture(f) is None
 
 
-@test("Phase 15.0g identity links: soul + hector mind expose vault URIs")
+@test("Phase 15.0g identity links: soul + user mind expose vault URIs")
 def _():
     from myalicia.skills.web_dashboard import compute_full_state
     state = compute_full_state()
@@ -585,7 +585,7 @@ def _():
     data_line = text.split("data: ", 1)[1].split("\n\n", 1)[0]
     parsed = json.loads(data_line)
     assert "alicia" in parsed
-    assert "hector" in parsed
+    assert "user" in parsed
 
 
 @test("Phase 15.2b: HTML uses EventSource as primary update path")

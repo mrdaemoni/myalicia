@@ -338,7 +338,7 @@ def _():
         from myalicia.skills import thread_puller as tp
         tp.PROFILES_DIR = td
         tp.THREAD_PULLS_PATH = os.path.join(td, "thread_pulls.jsonl")
-        with open(os.path.join(td, "2026-W18-hector.md"), "w") as f:
+        with open(os.path.join(td, "2026-W18-user.md"), "w") as f:
             f.write(SAMPLE_PROFILE_NO_THREADS)
         out = tp.build_thread_pull_message()
         assert out is None, f"expected None with empty Open Threads, got {out!r}"

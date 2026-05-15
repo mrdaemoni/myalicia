@@ -95,11 +95,11 @@ def sync_memory_to_vault():
         pass  # Non-critical — don't break memory writes if vault sync fails
 
 
-# ── Hot Topics Bridge (Alicia → Cowork) ──────────────────────────────────────
+# ── Hot Topics Bridge (Alicia → Desktop) ──────────────────────────────────────
 
 def _write_hot_topic(value: str, ext_type: str, score: int):
     """
-    Write a score-5 insight to hot_topics.md so Cowork scheduled tasks
+    Write a score-5 insight to hot_topics.md so Desktop scheduled tasks
     can bias their synthesis targeting toward the user's current interests.
 
     Format: timestamped entries, max 15 (oldest pruned).
@@ -123,9 +123,9 @@ def _write_hot_topic(value: str, ext_type: str, score: int):
             existing = existing[-15:]
 
             header = (
-                "# Hot Topics — Alicia → Cowork Bridge\n"
+                "# Hot Topics — Alicia → Desktop Bridge\n"
                 f"# Score-5 insights from {USER_NAME}'s conversations.\n"
-                "# Read by Cowork synthesis tasks to bias targeting toward current interests.\n"
+                "# Read by Desktop synthesis tasks to bias targeting toward current interests.\n"
                 "# Auto-maintained: max 15 entries, oldest pruned.\n\n"
             )
             atomic_write_text(
@@ -168,7 +168,7 @@ def load_memory_files() -> dict:
 
 def load_bridge_handoff() -> str:
     """Read the Bridge handoff file for cross-interface continuity.
-    This is how Telegram Alicia knows what happened in Cowork sessions
+    This is how Telegram Alicia knows what happened in Desktop sessions
     and vice versa. The Bridge layer lives in the Obsidian vault so
     it syncs across all devices."""
     if os.path.exists(BRIDGE_HANDOFF):
@@ -182,7 +182,7 @@ def load_bridge_handoff() -> str:
 
 def write_telegram_session_summary(summary: str, active_threads: list = None):
     """Write a Telegram session digest to the Bridge.
-    Called at the end of meaningful conversations so Cowork
+    Called at the end of meaningful conversations so Desktop
     can pick up where Telegram left off.
 
     Routes through bridge_protocol.write_bridge_text for atomicity + INDEX
@@ -209,8 +209,9 @@ def build_session_context(user_message: str = "") -> str:
     3. Use semantic search to pull ONLY the memories relevant to the current message
     4. Include ALICIA.md (the exosuit)
 
-    This means: if the user is talking about his daughter, he gets parenting memories.
-    If he's talking about Pirsig, he gets quality/philosophy memories. Not both.
+    This means: if the user is talking about their kid, they get parenting memories.
+    If they're talking about a particular author, they get the relevant memories.
+    Not both.
     """
     alicia_md = load_alicia_md()
     mem = load_memory_files()
@@ -512,7 +513,7 @@ These tags are metadata — do NOT include them in the extracted value text. The
                     append_to_memory_file(CONCEPTS_FILE, f"- ({date}) [score:{score}] {voice_prefix}{value}")
                     kept = True
 
-                # Hot topics bridge: score-5 insights signal current interests to Cowork
+                # Hot topics bridge: score-5 insights signal current interests to Desktop
                 if score >= 5:
                     _write_hot_topic(value, ext_type, score)
 

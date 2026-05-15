@@ -239,7 +239,7 @@ def _read_bond_reflections() -> int:
         return 0
 
 
-def _read_words_from_hector() -> int:
+def _read_words_from_user() -> int:
     """Count total words from the user via voice_metadata_log.jsonl and interaction count."""
     try:
         voice_path = os.path.join(VAULT_ROOT, "voice_metadata_log.jsonl")
@@ -295,7 +295,7 @@ def compute_emergence_metrics() -> dict:
         "invitations_sent": _read_challenges(),
         "threads_pulled": _read_thread_pulls(),
         "bonds_named": _read_bond_reflections(),
-        "words_heard": _read_words_from_hector(),
+        "words_heard": _read_words_from_user(),
         "days_breathing": _days_since_epoch(),
     }
 

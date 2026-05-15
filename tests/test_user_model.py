@@ -253,7 +253,7 @@ def test_classify_dimension_keyword_routing() -> None:
         ("Did some art making this evening",                   "creative"),
         ("Returning to the same morning ritual",               "practice"),
         ("Notice I keep avoiding this conversation",           "shadow"),
-        ("Reading more McGilchrist on hemispheric balance",    "knowledge"),
+        ("Reading more Gamma on hemispheric balance",    "knowledge"),
         # Default: nothing matches → identity
         ("Today I made a clear choice",                        "identity"),
     ]
@@ -348,7 +348,7 @@ def test_render_becoming_dashboard_shows_arc() -> None:
     hm.append_learning("evening practice preferred",
                        dimension="practice",
                        now=now - timedelta(days=2))
-    hm.append_learning("McGilchrist hemisphere reading is sticking",
+    hm.append_learning("Gamma hemisphere reading is sticking",
                        dimension="knowledge",
                        now=now - timedelta(days=3))
     out = hm.render_becoming_dashboard(now=now)
@@ -361,7 +361,7 @@ def test_render_becoming_dashboard_shows_arc() -> None:
     # Thin dimensions list contains body, wealth, voice etc.
     assert "Gap dimensions" in out
     # Most recent learnings preview
-    assert "evening practice" in out or "McGilchrist" in out
+    assert "evening practice" in out or "Gamma" in out
 
 
 if __name__ == "__main__":

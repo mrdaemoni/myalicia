@@ -38,9 +38,9 @@ LINK_SUGGESTIONS_FILE = os.path.join(MEMORY_DIR, "link_suggestions.json")
 # (employer/project/people directories that aren't part of synthesis).
 EXCLUDED_FOLDERS = {'.obsidian', '.trash', '.git', '__pycache__', 'templates'}
 
-# The 8 knowledge clusters
-CLUSTERS = ["Quality", "Mastery", "Environment", "Measurement",
-            "Relationships", "Compounding", "Technology", "Depth"]
+# Starter knowledge clusters — replace with your own themes.
+CLUSTERS = ["Cluster A", "Cluster B", "Cluster C", "Cluster D",
+            "Cluster E", "Cluster F", "Cluster G", "Cluster H"]
 
 
 # ══════════════════════════════════════════════════════════════════════════════
